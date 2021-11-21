@@ -1,27 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="flex flex-row h-screen">
+    <sidebar class="flex-none" :component="rootComponent"></sidebar>
+    <preview :component="rootComponent"></preview>
+    <controls class="flex-none"></controls>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { defineComponent, ref } from 'vue';
+import Preview from './components/Preview.vue';
+import Sidebar from './components/Sidebar.vue';
+import Controls from './components/Controls.vue';
+import Component from './layout/Component';
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld
+    Preview,
+    Sidebar,
+    Controls
+  },
+  setup() {
+    const rootComponent = ref(new Component())
+
+    return {
+      rootComponent
+    }
   }
 });
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 </style>
