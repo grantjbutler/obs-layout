@@ -1,36 +1,18 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export default class Component {
-  #_children: Component[] = []
-  #_parent?: WeakRef<Component> = undefined
+  id: string = uuidv4()
+  children: Component[] = []
 
-  get children(): Component[] {
-    return this.children;
+  get name(): string {
+    throw new Error('Subclasses are expected to override this method.')
   }
 
-  get parent(): Component | undefined {
-    return this.#_parent?.deref();
+  get viewComponent(): string {
+    throw new Error('Subclasses are expected to override this method.')
   }
 
-  addChild(child: Component): void {
-    this.#_children.push(child);
-    child.#_parent = new WeakRef(this);
-  }
-
-  removeFromParent(): void {
-    const parent = this.parent;
-    if (!parent) {
-      return;
-    }
-
-    parent.#removeChild(this);
-  }
-
-  #removeChild(child: Component): void {
-    let index;
-    if ((index = this.#_children.indexOf(child)) === -1) {
-      return;
-    }
-
-    this.#_children.splice(index, 1);
-    child.#_parent = undefined;
+  get controlsComponent(): string {
+    throw new Error('Subclasses are expected to override this method.')
   }
 }

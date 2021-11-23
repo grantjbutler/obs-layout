@@ -1,9 +1,39 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, Menu, IpcMainEvent, MenuItemConstructorOptions, MenuItem } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+function installClickHandler<Item extends MenuItemConstructorOptions | MenuItem>(template: Item[], event: IpcMainEvent): Item[] {
+  return template.map(item => {
+    if (item.submenu) {
+      if (Array.isArray(item.submenu)) {
+        item.submenu = installClickHandler(item.submenu, event)
+      } else {
+        item.submenu.items = installClickHandler(item.submenu.items, event)
+      }
+    }
+
+    if (!item.id) { return item; }
+
+    item.click = () => { event.reply(`context-menu:click:${item.id}`) }
+
+    return item;
+  })
+}
+
+function installMenus(): void {
+  ipcMain.on('show-context-menu', (event, template: MenuItemConstructorOptions[]) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (!window) {
+      return;
+    }
+    
+    const menu = Menu.buildFromTemplate(installClickHandler(template, event));
+    menu.popup({ window })
+  });
+}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -66,6 +96,8 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+
+  installMenus();
 })
 
 // Exit cleanly on request from parent process in development mode.
