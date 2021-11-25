@@ -1,30 +1,30 @@
 <template>
   <Disclosure v-slot="{ open }">
     <context-menu-providing>
-      <div class="flex justify-between" :class="isSelected ? 'bg-orange-200' : ''" @click.prevent="selectComponent">
+      <div class="flex justify-between" :class="{'bg-green-200': isSelected}" @click.prevent="selectComponent">
         <div class="flex">
           <DisclosureButton v-if="component.children.length > 0">
             <ChevronRightIcon class="w-6 h-6" :class='open ? "transform rotate-90" : ""' />
           </DisclosureButton>
           <div v-else class="w-6 h-6"></div>
 
-          <span v-text="component.name" :class="allowsSelection ? 'text-black' : 'text-gray-500'"></span>
+          <span v-text="component.name"></span>
         </div>
       </div>
 
       <template v-slot:menu>
-        <Menu>
+        <context-menu>
           <Submenu label="Add Component...">
             <menu-item @click="addFlexComponent()">Flex Component</menu-item>
             <menu-item @click="addSourceComponent()">Source Component</menu-item>
           </Submenu>
           <menu-separator/>
           <menu-item>Delete</menu-item>
-        </Menu>
+        </context-menu>
       </template>
     </context-menu-providing>
     <DisclosurePanel v-if="component.children.length > 0" class="pl-4">
-      <TreeControl v-for="child in component.children" :key="child.id" :component="child" :selectedComponent="selectedComponent" @selectComponent="propogateSelection"></TreeControl>
+      <TreeControl v-for="child in component.children" :key="child.id" :component="child"></TreeControl>
     </DisclosurePanel>
   </Disclosure>
 </template>
@@ -40,11 +40,14 @@ import {
 import { ChevronRightIcon } from '@heroicons/vue/solid';
 import {
   ContextMenuProviding,
-  Menu,
+  ContextMenu,
   MenuItem,
   Submenu,
   MenuSeparator
 } from '../Menu'
+import { useStore } from 'vuex';
+import { key } from '@/store';
+import { ADD_CHILD, SELECT_COMPONENT } from '@/store/mutation-types';
 
 export default defineComponent({
   components: {
@@ -53,7 +56,7 @@ export default defineComponent({
     DisclosurePanel,
     ChevronRightIcon,
     ContextMenuProviding,
-    Menu,
+    ContextMenu,
     MenuItem,
     Submenu,
     MenuSeparator,
@@ -63,48 +66,32 @@ export default defineComponent({
       type: Object as PropType<Component>,
       required: true
     },
-    allowsSelection: {
-      type: Boolean,
-      default: true
-    },
-    selectedComponent: {
-      type: Object as PropType<Component>
-    }
   },
-  emits: {
-    selectComponent(payload: Component) {
-      return true
-    }
-  },
-  setup(props, context) {
-    const { selectedComponent, component, allowsSelection } = toRefs(props);
-    const selectComponent = () => {
-      if (!allowsSelection.value) { return; }
-      propogateSelection(component.value)
-    }
+  setup(props) {
+    const store = useStore(key)
+    const { component } = toRefs(props);
 
-    const propogateSelection = (component: Component) => {
-      context.emit('selectComponent', component)
+    const selectComponent = () => {
+      store.commit(SELECT_COMPONENT, component.value)
     }
 
     const isSelected = computed(() => {
-      return selectedComponent.value?.id == component.value.id
+      return store.state.selectedComponent?.id == component.value.id
     })
 
     const addFlexComponent = () => {
-      component.value.children.push(new FlexComponent())
+      store.commit(ADD_CHILD, { parentId: component.value.id, component: new FlexComponent()})
     }
 
     const addSourceComponent = () => {
-      component.value.children.push(new SourceComponent())
+      store.commit(ADD_CHILD, { parentId: component.value.id, component: new SourceComponent()})
     }
 
     return {
       selectComponent,
       isSelected,
       addFlexComponent,
-      addSourceComponent,
-      propogateSelection
+      addSourceComponent
     }
   }
 })

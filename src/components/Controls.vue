@@ -11,8 +11,9 @@
 </template>
 
 <script lang="ts">
-import Component from '@/layout/Component'
-import { defineComponent, PropType } from 'vue'
+import { key } from '@/store'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
 import FlexComponentControls from './Controls/FlexComponentControls.vue'
 import SourceComponentControls from './Controls/SourceComponentControls.vue'
 
@@ -21,9 +22,11 @@ export default defineComponent({
     FlexComponentControls,
     SourceComponentControls
   },
-  props: {
-    component: {
-      type: Object as PropType<Component>
+  setup() {
+    const store = useStore(key)
+
+    return {
+      component: computed(() => store.state.selectedComponent)
     }
   }
 })

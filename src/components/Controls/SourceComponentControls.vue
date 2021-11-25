@@ -3,7 +3,7 @@
     <p>Source Component</p>
     <div>
       <label>Source</label>
-      <select :value="component.source" @change="setSource">
+      <select v-model="source">
         <option value="">None</option>
         <option value="MC Ninja">MC Ninja</option>
         <option value="Game capture">Game capture</option>
@@ -15,7 +15,10 @@
 
 <script lang="ts">
 import SourceComponent from '@/layout/SourceComponent'
-import { defineComponent, PropType, toRefs } from 'vue'
+import { key } from '@/store'
+import { SOURCE_SET_SOURCE } from '@/store/mutation-types'
+import { computed, defineComponent, PropType, toRefs } from 'vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   props: {
@@ -25,14 +28,14 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const store = useStore(key)
     const { component } = toRefs(props)
 
-    const setSource = (source: string) => {
-      component.value.source = source
-    }
-
     return {
-      setSource
+      source: computed({
+        get() { return component.value.source },
+        set(value) { store.commit(SOURCE_SET_SOURCE, value) }
+      })
     }
   },
 })

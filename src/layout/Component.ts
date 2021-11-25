@@ -1,18 +1,27 @@
 import { v4 as uuidv4 } from 'uuid';
+import Size from './Size';
+import LayoutNode from './LayoutNode';
 
-export default class Component {
+export default abstract class Component {
   id: string = uuidv4()
   children: Component[] = []
 
-  get name(): string {
-    throw new Error('Subclasses are expected to override this method.')
-  }
+  abstract get name(): string
+  abstract get controlsComponent(): string
+  abstract exerciseLayout(size: Size): LayoutNode
 
-  get viewComponent(): string {
-    throw new Error('Subclasses are expected to override this method.')
-  }
+  childWithId(id: string): null | Component {
+    if (this.id == id) {
+      return this
+    }
 
-  get controlsComponent(): string {
-    throw new Error('Subclasses are expected to override this method.')
+    for (const child of this.children) {
+      const found = child.childWithId(id)
+      if (found) {
+        return found
+      }
+    }
+
+    return null
   }
 }

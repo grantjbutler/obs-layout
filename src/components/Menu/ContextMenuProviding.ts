@@ -10,7 +10,9 @@ export default defineComponent({
       return h(
         'div',
         {
-          onContextmenu: () => {
+          onContextmenu: (event: Event) => {
+            event.preventDefault()
+
             const [node] = menuSlot
             if (!node) {
               return;
@@ -20,6 +22,8 @@ export default defineComponent({
             if (!component) {
               return;
             }
+
+            event.stopPropagation()
 
             const buildItem = component.exposed?.buildItem
             if (!buildItem) {

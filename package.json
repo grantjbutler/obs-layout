@@ -20,7 +20,7 @@
     "obs-websocket-js": "^4.0.3",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@types/electron-devtools-installer": "^2.2.0",
