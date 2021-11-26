@@ -11,6 +11,7 @@ import { useStore } from 'vuex';
 import TreeControl from './Sidebar/TreeControl.vue';
 
 export default defineComponent({
+  name: 'Sidebar',
   components: {
     TreeControl
   },

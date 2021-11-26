@@ -1,6 +1,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  name: 'MenuSeparator',
   setup(props, context) {
     const buildItem = () => {
       return {

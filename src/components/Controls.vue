@@ -1,32 +1,44 @@
 <template>
   <div class="w-72 bg-gray-200 p-2">
     <div v-if="component">
-      <div>
-        <p>Base Component Controls</p>
+      <div v-for="(control, index) in controls" :key="index">
+        <component :is="control" :component="component"></component>
       </div>
-
-      <component :is="component.controlsComponent" :component="component"></component>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { Component } from '@/layout';
 import { key } from '@/store'
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
-import FlexComponentControls from './Controls/FlexComponentControls.vue'
-import SourceComponentControls from './Controls/SourceComponentControls.vue'
+import ControlComponents from './Controls/Registry';
 
 export default defineComponent({
+  name: 'Controls',
   components: {
-    FlexComponentControls,
-    SourceComponentControls
+    ...ControlComponents.components
   },
   setup() {
     const store = useStore(key)
+    const component = computed(() => store.state.selectedComponent)
+    const controls = computed(() => {
+      let controlComponent = Object.getPrototypeOf(component.value);
+      let controlsComponents = [];
+      do {
+        let control: any = ControlComponents.registry.get(controlComponent.constructor);
+        if (control) {
+          controlsComponents.push(control)
+        }
+        controlComponent = Object.getPrototypeOf(controlComponent);
+      } while (controlComponent instanceof Component);
+      return controlsComponents.reverse();
+    })
 
     return {
-      component: computed(() => store.state.selectedComponent)
+      controls,
+      component
     }
   }
 })

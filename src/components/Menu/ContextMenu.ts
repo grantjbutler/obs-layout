@@ -2,6 +2,7 @@ import { defineComponent } from 'vue'
 import useMenuBuilding from './useMenuBuilding';
 
 export default defineComponent({
+  name: 'ContextMenu',
   setup(props, context) {
     const { buildItem, buildMenu } = useMenuBuilding()
 

@@ -17,6 +17,7 @@ function getRandomInt(min: number, max: number): number {
 }
 
 export default defineComponent({
+  name: 'NodeView',
   props: {
     node: {
       type: Object as PropType<LayoutNode>,

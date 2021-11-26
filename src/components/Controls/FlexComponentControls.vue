@@ -31,6 +31,7 @@ import { computed, defineComponent, PropType, toRefs } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
+  name: 'FlexComponentControls',
   props: {
     component: {
       type: Object as PropType<FlexComponent>,

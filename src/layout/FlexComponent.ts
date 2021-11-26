@@ -1,19 +1,15 @@
-import Component from "./Component";
+import ContainerComponent from "./ContainerComponent";
 import Frame from "./Frame";
 import LayoutNode from "./LayoutNode";
 import Size from "./Size";
 
-export default class FlexComponent extends Component {
+export default class FlexComponent extends ContainerComponent {
   direction: 'horizontal' | 'vertical' = 'horizontal'
   spacing = 0
   distribution: 'leading' | 'center' | 'trailing' = 'center'
 
-  get name(): string {
+  static get displayName(): string {
     return 'Flex Component'
-  }
-
-  get controlsComponent(): string {
-    return 'FlexComponentControls'
   }
 
   exerciseLayout(size: Size): LayoutNode {
@@ -52,7 +48,16 @@ export default class FlexComponent extends Component {
 
         return width;
       }, 0);
-      nodeFrame = new Frame(0, 0, maxWidth, size.height)
+      nodeFrame = new Frame(0, 0, maxWidth, size.height);
+
+      const totalHeight = childNodes.reduce((height, node) => {
+        return height + node.frame.height
+      }, 0) + totalSpacing;
+
+      const verticalOffset = (size.height - totalHeight) / 2.0;
+      childNodes.forEach(node => {
+        node.frame.y += verticalOffset
+      });
     } else {
       const maxHeight = childNodes.reduce((height, node) => {
         if (node.frame.height > height) {
@@ -61,7 +66,16 @@ export default class FlexComponent extends Component {
 
         return height;
       }, 0);
-      nodeFrame = new Frame(0, 0, size.width, maxHeight)
+      nodeFrame = new Frame(0, 0, size.width, maxHeight);
+
+      const totalWidth = childNodes.reduce((width, node) => {
+        return width + node.frame.width
+      }, 0) + totalSpacing;
+
+      const horizontalOffset = (size.width - totalWidth) / 2.0;
+      childNodes.forEach(node => {
+        node.frame.x += horizontalOffset
+      });
     }
 
     childNodes.forEach(node => {

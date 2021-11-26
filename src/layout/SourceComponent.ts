@@ -7,12 +7,8 @@ export default class SourceComponent extends Component {
   source?: string = undefined // This may need to be a different type depending on what OBS returns.
   aspectRatio: Size = new Size(16, 9)
 
-  get name(): string {
+  static get displayName(): string {
     return 'Source Component'
-  }
-
-  get controlsComponent(): string {
-    return 'SourceComponentControls'
   }
 
   exerciseLayout(size: Size): LayoutNode {

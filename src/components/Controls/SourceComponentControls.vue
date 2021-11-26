@@ -21,6 +21,7 @@ import { computed, defineComponent, PropType, toRefs } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
+  name: 'SourceComponentControls',
   props: {
     component: {
       type: Object as PropType<SourceComponent>,

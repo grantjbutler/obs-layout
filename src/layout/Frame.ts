@@ -1,3 +1,5 @@
+import Insets from "./Insets";
+
 interface FrameStyleObject {
   top: string
   left: string
@@ -25,5 +27,14 @@ export default class Frame {
       width: this.width + 'px',
       height: this.height + 'px'
     }
+  }
+
+  insetBy(insets: Insets): Frame {
+    return new Frame(
+      this.x + insets.left,
+      this.y + insets.top,
+      this.width - (insets.left + insets.right),
+      this.height - (insets.top + insets.bottom)
+    );
   }
 }

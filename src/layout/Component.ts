@@ -1,27 +1,39 @@
 import { v4 as uuidv4 } from 'uuid';
 import Size from './Size';
 import LayoutNode from './LayoutNode';
+import ContainerComponent from './ContainerComponent';
 
-export default abstract class Component {
+export default class Component {
   id: string = uuidv4()
-  children: Component[] = []
+  #parent: WeakRef<ContainerComponent> | undefined = undefined;
+  customName: string | undefined
 
-  abstract get name(): string
-  abstract get controlsComponent(): string
-  abstract exerciseLayout(size: Size): LayoutNode
+  get name(): string {
+    return this.customName ?? Object.getPrototypeOf(this).constructor.displayName
+  }
 
-  childWithId(id: string): null | Component {
-    if (this.id == id) {
-      return this
+  get parent(): ContainerComponent | undefined {
+    return this.#parent?.deref();
+  }
+
+  set _parent(parent: ContainerComponent | undefined) {
+    if (parent) {
+      this.#parent = new WeakRef(parent);
+    } else {
+      this.#parent = undefined;
     }
+  }
 
-    for (const child of this.children) {
-      const found = child.childWithId(id)
-      if (found) {
-        return found
-      }
-    }
+  removeFromParent(): void {
+    this.parent?._removeChild(this)
+  }
 
-    return null
+  static get displayName(): string {
+    throw new Error("Subclasses are expected to provide a display name.");
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  exerciseLayout(size: Size): LayoutNode {
+    throw new Error("Subclasses are expected to implement logic for exercising a layout.");
   }
 }

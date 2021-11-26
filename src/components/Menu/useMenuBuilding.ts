@@ -1,5 +1,5 @@
 import MenuItemDefinition from './MenuItemDefinition'
-import { ref } from 'vue'
+import { ref, Fragment } from 'vue'
 
 interface MenuBuilding {
   buildItem(): MenuItemDefinition[] | null
@@ -7,10 +7,8 @@ interface MenuBuilding {
 }
 
 export default function useMenuBuilding(): MenuBuilding {
-  const stashedChildren = ref<any[]>([]);
-  const buildItem = (): MenuItemDefinition[] | null => {
-    return stashedChildren.value.map(node => {
-      const component = node.component
+  const buildNode = (node: any) => {
+    const component = node.component
       if (!component) {
         return null;
       }
@@ -21,6 +19,16 @@ export default function useMenuBuilding(): MenuBuilding {
       }
 
       return buildChildItem();
+  }
+
+  const stashedChildren = ref<any[]>([]);
+  const buildItem = (): MenuItemDefinition[] | null => {
+    return stashedChildren.value.flatMap(node => {
+      if (node.type == Fragment) {
+        return node.children.map(buildNode)
+      } else {
+        return buildNode(node)
+      }
     }).filter(element => !!element)
   }
 

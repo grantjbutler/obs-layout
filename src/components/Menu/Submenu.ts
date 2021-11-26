@@ -2,6 +2,7 @@ import { defineComponent } from '@vue/runtime-core'
 import useMenuBuilding from './useMenuBuilding'
 
 export default defineComponent({
+  name: 'Submenu',
   props: {
     label: {
       type: String,

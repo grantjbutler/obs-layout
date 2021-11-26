@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron';
 import MenuItemDefinition from './MenuItemDefinition'
 
 export default defineComponent({
+  name: 'MenuItem',
   emits: ['click'],
   setup(props, context) {
     const label = ref('');
