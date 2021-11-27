@@ -9,7 +9,7 @@ export default abstract class ContainerComponent extends Component {
 
   addChild(child: Component): void {
     this._children.push(child)
-    child._parent = this
+    child._parent = new WeakRef(this);
   }
 
   _removeChild(child: Component): void {

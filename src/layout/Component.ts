@@ -5,7 +5,7 @@ import ContainerComponent from './ContainerComponent';
 
 export default class Component {
   id: string = uuidv4()
-  #parent: WeakRef<ContainerComponent> | undefined = undefined;
+  _parent: WeakRef<ContainerComponent> | undefined = undefined;
   customName: string | undefined
 
   get name(): string {
@@ -13,15 +13,7 @@ export default class Component {
   }
 
   get parent(): ContainerComponent | undefined {
-    return this.#parent?.deref();
-  }
-
-  set _parent(parent: ContainerComponent | undefined) {
-    if (parent) {
-      this.#parent = new WeakRef(parent);
-    } else {
-      this.#parent = undefined;
-    }
+    return this._parent?.deref();
   }
 
   removeFromParent(): void {

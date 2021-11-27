@@ -1,5 +1,5 @@
 <template>
-  <Disclosure v-slot="{ open }">
+  <Disclosure v-slot="{ open }" :defaultOpen="true">
     <context-menu-providing>
       <div class="flex justify-between" :class="{'bg-green-200': isSelected}" @click.prevent="selectComponent">
         <div class="flex">
@@ -18,6 +18,10 @@
             <menu-item v-for="action in containerActions" :key="action.title" @click="action.action()">{{ action.title }}</menu-item>
           </Submenu>
           <menu-separator v-if="isContainerComponent" />
+          <Submenu label="Embed In...">
+            <menu-item v-for="action in embedActions" :key="action.title" @click="action.action()">{{ action.title }}</menu-item>
+          </Submenu>
+          <menu-separator/>
           <menu-item>Delete</menu-item>
         </context-menu>
       </template>
@@ -30,24 +34,16 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType, toRefs } from 'vue'
-import { Component, FlexComponent, SourceComponent, components as LayoutComponents } from '@/layout';
+import { Component, FlexComponent, SourceComponent, ContainerComponent, containerComponents as ContainerComponents, components as LayoutComponents } from '@/layout';
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from '@headlessui/vue';
 import { ChevronRightIcon } from '@heroicons/vue/solid';
-import {
-  ContextMenuProviding,
-  ContextMenu,
-  MenuItem,
-  Submenu,
-  MenuSeparator
-} from '../Menu'
 import { useStore } from 'vuex';
 import { key } from '@/store';
-import { ADD_CHILD, SELECT_COMPONENT } from '@/store/mutation-types';
-import ContainerComponent from '@/layout/ContainerComponent';
+import { ADD_CHILD, SELECT_COMPONENT, EMBED_IN_COMPONENT } from '@/store/mutation-types';
 
 interface ContainerAction {
   title: string
@@ -61,11 +57,6 @@ export default defineComponent({
     DisclosureButton,
     DisclosurePanel,
     ChevronRightIcon,
-    ContextMenuProviding,
-    ContextMenu,
-    MenuItem,
-    Submenu,
-    MenuSeparator,
   },
   props: {
     component: {
@@ -119,11 +110,25 @@ export default defineComponent({
       return actions;
     })
 
+    const embedActions = computed((): ContainerAction[] => {
+      let actions: ContainerAction[] = []
+      for (const property in ContainerComponents) {
+        actions.push({
+          title: LayoutComponents[property].displayName,
+          action: () => {
+            store.commit(EMBED_IN_COMPONENT, { id: component.value.id, container: new LayoutComponents[property]() })
+          }
+        })
+      }
+      return actions
+    })
+
     return {
       selectComponent,
       isSelected,
       isContainerComponent,
       containerActions,
+      embedActions,
       addFlexComponent,
       addSourceComponent
     }

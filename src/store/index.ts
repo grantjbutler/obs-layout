@@ -1,4 +1,4 @@
-import { Component, FlexComponent, SourceComponent, LayoutExerciser, LayoutNode, Size } from '@/layout'
+import { Component, FlexComponent, SourceComponent, LayoutExerciser, LayoutNode, Size, containerComponents } from '@/layout'
 import ContainerComponent from '@/layout/ContainerComponent'
 import InsetComponent from '@/layout/InsetComponent'
 import Insets from '@/layout/Insets'
@@ -8,6 +8,7 @@ import { createStore, Store } from 'vuex'
 import { 
   SELECT_COMPONENT,
   ADD_CHILD,
+  EMBED_IN_COMPONENT,
   EXERCISE_LAYOUT,
   FLEX_SET_DIRECTION,
   FLEX_SET_DISTRIBUTION,
@@ -15,6 +16,7 @@ import {
   INSET_SET_INSETS,
   SOURCE_SET_SOURCE,
   SET_PREVIEW_SIZE,
+  layoutExercisingMutations
 } from './mutation-types'
 
 export interface State {
@@ -44,9 +46,24 @@ export const store = createStore<State>({
       state.rootNode = new LayoutExerciser().execute(state.rootComponent, state.previewSize)
     },
     [ADD_CHILD](state: State, payload: { component: Component, parentId: string }) {
-      const parent = state.rootComponent?.childWithId(payload.parentId)
+      const parent = state.rootComponent.childWithId(payload.parentId)
       if (!parent || !(parent instanceof ContainerComponent)) { return }
       parent.addChild(payload.component)
+    },
+    [EMBED_IN_COMPONENT](state: State, payload: { id: string, container: ContainerComponent }) {
+      if (state.rootComponent.id == payload.id) {
+        payload.container.addChild(state.rootComponent)
+        state.rootComponent = payload.container
+      } else {
+        const child = state.rootComponent.childWithId(payload.id)
+        if (!child) { return; }
+        const parent = child.parent;
+        if (!parent) { return; }
+
+        child.removeFromParent()
+        parent.addChild(payload.container)
+        payload.container.addChild(child)
+      }
     },
     [FLEX_SET_DIRECTION](state: State, direction: 'horizontal' | 'vertical') {
       if (!state.selectedComponent || !(state.selectedComponent instanceof FlexComponent)) {
@@ -86,7 +103,7 @@ export const store = createStore<State>({
   plugins: [
     (store) => {
       store.subscribe(mutation => {
-        if (![ADD_CHILD, SET_PREVIEW_SIZE, FLEX_SET_DIRECTION, FLEX_SET_SPACING, SOURCE_SET_SOURCE, FLEX_SET_DISTRIBUTION, INSET_SET_INSETS].includes(mutation.type)) {
+        if (!layoutExercisingMutations.includes(mutation.type)) {
           return;
         }
         store.commit(EXERCISE_LAYOUT)

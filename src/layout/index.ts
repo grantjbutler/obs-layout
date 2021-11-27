@@ -6,6 +6,7 @@ import LayoutExerciser from './LayoutExerciser'
 import Frame from './Frame'
 import Size from './Size'
 import LayoutNode from './LayoutNode'
+import ContainerComponent from './ContainerComponent';
 
 export const components: { [index: string]: typeof Component } = {
   FlexComponent,
@@ -13,8 +14,14 @@ export const components: { [index: string]: typeof Component } = {
   SourceComponent
 }
 
+export const containerComponents: { [index: string]: typeof ContainerComponent } = {
+  FlexComponent,
+  InsetComponent
+}
+
 export {
   Component,
+  ContainerComponent,
   FlexComponent,
   InsetComponent,
   SourceComponent,
