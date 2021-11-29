@@ -1,44 +1,20 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain, Menu, IpcMainEvent, MenuItemConstructorOptions, MenuItem } from 'electron'
+import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import { installContextMenuHandling, configureApplicationMenu } from './electron/menus';
+import emitter from './electron/events';
+import { openPreferences } from './electron/preferences-window';
+import { injectSystemColors } from './electron/colors';
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
-function installClickHandler<Item extends MenuItemConstructorOptions | MenuItem>(template: Item[], event: IpcMainEvent): Item[] {
-  return template.map(item => {
-    if (item.submenu) {
-      if (Array.isArray(item.submenu)) {
-        item.submenu = installClickHandler(item.submenu, event)
-      } else {
-        item.submenu.items = installClickHandler(item.submenu.items, event)
-      }
-    }
-
-    if (!item.id) { return item; }
-
-    item.click = () => { event.reply(`context-menu:click:${item.id}`) }
-
-    return item;
-  })
-}
-
-function installMenus(): void {
-  ipcMain.on('show-context-menu', (event, template: MenuItemConstructorOptions[]) => {
-    const window = BrowserWindow.fromWebContents(event.sender);
-    if (!window) {
-      return;
-    }
-    
-    const menu = Menu.buildFromTemplate(installClickHandler(template, event));
-    menu.popup({ window })
-  });
-}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+let mainWindow: BrowserWindow | null = null;
 
 async function createWindow() {
   // Create the browser window.
@@ -47,6 +23,9 @@ async function createWindow() {
     height: 600,
     minHeight: 600,
     minWidth: 1050,
+    show: false,
+    vibrancy: 'sidebar',
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -57,15 +36,23 @@ async function createWindow() {
     }
   })
 
+  win.once('ready-to-show', () => {
+    injectSystemColors(win);
+
+    win.show();
+  });
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+
+  win.on('closed', () => { mainWindow = null; });
+
+  mainWindow = win;
 }
 
 // Quit when all windows are closed.
@@ -80,7 +67,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  if (!mainWindow) createWindow()
 })
 
 // This method will be called when Electron has finished
@@ -92,13 +79,23 @@ app.on('ready', async () => {
     try {
       await installExtension(VUEJS3_DEVTOOLS)
     } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
+      console.error(`Vue Devtools failed to install: ${e}`)
     }
   }
+
+  if (!process.env.WEBPACK_DEV_SEVER_URL) {
+    createProtocol('app');
+  }
+
   createWindow()
 
-  installMenus();
+  installContextMenuHandling();
+  configureApplicationMenu();
 })
+
+emitter.on('open-preferences', () => {
+  openPreferences();
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

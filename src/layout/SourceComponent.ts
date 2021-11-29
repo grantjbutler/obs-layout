@@ -21,6 +21,6 @@ export default class SourceComponent extends Component {
       nodeSize = new Size(width, size.height)
     }
 
-    return new LayoutNode(this.id, new Frame(0, 0, nodeSize.width, nodeSize.height))
+    return new LayoutNode(this.id, new Frame(0, 0, nodeSize.width, nodeSize.height), false)
   }
 }

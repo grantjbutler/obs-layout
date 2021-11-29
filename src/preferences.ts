@@ -1,22 +1,13 @@
 import { createApp } from 'vue'
-import App from './App.vue'
-import { store, key } from './store/app'
-import observeResize from './directives/observe-resize'
+import Preferences from './Preferences.vue';
 import {
   ContextMenu, ContextMenuProviding, MenuItem, MenuSeparator, Submenu
 } from './components/ContextMenu';
 
-createApp(App)
-  .use(store, key)
-  .directive(
-    'observe-resize', observeResize
-  )
+createApp(Preferences)
   .component('context-menu', ContextMenu)
   .component('context-menu-providing', ContextMenuProviding)
   .component('menu-item', MenuItem)
   .component('menu-separator', MenuSeparator)
   .component('Submenu', Submenu)
   .mount('#app')
-
-document.getElementsByTagName('html')[0]
-  .classList.add(process.platform);

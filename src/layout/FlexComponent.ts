@@ -15,7 +15,7 @@ export default class FlexComponent extends ContainerComponent {
   exerciseLayout(size: Size): LayoutNode {
     const totalSpacing = this.spacing * (this.children.length - 1)
     if ((this.direction == 'horizontal' && totalSpacing >= size.width) || (this.direction == 'vertical' && totalSpacing >= size.height)) {
-      return new LayoutNode(this.id, new Frame(0, 0, 0, 0))
+      return new LayoutNode(this.id, new Frame(0, 0, 0, 0), true)
     }
 
     let childSize: Size
@@ -106,6 +106,6 @@ export default class FlexComponent extends ContainerComponent {
       }
     })
 
-    return new LayoutNode(this.id, nodeFrame, childNodes)
+    return new LayoutNode(this.id, nodeFrame, true, childNodes)
   }
 }

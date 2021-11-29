@@ -1,33 +1,6 @@
 import { Store, StoreOptions } from './store'
 import { safeStorage } from 'electron'
-
-interface OBSConnection {
-  host: string;
-  port?: number;
-  password?: string;
-}
-
-function isOBSConnection(obj: any): obj is OBSConnection {
-  let hasRequiredFields = (obj as OBSConnection).host !== undefined
-    && typeof (obj as OBSConnection).host === 'string';
-  if (!hasRequiredFields) {
-    return false;
-  }
-
-  if ((obj as OBSConnection).port !== undefined) {
-    if (typeof (obj as OBSConnection).port !== 'number') {
-      return false;
-    }
-  }
-
-  if ((obj as OBSConnection).password !== undefined) {
-    if (typeof (obj as OBSConnection).password !== 'string') {
-      return false;
-    }
-  }
-
-  return true;
-}
+import { OBSConnection, isOBSConnection } from '@/obs/connection';
 
 export default class Preferences {
   store: Store;
@@ -37,7 +10,7 @@ export default class Preferences {
   }
 
   get obsConnection(): OBSConnection | null {
-    let connection = this.store.get('obs-connection');
+    const connection = this.store.get('obs-connection');
     if (isOBSConnection(connection)) {
       if (connection.password) {
         connection.password = safeStorage.decryptString(Buffer.from(connection.password, 'base64'))

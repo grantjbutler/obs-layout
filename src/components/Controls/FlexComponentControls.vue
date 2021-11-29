@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { FlexComponent } from '@/layout'
-import { key } from '@/store'
+import { key } from '@/store/app'
 import { FLEX_SET_DIRECTION, FLEX_SET_DISTRIBUTION, FLEX_SET_SPACING } from '@/store/mutation-types'
 import { computed, defineComponent, PropType, toRefs } from 'vue'
 import { useStore } from 'vuex'

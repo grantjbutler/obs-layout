@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import InsetComponent from '@/layout/InsetComponent';
-import { key } from '@/store'
+import { key } from '@/store/app'
 import { INSET_SET_INSETS } from '@/store/mutation-types';
 import { computed, defineComponent, PropType, toRefs } from 'vue'
 import { useStore } from 'vuex'

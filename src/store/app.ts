@@ -1,4 +1,4 @@
-import { Component, FlexComponent, SourceComponent, LayoutExerciser, LayoutNode, Size, containerComponents } from '@/layout'
+import { Component, FlexComponent, SourceComponent, LayoutExerciser, LayoutNode, Size } from '@/layout'
 import ContainerComponent from '@/layout/ContainerComponent'
 import InsetComponent from '@/layout/InsetComponent'
 import Insets from '@/layout/Insets'
@@ -15,14 +15,12 @@ import {
   FLEX_SET_SPACING,
   INSET_SET_INSETS,
   SOURCE_SET_SOURCE,
-  SET_PREVIEW_SIZE,
   layoutExercisingMutations
 } from './mutation-types'
 
 export interface State {
   rootComponent: ContainerComponent
   rootNode: LayoutNode | null
-  previewSize: Size
   selectedComponent: Component | null
 }
 
@@ -32,18 +30,14 @@ export const store = createStore<State>({
   state: {
     rootComponent: new FlexComponent(),
     rootNode: null,
-    previewSize: new Size(0, 0),
     selectedComponent: null,
   },
   mutations: {
     [SELECT_COMPONENT](state: State, component: Component) {
       state.selectedComponent = component
     },
-    [SET_PREVIEW_SIZE](state: State, newSize: Size) {
-      state.previewSize = newSize
-    },
     [EXERCISE_LAYOUT](state: State) {
-      state.rootNode = new LayoutExerciser().execute(state.rootComponent, state.previewSize)
+      state.rootNode = new LayoutExerciser().execute(state.rootComponent, new Size(1920, 1080))
     },
     [ADD_CHILD](state: State, payload: { component: Component, parentId: string }) {
       const parent = state.rootComponent.childWithId(payload.parentId)
@@ -102,6 +96,8 @@ export const store = createStore<State>({
   },
   plugins: [
     (store) => {
+      store.commit(EXERCISE_LAYOUT)
+
       store.subscribe(mutation => {
         if (!layoutExercisingMutations.includes(mutation.type)) {
           return;

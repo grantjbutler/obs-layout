@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import SourceComponent from '@/layout/SourceComponent'
-import { key } from '@/store'
+import { key } from '@/store/app'
 import { SOURCE_SET_SOURCE } from '@/store/mutation-types'
 import { computed, defineComponent, PropType, toRefs } from 'vue'
 import { useStore } from 'vuex'

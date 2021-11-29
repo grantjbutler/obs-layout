@@ -1,7 +1,11 @@
 module.exports = {
-    pluginOptions: {
-        electronBuilder: {
-            nodeIntegration: true
-        }
+  pages: {
+    index: 'src/main.ts',
+    preferences: 'src/preferences.ts'
+  },
+  pluginOptions: {
+    electronBuilder: {
+      nodeIntegration: true
     }
+  }
 }

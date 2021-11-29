@@ -1,9 +1,9 @@
 <template>
   <Disclosure v-slot="{ open }" :defaultOpen="true">
     <context-menu-providing>
-      <div class="flex justify-between" :class="{'bg-green-200': isSelected}" @click.prevent="selectComponent">
+      <div class="flex justify-between macos:m-2 macos:rounded" :class="{'bg-system-background-selected-content': isSelected}" @click.prevent="selectComponent">
         <div class="flex">
-          <DisclosureButton v-if="isContainerComponent && component.children.length > 0">
+          <DisclosureButton v-if="isContainerComponent">
             <ChevronRightIcon class="w-6 h-6" :class='open ? "transform rotate-90" : ""' />
           </DisclosureButton>
           <div v-else class="w-6 h-6"></div>
@@ -26,7 +26,7 @@
         </context-menu>
       </template>
     </context-menu-providing>
-    <DisclosurePanel v-if="isContainerComponent && component.children.length > 0" class="pl-4">
+    <DisclosurePanel v-if="isContainerComponent" class="pl-4">
       <TreeControl v-for="child in component.children" :key="child.id" :component="child"></TreeControl>
     </DisclosurePanel>
   </Disclosure>
@@ -42,7 +42,7 @@ import {
 } from '@headlessui/vue';
 import { ChevronRightIcon } from '@heroicons/vue/solid';
 import { useStore } from 'vuex';
-import { key } from '@/store';
+import { key } from '@/store/app';
 import { ADD_CHILD, SELECT_COMPONENT, EMBED_IN_COMPONENT } from '@/store/mutation-types';
 
 interface ContainerAction {

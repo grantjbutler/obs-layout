@@ -1,5 +1,5 @@
 <template>
-  <div class="w-72 bg-gray-200 p-2">
+  <div class="w-72 bg-system-background-window p-2">
     <div v-if="component">
       <div v-for="(control, index) in controls" :key="index">
         <component :is="control" :component="component"></component>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { Component } from '@/layout';
-import { key } from '@/store'
+import { key } from '@/store/app'
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import ControlComponents from './Controls/Registry';

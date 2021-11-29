@@ -16,7 +16,7 @@ export default class InsetComponent extends ContainerComponent {
 
   exerciseLayout(size: Size): LayoutNode {
     if (!this.children.length) {
-      return new LayoutNode(this.id, new Frame(0, 0, 0, 0));
+      return new LayoutNode(this.id, new Frame(0, 0, 0, 0), true);
     }
 
     const constrainedSize = size.insetBy(this.insets)
@@ -24,6 +24,6 @@ export default class InsetComponent extends ContainerComponent {
     childNode.frame.x = this.insets.left;
     childNode.frame.y = this.insets.top;
 
-    return new LayoutNode(this.id, new Frame(0, 0, childNode.frame.width + this.insets.left + this.insets.right, childNode.frame.height + this.insets.top + this.insets.bottom), [childNode]);
+    return new LayoutNode(this.id, new Frame(0, 0, childNode.frame.width + this.insets.left + this.insets.right, childNode.frame.height + this.insets.top + this.insets.bottom), true, [childNode]);
   }
 }
