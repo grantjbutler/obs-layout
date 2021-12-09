@@ -36,9 +36,11 @@ async function createWindow() {
     }
   })
 
-  win.once('ready-to-show', () => {
+  win.webContents.on('dom-ready', () => {
     injectSystemColors(win);
+  });
 
+  win.once('ready-to-show', () => {
     win.show();
   });
 

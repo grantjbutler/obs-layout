@@ -1,6 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const plugin = require('tailwindcss/plugin')
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   purge: [
     'src/**/*.vue'
@@ -9,19 +12,25 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        gray: colors.trueGray,
         system: {
           text: {
-            DEFAULT: 'var(--color-text)'
+            DEFAULT: 'var(--color-text)',
+            secondary: 'var(--color-text-secondary)',
+            control: 'var(--color-text-control)',
+            'selected-control': 'var(--color-text-selected-control)',
           },
           background: {
-            'nav-bar': {
-              dark: '#3c363c'
-            },
+            'nav-bar': 'var(--color-nav-bar-background)',
+            control: 'var(--color-control-background)',
             'selected-content': 'var(--color-selected-content-background)',
             window: 'var(--color-window-background)'
           },
-          accent: 'var(--color-accent)'
-        }
+          accent: 'var(--color-accent)',
+          separator: 'var(--color-separator)',
+          divider: 'var(--color-divider)'
+        },
+
       }
     },
   },

@@ -7,11 +7,13 @@ let preferencesWindow: BrowserWindow | undefined
 
 async function createPreferencesWindow() {
   preferencesWindow = new BrowserWindow({
-    width: 600,
-    height: 400,
+    width: 330,
+    height: 175,
     show: false,
     fullscreenable: false,
     maximizable: false,
+    resizable: false,
+    title: 'Preferences',
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -22,10 +24,14 @@ async function createPreferencesWindow() {
     }
   });
 
-  preferencesWindow.once('ready-to-show', () => {
+  preferencesWindow.webContents.on('dom-ready', () => {
     if(!preferencesWindow) { return }
 
     injectSystemColors(preferencesWindow)
+  });
+
+  preferencesWindow.once('ready-to-show', () => {
+    if(!preferencesWindow) { return }
 
     preferencesWindow.show();
   });

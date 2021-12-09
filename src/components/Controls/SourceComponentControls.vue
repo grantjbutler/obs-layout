@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p>Source Component</p>
-    <div>
+    <p class="controls-heading">Source Component</p>
+    <div class="control-field">
       <label>Source</label>
       <select v-model="source">
         <option value="">None</option>

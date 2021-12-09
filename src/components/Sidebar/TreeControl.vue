@@ -1,15 +1,13 @@
 <template>
   <Disclosure v-slot="{ open }" :defaultOpen="true">
     <context-menu-providing>
-      <div class="flex justify-between macos:m-2 macos:rounded" :class="{'bg-system-background-selected-content': isSelected}" @click.prevent="selectComponent">
-        <div class="flex">
+      <div class="flex macos:mx-2 macos:rounded" :class="{'bg-system-background-selected-content': isSelected, 'text-white': isSelected}" :style="`padding-left: calc(0.75rem * ${indentationLevel})`" @click.prevent="selectComponent">
           <DisclosureButton v-if="isContainerComponent">
-            <ChevronRightIcon class="w-6 h-6" :class='open ? "transform rotate-90" : ""' />
+            <ChevronRightIcon class="w-4 h-4" :class='open ? "transform rotate-90" : ""' />
           </DisclosureButton>
-          <div v-else class="w-6 h-6"></div>
+          <div v-else class="w-4 h-4"></div>
 
           <span v-text="component.name"></span>
-        </div>
       </div>
 
       <template v-slot:menu>
@@ -26,8 +24,8 @@
         </context-menu>
       </template>
     </context-menu-providing>
-    <DisclosurePanel v-if="isContainerComponent" class="pl-4">
-      <TreeControl v-for="child in component.children" :key="child.id" :component="child"></TreeControl>
+    <DisclosurePanel v-if="isContainerComponent">
+      <TreeControl v-for="child in component.children" :key="child.id" :component="child" :indentationLevel="indentationLevel + 1"></TreeControl>
     </DisclosurePanel>
   </Disclosure>
 </template>
@@ -63,6 +61,10 @@ export default defineComponent({
       type: Object as PropType<Component>,
       required: true
     },
+    indentationLevel: {
+      type: Number,
+      default: 0,
+    }
   },
   setup(props) {
     const store = useStore(key)

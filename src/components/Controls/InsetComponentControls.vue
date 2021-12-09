@@ -1,23 +1,25 @@
 <template>
   <div>
-    <p>Flex Component</p>
-    <div>
+    <p class="controls-heading">Inset Component</p>
+    <div class="control-field">
       <label>Insets</label>
       <div>
-        <label>Top</label>
-        <input type="number" v-model="top">
-      </div>
-      <div>
-        <label>Left</label>
-        <input type="number" v-model="left">
-      </div>
-      <div>
-        <label>Bottom</label>
-        <input type="number" v-model="bottom">
-      </div>
-      <div>
-        <label>Right</label>
-        <input type="number" v-model="right">
+        <div>
+          <label>Top</label>
+          <input type="number" v-model="top">
+        </div>
+        <div>
+          <label>Left</label>
+          <input type="number" v-model="left">
+        </div>
+        <div>
+          <label>Bottom</label>
+          <input type="number" v-model="bottom">
+        </div>
+        <div>
+          <label>Right</label>
+          <input type="number" v-model="right">
+        </div>
       </div>
     </div>
   </div>

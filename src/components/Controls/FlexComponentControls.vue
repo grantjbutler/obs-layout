@@ -1,14 +1,14 @@
 <template>
   <div>
-    <p>Flex Component</p>
-    <div>
+    <p class="controls-heading">Flex Component</p>
+    <div class="control-field">
       <label>Direction</label>
       <select v-model="direction">
         <option value="horizontal">Horizontal</option>
         <option value="vertical">Vertical</option>
       </select>
     </div>
-    <div>
+    <div class="control-field">
       <label>Distribution</label>
       <select v-model="distribution">
         <option value="leading">Leading</option>
@@ -16,7 +16,7 @@
         <option value="trailing">Trailing</option>
       </select>
     </div>
-    <div>
+    <div class="control-field">
       <label>Spacing</label>
       <input type="number" v-model="spacing">
     </div>

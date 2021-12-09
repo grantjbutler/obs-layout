@@ -1,5 +1,5 @@
 <template>
-  <div class="w-72 bg-system-background-window p-2">
+  <div class="w-72 bg-system-background-window">
     <div v-if="component">
       <div v-for="(control, index) in controls" :key="index">
         <component :is="control" :component="component"></component>
@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts">
+import '@/assets/shared.css';
 import { Component } from '@/layout';
 import { key } from '@/store/app'
 import { computed, defineComponent } from 'vue'

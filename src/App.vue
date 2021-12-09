@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col h-screen text-system-text">
+  <div class="flex flex-col h-screen text-system-text text-sm">
     <nav-bar v-if="isMacOS" class="flex-none"></nav-bar>
     <div class="flex-1 flex flex-row items-stretch">
-      <sidebar class="flex-none"></sidebar>
+      <sidebar class="flex-none border-r border-system-divider"></sidebar>
       <preview></preview>
-      <controls class="flex-none"></controls>
+      <controls class="flex-none border-l border-system-divider"></controls>
     </div>
   </div>
 </template>
