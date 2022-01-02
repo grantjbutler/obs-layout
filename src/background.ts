@@ -7,12 +7,24 @@ import { installContextMenuHandling, configureApplicationMenu } from './electron
 import emitter from './electron/events';
 import { openPreferences } from './electron/preferences-window';
 import { injectSystemColors } from './electron/colors';
+import Preferences from './electron/preferences';
+import { install as installInterface } from './electron/interface';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+const preferences = new Preferences({
+  name: process.argv0,
+  defaults: {
+    connection: null
+  }
+});
+installInterface({
+  preferences
+})
 
 let mainWindow: BrowserWindow | null = null;
 

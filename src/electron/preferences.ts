@@ -1,17 +1,17 @@
 import { Store, StoreOptions } from './store'
 import { safeStorage } from 'electron'
-import { OBSConnection, isOBSConnection } from '@/obs/connection';
+import { OBSConnectionOptions, isOBSConnectionOptions } from '@/obs/connection';
 
 export default class Preferences {
-  store: Store;
+  store: Store
 
   constructor(options: StoreOptions) {
     this.store = new Store(options);
   }
 
-  get obsConnection(): OBSConnection | null {
+  get obsConnection(): OBSConnectionOptions | null {
     const connection = this.store.get('obs-connection');
-    if (isOBSConnection(connection)) {
+    if (isOBSConnectionOptions(connection)) {
       if (connection.password) {
         connection.password = safeStorage.decryptString(Buffer.from(connection.password, 'base64'))
       }
@@ -22,7 +22,7 @@ export default class Preferences {
     return null;
   }
 
-  set obsConnection(value: OBSConnection | null) {
+  set obsConnection(value: OBSConnectionOptions | null) {
     if (value && value.password) {
       value.password = safeStorage.encryptString(value.password).toString('base64')
     }

@@ -1,20 +1,22 @@
-export interface OBSConnection {
+export interface OBSConnectionOptions {
   host: string;
   port: number;
   password?: string;
 }
 
-export function isOBSConnection(obj: unknown): obj is OBSConnection {
-  const hasRequiredFields = (obj as OBSConnection).host !== undefined
-    && typeof (obj as OBSConnection).host === 'string'
-    && (obj as OBSConnection).port !== undefined
-    && typeof (obj as OBSConnection).port !== 'number';
+export function isOBSConnectionOptions(obj: unknown): obj is OBSConnectionOptions {
+  if (typeof obj !== 'object') { return false; }
+
+  const hasRequiredFields = (obj as OBSConnectionOptions).host !== undefined
+    && typeof (obj as OBSConnectionOptions).host === 'string'
+    && (obj as OBSConnectionOptions).port !== undefined
+    && typeof (obj as OBSConnectionOptions).port !== 'number';
   if (!hasRequiredFields) {
     return false;
   }
 
-  if ((obj as OBSConnection).password !== undefined) {
-    if (typeof (obj as OBSConnection).password !== 'string') {
+  if ((obj as OBSConnectionOptions).password !== undefined) {
+    if (typeof (obj as OBSConnectionOptions).password !== 'string') {
       return false;
     }
   }

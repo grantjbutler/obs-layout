@@ -1,9 +1,9 @@
 import { InjectionKey } from '@vue/runtime-core'
 import { createStore, Store } from 'vuex'
-import { OBSConnection } from '@/obs/connection';
+import { OBSConnectionOptions } from '@/obs/connection';
 
 export interface State {
-  connection: OBSConnection | undefined
+  connection: OBSConnectionOptions | undefined
 }
   
 export const key: InjectionKey<Store<State>> = Symbol()
