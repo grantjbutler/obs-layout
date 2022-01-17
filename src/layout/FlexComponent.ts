@@ -31,16 +31,8 @@ export default class FlexComponent extends ContainerComponent {
       childSize = new Size(availableWidth / this.children.length, size.height)        
     }
 
-    const childNodes = this.children.map((child, index) => {
-      const childNode = child.exerciseLayout(childSize)
-
-      if (this.direction == 'vertical') {
-        childNode.frame.y = index * (childSize.height + this.spacing)
-      } else {
-        childNode.frame.x = index * (childSize.width + this.spacing)
-      }
-
-      return childNode;
+    const childNodes = this.children.map((child) => {
+      return child.exerciseLayout(childSize)
     });
 
     let nodeFrame: Frame
@@ -56,12 +48,12 @@ export default class FlexComponent extends ContainerComponent {
 
       const totalHeight = childNodes.reduce((height, node) => {
         return height + node.frame.height
-      }, 0) + totalSpacing;
+      }, totalSpacing);
 
-      const verticalOffset = (size.height - totalHeight) / 2.0;
-      childNodes.forEach(node => {
-        node.frame.y += verticalOffset
-      });
+      childNodes.reduce((yOffset, node) => {
+        node.frame.y = yOffset
+        return yOffset + node.frame.height + this.spacing
+      }, (size.height - totalHeight) / 2.0)
     } else {
       const maxHeight = childNodes.reduce((height, node) => {
         if (node.frame.height > height) {
@@ -74,12 +66,12 @@ export default class FlexComponent extends ContainerComponent {
 
       const totalWidth = childNodes.reduce((width, node) => {
         return width + node.frame.width
-      }, 0) + totalSpacing;
+      }, totalSpacing);
 
-      const horizontalOffset = (size.width - totalWidth) / 2.0;
-      childNodes.forEach(node => {
-        node.frame.x += horizontalOffset
-      });
+      childNodes.reduce((xOffset, node) => {
+        node.frame.x = xOffset
+        return xOffset + node.frame.width + this.spacing
+      }, (size.width - totalWidth) / 2.0)
     }
 
     childNodes.forEach(node => {
