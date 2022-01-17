@@ -27,10 +27,9 @@
 
 <script lang="ts">
 import InsetComponent from '@/layout/InsetComponent';
-import { key } from '@/store/app'
+import { useStore } from '@/store/app'
 import { INSET_SET_INSETS } from '@/store/mutation-types';
 import { computed, defineComponent, PropType, toRefs } from 'vue'
-import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'InsetComponentControls',
@@ -42,7 +41,7 @@ export default defineComponent({
   },
   setup(props) {
     const { component } = toRefs(props);
-    const store = useStore(key);
+    const store = useStore();
 
     return {
       top: computed({

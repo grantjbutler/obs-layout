@@ -39,8 +39,7 @@ import {
   DisclosurePanel,
 } from '@headlessui/vue';
 import { ChevronRightIcon } from '@heroicons/vue/solid';
-import { useStore } from 'vuex';
-import { key } from '@/store/app';
+import { useStore } from '@/store/app';
 import { ADD_CHILD, SELECT_COMPONENT, EMBED_IN_COMPONENT } from '@/store/mutation-types';
 
 interface ContainerAction {
@@ -67,7 +66,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const store = useStore(key)
+    const store = useStore()
     const { component } = toRefs(props);
 
     const selectComponent = () => {

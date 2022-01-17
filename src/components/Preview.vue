@@ -1,15 +1,14 @@
 <template>
-  <div class="bg-gray-200 dark:bg-gray-800 w-full h-full p-4">
-    <div class="overflow-hidden h-full w-full relative" v-observe-resize="didChangeSize">
-      <canvas ref="canvas" class='bg-white dark:bg-black absolute' width="1920" height="1080"></canvas>
+  <div class="w-full h-full p-4 bg-gray-200 dark:bg-gray-800">
+    <div class="relative w-full h-full overflow-hidden" v-observe-resize="didChangeSize">
+      <canvas ref="canvas" class='absolute bg-white dark:bg-black' width="1920" height="1080"></canvas>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { key } from '@/store/app'
+import { useStore } from '@/store/app'
 import { computed, defineComponent, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 import { LayoutNode } from '@/layout'
 import { Size } from '@/layout'
 import { usePreferredDark } from '@vueuse/core'
@@ -17,7 +16,7 @@ import { usePreferredDark } from '@vueuse/core'
 export default defineComponent({
   name: 'Preview',
   setup() {
-    const store = useStore(key)
+    const store = useStore()
     const scale = ref(1);
     const canvas = ref<HTMLCanvasElement | null>(null);
 

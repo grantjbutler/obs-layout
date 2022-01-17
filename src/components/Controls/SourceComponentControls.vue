@@ -15,10 +15,9 @@
 
 <script lang="ts">
 import SourceComponent from '@/layout/SourceComponent'
-import { key } from '@/store/app'
+import { useStore } from '@/store/app'
 import { SOURCE_SET_SOURCE } from '@/store/mutation-types'
 import { computed, defineComponent, PropType, toRefs } from 'vue'
-import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'SourceComponentControls',
@@ -29,7 +28,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const store = useStore(key)
+    const store = useStore()
     const { component } = toRefs(props)
 
     return {

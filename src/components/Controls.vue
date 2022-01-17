@@ -11,9 +11,8 @@
 <script lang="ts">
 import '@/assets/shared.css';
 import { Component } from '@/layout';
-import { key } from '@/store/app'
+import { useStore } from '@/store/app'
 import { computed, defineComponent } from 'vue'
-import { useStore } from 'vuex'
 import ControlComponents from './Controls/Registry';
 
 export default defineComponent({
@@ -22,7 +21,7 @@ export default defineComponent({
     ...ControlComponents.components
   },
   setup() {
-    const store = useStore(key)
+    const store = useStore()
     const component = computed(() => store.state.selectedComponent)
     const controls = computed(() => {
       let controlComponent = Object.getPrototypeOf(component.value);

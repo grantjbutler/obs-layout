@@ -3,7 +3,7 @@ import ContainerComponent from '@/layout/ContainerComponent'
 import InsetComponent from '@/layout/InsetComponent'
 import Insets from '@/layout/Insets'
 import { InjectionKey } from '@vue/runtime-core'
-import { createStore, Store } from 'vuex'
+import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
 import { 
   SELECT_COMPONENT,
@@ -107,3 +107,7 @@ export const store = createStore<State>({
     }
   ]
 })
+
+export function useStore(): Store<State> {
+  return baseUseStore(key)
+}

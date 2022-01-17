@@ -1,13 +1,12 @@
 <template>
-  <div class="w-72 bg-gray-200 macos:bg-transparent">
+  <div class="bg-gray-200 w-72 macos:bg-transparent">
     <tree-control v-if="component" :component="component"></tree-control>
   </div>
 </template>
 
 <script lang="ts">
-import { key } from '@/store/app';
+import { useStore } from '@/store/app';
 import { computed, defineComponent } from 'vue'
-import { useStore } from 'vuex';
 import TreeControl from './Sidebar/TreeControl.vue';
 
 export default defineComponent({
@@ -16,7 +15,7 @@ export default defineComponent({
     TreeControl
   },
   setup() {
-    const store = useStore(key)
+    const store = useStore()
     return {
       component: computed(() => store.state.rootComponent)
     }
