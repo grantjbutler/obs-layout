@@ -1,7 +1,9 @@
+import { obsWebSocketPlugin } from '@/integration/obs'
 import { Component, FlexComponent, SourceComponent, LayoutExerciser, LayoutNode, Size } from '@/layout'
 import ContainerComponent from '@/layout/ContainerComponent'
 import InsetComponent from '@/layout/InsetComponent'
 import Insets from '@/layout/Insets'
+import { OBSConnectionState } from '@/obs/connection-state'
 import { InjectionKey } from '@vue/runtime-core'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
@@ -15,13 +17,15 @@ import {
   FLEX_SET_SPACING,
   INSET_SET_INSETS,
   SOURCE_SET_SOURCE,
-  layoutExercisingMutations
+  layoutExercisingMutations,
+  SET_OBS_CONNECTION_STATE
 } from './mutation-types'
 
 export interface State {
   rootComponent: ContainerComponent
   rootNode: LayoutNode | null
-  selectedComponent: Component | null
+  selectedComponent: Component | null,
+  connectionState: OBSConnectionState
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -31,6 +35,7 @@ export const store = createStore<State>({
     rootComponent: new FlexComponent(),
     rootNode: null,
     selectedComponent: null,
+    connectionState: OBSConnectionState.Disconnected
   },
   mutations: {
     [SELECT_COMPONENT](state: State, component: Component) {
@@ -88,6 +93,9 @@ export const store = createStore<State>({
         return;
       }
       state.selectedComponent.source = source
+    },
+    [SET_OBS_CONNECTION_STATE](state: State, connectionState: OBSConnectionState) {
+      state.connectionState = connectionState
     }
   },
   actions: {
@@ -95,6 +103,7 @@ export const store = createStore<State>({
   modules: {
   },
   plugins: [
+    obsWebSocketPlugin(),
     (store) => {
       store.commit(EXERCISE_LAYOUT)
 

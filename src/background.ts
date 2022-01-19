@@ -9,6 +9,9 @@ import { openPreferences } from './electron/preferences-window';
 import { injectSystemColors } from './electron/colors';
 import Preferences from './electron/preferences';
 import { install as installInterface } from './electron/interface';
+import ObsWebSocket from 'obs-websocket-js';
+import { basename } from 'path';
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -17,13 +20,17 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 const preferences = new Preferences({
-  name: process.argv0,
+  name: basename(process.argv0),
   defaults: {
     connection: null
   }
 });
+
+const obsWebSocket = new ObsWebSocket();
+
 installInterface({
-  preferences
+  preferences,
+  obsWebSocket
 })
 
 let mainWindow: BrowserWindow | null = null;

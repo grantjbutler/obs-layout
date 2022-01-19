@@ -12,7 +12,7 @@ async function createPreferencesWindow() {
     show: false,
     fullscreenable: false,
     maximizable: false,
-    resizable: false,
+    // resizable: false,
     title: 'Preferences',
     webPreferences: {
       

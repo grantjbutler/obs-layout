@@ -12,6 +12,8 @@ export const INSET_SET_INSETS = 'INSET_SET_INSETS'
 
 export const SOURCE_SET_SOURCE = 'SOURCE_SET_SOURCE'
 
+export const SET_OBS_CONNECTION_STATE = 'SET_OBS_CONNECTION_STATE'
+
 export const layoutExercisingMutations = [
   ADD_CHILD,
   EMBED_IN_COMPONENT,
