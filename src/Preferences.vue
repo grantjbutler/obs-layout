@@ -16,7 +16,7 @@
     <div class="justify-end control-field">
       <button v-if="isConnectButtonVisible" class="px-3 py-1 bg-green-500 rounded" @click="connect">Connect</button>
       <button v-if="isAbortButtonVisible" class="px-3 py-1 bg-yellow-500 rounded">Abort</button>
-      <button v-if="isDisconnectButtonVisible" class="px-3 py-1 bg-red-500 rounded">Disconnect</button>
+      <button v-if="isDisconnectButtonVisible" class="px-3 py-1 bg-red-500 rounded" @click="disconnect">Disconnect</button>
     </div>
   </div>
 </template>
@@ -48,6 +48,10 @@ export default defineComponent({
       }
     }
 
+    const disconnect = () => {
+      ipcRenderer.send('disconnect-from-obs');
+    }
+
     onMounted(() => {
       ipcRenderer.invoke('load-obs-connection')
         .then(connection => {
@@ -61,6 +65,7 @@ export default defineComponent({
       connection,
       connectionState,
       connect,
+      disconnect,
 
       isConnectButtonVisible,
       isAbortButtonVisible,

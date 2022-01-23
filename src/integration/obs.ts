@@ -27,7 +27,6 @@ export function obsWebSocketPlugin() {
         setObsConnectionState(state)
       })
 
-    // eslint-disable-next-line prefer-rest-params
     ipcRenderer.on('obs-connection-state', (_, state: OBSConnectionState) => setObsConnectionState(state))
   }
 }

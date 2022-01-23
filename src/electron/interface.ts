@@ -33,6 +33,12 @@ export function install(options: InstallationOptions): void {
     });
   });
 
+  ipcMain.on('disconnect-from-obs', () => {
+    setConnectionState(OBSConnectionState.Disconnected);
+    
+    options.obsWebSocket.disconnect();
+  })
+
   ipcMain.handle('get-obs-connection-status', () => {
     return getConnectionState();
   });
