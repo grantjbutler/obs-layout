@@ -3,14 +3,15 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import { basename } from 'path';
+
 import { installContextMenuHandling, configureApplicationMenu } from './electron/menus';
 import emitter from './electron/events';
 import { openPreferences } from './electron/preferences-window';
 import { injectSystemColors } from './electron/colors';
 import Preferences from './electron/preferences';
 import { install as installInterface } from './electron/interface';
-import ObsWebSocket from 'obs-websocket-js';
-import { basename } from 'path';
+import OBSSocket from './electron/obs';
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -26,12 +27,16 @@ const preferences = new Preferences({
   }
 });
 
-const obsWebSocket = new ObsWebSocket();
+const obsSocket = new OBSSocket();
 
 installInterface({
   preferences,
-  obsWebSocket
-})
+  obsSocket
+});
+
+if (preferences.obsConnection) {
+  obsSocket.connect(preferences.obsConnection);
+}
 
 let mainWindow: BrowserWindow | null = null;
 
