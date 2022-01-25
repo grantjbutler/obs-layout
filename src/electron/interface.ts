@@ -26,4 +26,8 @@ export function install(options: InstallationOptions): void {
   ipcMain.handle('get-obs-connection-status', () => {
     return options.obsSocket.state;
   });
+
+  ipcMain.handle('get-obs-sources', () => {
+    return options.obsSocket.sources;
+  });
 }

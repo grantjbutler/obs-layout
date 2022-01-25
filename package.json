@@ -19,6 +19,7 @@
     "@vueuse/core": "^7.1.2",
     "core-js": "^3.6.5",
     "obs-websocket-js": "^4.0.3",
+    "on-change": "^3.0",
     "uuid": "^8.3.2",
     "vue": "^3.0.0",
     "vuex": "^4.0.2"
