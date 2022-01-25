@@ -18,13 +18,19 @@
       <button v-if="isAbortButtonVisible" class="px-3 py-1 bg-yellow-500 rounded">Abort</button>
       <button v-if="isDisconnectButtonVisible" class="px-3 py-1 bg-red-500 rounded" @click="disconnect">Disconnect</button>
     </div>
+    <p class="controls-heading">Sources</p>
+    <div class="control-field">
+      <label>Source Filter</label>
+      <input type="text" v-model="sourceFilter">
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import '@/assets/shared.css';
 import { ipcRenderer } from 'electron';
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+import debounce from 'lodash/debounce';
 import { isOBSConnectionOptions } from './obs/connection';
 import { useObsConnectionState } from './integration/obs';
 import { OBSConnectionState } from './obs/connection-state';
@@ -37,6 +43,7 @@ export default defineComponent({
       port: 4444,
       password: null
     });
+    const sourceFilter = ref('');
 
     const isConnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Disconnected || connectionState.value == OBSConnectionState.Error)
     const isAbortButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connecting);
@@ -59,7 +66,16 @@ export default defineComponent({
             connection.value = connection
           }
         });
+      
+      ipcRenderer.invoke('load-source-filter')
+        .then(filter => {
+          sourceFilter.value = filter;
+        })
     });
+
+    watch(sourceFilter, debounce((newFilter: string) => {
+      ipcRenderer.send('set-source-filter', newFilter);
+    }));
     
     return {
       connection,
@@ -69,12 +85,13 @@ export default defineComponent({
 
       isConnectButtonVisible,
       isAbortButtonVisible,
-      isDisconnectButtonVisible
+      isDisconnectButtonVisible,
+
+      sourceFilter
     }
   }
 })
 </script>
-
 
 <style>
 @tailwind base;

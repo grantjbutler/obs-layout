@@ -27,7 +27,9 @@ const preferences = new Preferences({
   }
 });
 
-const obsSocket = new OBSSocket();
+const obsSocket = new OBSSocket({
+  sourceFilter: preferences.sourceFilter
+});
 
 installInterface({
   preferences,

@@ -5,13 +5,21 @@ import broadcast from "./broadcast";
 import { OBSConnectionState } from "@/obs/connection-state";
 import { OBSConnectionOptions } from "@/obs/connection";
 
+interface OBSSocketOptions {
+  sourceFilter: string
+}
+
 export default class OBSSocket {
   _state = OBSConnectionState.Disconnected;
   _socket = new ObsWebSocket();
 
+  _filter = '';
+
   _sources: string[] = [];
 
-  constructor() {
+  constructor(options: OBSSocketOptions) {
+    this._filter = options.sourceFilter;
+
     this.sources = [];
     this._socket.on('SourceCreated', (data) => this._sourceCreated(data));
     this._socket.on('SourceDestroyed', (data) => this._sourceDestroyed(data));
@@ -62,6 +70,16 @@ export default class OBSSocket {
     broadcast('obs-sources', sources);
   }
 
+  get sourceFilter(): string {
+    return this._filter;
+  }
+
+  set sourceFilter(filter: string) {
+    this._filter = filter;
+
+    this._fullUpdate();
+  }
+
   _fullUpdate(): Promise<unknown> {
     return Promise.all([
       this._fetchSources()
@@ -72,26 +90,37 @@ export default class OBSSocket {
     return this._socket.send('GetSourcesList')
       .then((response) => {
         this.sources = response.sources
-          .filter(source => source.type == 'input')
+          .filter(source => source.type == 'input' && source.name.includes(this._filter))
           .map(source => source.name);
       })
   }
 
   _sourceCreated({ sourceName, sourceType }: { sourceName: string, sourceType: string }): void {
     if (sourceType != 'input') { return }
-    this.sources.push(sourceName);
+    this._sources.push(sourceName);
   }
 
   _sourceDestroyed({ sourceName }: { sourceName: string }): void {
     const sourceIndex = this.sources.indexOf(sourceName);
     if (sourceIndex < 0) { return }
-    this.sources.splice(sourceIndex, 1);
+    this._sources.splice(sourceIndex, 1);
   }
 
   _sourceRenamed({ previousName, newName, sourceType }: { previousName: string, newName: string, sourceType: string }): void {
     if (sourceType != 'input') { return }
     const sourceIndex = this.sources.indexOf(previousName);
-    if (sourceIndex < 0) { return }
-    this.sources.splice(sourceIndex, 1, newName);
+    const newNameMatchesFilter = newName.includes(this._filter);
+
+    if (sourceIndex < 0) {
+      if (newNameMatchesFilter) {
+        this._sources.push(newName);
+      }
+    } else {
+      if (newNameMatchesFilter) {
+        this._sources[sourceIndex] = newName;
+      } else {
+        this._sources.splice(sourceIndex, 1);
+      }
+    }
   }
 }

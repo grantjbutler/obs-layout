@@ -29,4 +29,17 @@ export default class Preferences {
 
     this.store.set('obs-connection', value)
   }
+
+  get sourceFilter(): string {
+    const sourceFilter = this.store.get('source-filter')
+    if (typeof sourceFilter !== 'string') {
+      return '';
+    }
+
+    return sourceFilter;
+  }
+
+  set sourceFilter(value: string) {
+    this.store.set('source-filter', value);
+  }
 }

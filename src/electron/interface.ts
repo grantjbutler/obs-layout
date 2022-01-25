@@ -30,4 +30,14 @@ export function install(options: InstallationOptions): void {
   ipcMain.handle('get-obs-sources', () => {
     return options.obsSocket.sources;
   });
+
+  ipcMain.handle('load-source-filter', () => {
+    return options.preferences.sourceFilter;
+  });
+
+  ipcMain.on('set-source-filter', (_, filter: string) => {
+    options.preferences.sourceFilter = filter;
+
+    options.obsSocket.sourceFilter = filter;
+  })
 }
