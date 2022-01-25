@@ -53,7 +53,7 @@ export default class OBSSocket {
   }
 
   get sources(): string[] {
-    return this._sources;
+    return onChange.target(this._sources);
   }
 
   set sources(sources: string[]) {

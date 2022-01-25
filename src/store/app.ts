@@ -18,14 +18,16 @@ import {
   INSET_SET_INSETS,
   SOURCE_SET_SOURCE,
   layoutExercisingMutations,
-  SET_OBS_CONNECTION_STATE
+  SET_OBS_CONNECTION_STATE,
+  SET_OBS_SOURCES
 } from './mutation-types'
 
 export interface State {
   rootComponent: ContainerComponent
   rootNode: LayoutNode | null
   selectedComponent: Component | null,
-  connectionState: OBSConnectionState
+  connectionState: OBSConnectionState,
+  sources: string[]
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -35,7 +37,8 @@ export const store = createStore<State>({
     rootComponent: new FlexComponent(),
     rootNode: null,
     selectedComponent: null,
-    connectionState: OBSConnectionState.Disconnected
+    connectionState: OBSConnectionState.Disconnected,
+    sources: []
   },
   mutations: {
     [SELECT_COMPONENT](state: State, component: Component) {
@@ -96,6 +99,9 @@ export const store = createStore<State>({
     },
     [SET_OBS_CONNECTION_STATE](state: State, connectionState: OBSConnectionState) {
       state.connectionState = connectionState
+    },
+    [SET_OBS_SOURCES](state: State, sources: string[]) {
+      state.sources = sources;
     }
   },
   actions: {

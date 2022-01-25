@@ -4,10 +4,7 @@
     <div class="control-field">
       <label>Source</label>
       <select v-model="source">
-        <option value="">None</option>
-        <option value="MC Ninja">MC Ninja</option>
-        <option value="Game capture">Game capture</option>
-        <option value="facecam">facecam</option>
+        <option v-for="aSource in sources" :key="aSource" :value="aSource" v-text="aSource"></option>
       </select>
     </div>
   </div>
@@ -30,12 +27,14 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
     const { component } = toRefs(props)
+    const sources = computed(() => store.state.sources);
 
     return {
       source: computed({
         get() { return component.value.source },
         set(value) { store.commit(SOURCE_SET_SOURCE, value) }
-      })
+      }),
+      sources
     }
   },
 })
