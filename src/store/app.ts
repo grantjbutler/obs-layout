@@ -4,6 +4,7 @@ import ContainerComponent from '@/layout/ContainerComponent'
 import InsetComponent from '@/layout/InsetComponent'
 import Insets from '@/layout/Insets'
 import { OBSConnectionState } from '@/obs/connection-state'
+import { Source } from '@/obs/source';
 import { InjectionKey } from '@vue/runtime-core'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
@@ -27,7 +28,7 @@ export interface State {
   rootNode: LayoutNode | null
   selectedComponent: Component | null,
   connectionState: OBSConnectionState,
-  sources: string[]
+  sources: Source[]
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -91,7 +92,7 @@ export const store = createStore<State>({
       }
       state.selectedComponent.insets = insets
     },
-    [SOURCE_SET_SOURCE](state: State, source: string | undefined) {
+    [SOURCE_SET_SOURCE](state: State, source: Source | undefined) {
       if (!state.selectedComponent || !(state.selectedComponent instanceof SourceComponent)) {
         return;
       }
@@ -100,7 +101,7 @@ export const store = createStore<State>({
     [SET_OBS_CONNECTION_STATE](state: State, connectionState: OBSConnectionState) {
       state.connectionState = connectionState
     },
-    [SET_OBS_SOURCES](state: State, sources: string[]) {
+    [SET_OBS_SOURCES](state: State, sources: Source[]) {
       state.sources = sources;
     }
   },

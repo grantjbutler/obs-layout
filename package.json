@@ -18,6 +18,8 @@
     "@heroicons/vue": "^1.0.5",
     "@vueuse/core": "^7.1.2",
     "core-js": "^3.6.5",
+    "data-uri-to-buffer": "^4.0.0",
+    "image-size": "^1.0.1",
     "lodash": "^4.17.21",
     "obs-websocket-js": "^4.0.3",
     "on-change": "^3.0",

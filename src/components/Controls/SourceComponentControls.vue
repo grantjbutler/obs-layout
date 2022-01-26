@@ -4,7 +4,7 @@
     <div class="control-field">
       <label>Source</label>
       <select v-model="source">
-        <option v-for="aSource in sources" :key="aSource" :value="aSource" v-text="aSource"></option>
+        <option v-for="aSource in sources" :key="aSource" :value="aSource" v-text="aSource.name"></option>
       </select>
     </div>
   </div>
