@@ -7,6 +7,8 @@ import Frame from './Frame'
 import Size from './Size'
 import LayoutNode from './LayoutNode'
 import ContainerComponent from './ContainerComponent';
+import ContainerLayoutNode from './ContainerLayoutNode';
+import SourceLayoutNode from './SourceLayoutNode';
 
 export const components: { [index: string]: typeof Component } = {
   FlexComponent,
@@ -29,4 +31,6 @@ export {
   Frame,
   Size,
   LayoutNode,
+  ContainerLayoutNode,
+  SourceLayoutNode
 }

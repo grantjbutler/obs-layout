@@ -20,7 +20,8 @@ import {
   SOURCE_SET_SOURCE,
   layoutExercisingMutations,
   SET_OBS_CONNECTION_STATE,
-  SET_OBS_SOURCES
+  SET_OBS_SOURCES,
+  SET_OBS_SCENES
 } from './mutation-types'
 
 export interface State {
@@ -28,7 +29,8 @@ export interface State {
   rootNode: LayoutNode | null
   selectedComponent: Component | null,
   connectionState: OBSConnectionState,
-  sources: Source[]
+  sources: Source[],
+  scenes: string[]
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -39,7 +41,8 @@ export const store = createStore<State>({
     rootNode: null,
     selectedComponent: null,
     connectionState: OBSConnectionState.Disconnected,
-    sources: []
+    sources: [],
+    scenes: []
   },
   mutations: {
     [SELECT_COMPONENT](state: State, component: Component) {
@@ -103,6 +106,9 @@ export const store = createStore<State>({
     },
     [SET_OBS_SOURCES](state: State, sources: Source[]) {
       state.sources = sources;
+    },
+    [SET_OBS_SCENES](state: State, scenes: string[]) {
+      state.scenes = scenes;
     }
   },
   actions: {

@@ -2,6 +2,7 @@ import { OBSConnectionOptions } from "@/obs/connection";
 import { ipcMain } from "electron";
 import OBSSocket from "@/electron/obs";
 import Preferences from "./preferences";
+import { Node } from './obs';
 
 export interface InstallationOptions {
   preferences: Preferences,
@@ -39,5 +40,13 @@ export function install(options: InstallationOptions): void {
     options.preferences.sourceFilter = filter;
 
     options.obsSocket.sourceFilter = filter;
+  })
+
+  ipcMain.handle('get-obs-scenes', () => {
+    return options.obsSocket.scenes;
+  });
+
+  ipcMain.handle('sync-layout-to-scene', (_, nodes: Node[], sceneName: string) => {
+    return options.obsSocket.syncLayout(nodes, sceneName);
   })
 }

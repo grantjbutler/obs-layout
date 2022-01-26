@@ -23,21 +23,35 @@ interface ScreenshotOptions {
   compressionQuality?: number | undefined;
 }
 
+export interface Node {
+  sourceName: string,
+  frame: {
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  }
+}
+
 export default class OBSSocket {
   _state = OBSConnectionState.Disconnected;
   _socket = new ObsWebSocket();
 
-  _filter = '';
+  _sourceFilter = '';
+  _sceneFilter = '';
 
   _sources: Source[] = [];
+  _scenes: string[] = [];
 
   constructor(options: OBSSocketOptions) {
-    this._filter = options.sourceFilter;
+    this._sourceFilter = options.sourceFilter;
 
     this.sources = [];
     this._socket.on('SourceCreated', (data) => this._sourceCreated(data));
     this._socket.on('SourceDestroyed', (data) => this._sourceDestroyed(data));
     this._socket.on('SourceRenamed', (data) => this._sourceRenamed(data));
+
+    this._socket.on('ScenesChanged', (data) => this._scenesChanged(data));
   }
 
   connect(options: OBSConnectionOptions): Promise<unknown> {
@@ -64,6 +78,38 @@ export default class OBSSocket {
     this._socket.disconnect();
   }
 
+  syncLayout(nodes: Node[], sceneName: string): Promise<void[]> {
+    return this._socket.send('GetSceneItemList', { sceneName })
+      .then(response => {
+        return Promise.all(
+          // This could probably use some optimization. I could be smart about only deleting the things that don't exist between the old layout and the new layout, rather
+          // than deleting every single item and then adding them back in.
+          response.sceneItems.map(item => {
+            return this._socket.send('DeleteSceneItem', { scene: sceneName, item: { name: item.sourceName, id: item.itemId }})
+          })
+        )
+      })
+      .then(() => {
+        return Promise.all(
+          nodes.map(node => {
+            return this._socket.send('AddSceneItem', { sceneName, sourceName: node.sourceName })
+              .then(response => {
+                this._socket.send(
+                  'SetSceneItemProperties',
+                  {
+                    "scene-name": sceneName,
+                    item: { id: response.itemId },
+                    position: { x: node.frame.x, y: node.frame.y },
+                    scale: { x: node.frame.width, y: node.frame.height },
+                    crop: {},
+                    bounds: {}
+                  })
+              })
+          })
+        )
+      })
+  }
+
   get state(): OBSConnectionState {
     return this._state;
   }
@@ -84,27 +130,48 @@ export default class OBSSocket {
     broadcast('obs-sources', sources);
   }
 
+  get scenes(): string[] {
+    return onChange.target(this._scenes);
+  }
+
+  set scenes(scenes: string[]) {
+    this._scenes = onChange(scenes, function () { broadcast('obs-scenes', onChange.target(this)); });
+
+    broadcast('obs-scenes', scenes);
+  }
+
   get sourceFilter(): string {
-    return this._filter;
+    return this._sourceFilter;
   }
 
   set sourceFilter(filter: string) {
-    this._filter = filter;
+    this._sourceFilter = filter;
 
-    this._fullUpdate();
+    this._fetchSources();
+  }
+
+  get sceneFilter(): string {
+    return this._sceneFilter;
+  }
+
+  set sceneFilter(filter: string) {
+    this._sceneFilter = filter;
+
+    this._fetchScenes();
   }
 
   _fullUpdate(): Promise<unknown> {
     return Promise.all([
-      this._fetchSources()
+      this._fetchSources(),
+      this._fetchScenes()
     ])
   }
 
-  _fetchSources(): Promise<unknown> {
+  _fetchSources(): Promise<void> {
     return this._socket.send('GetSourcesList')
       .then((response) => {
         return response.sources
-          .filter(source => source.type == 'input' && source.name.includes(this._filter))
+          .filter(source => source.type == 'input' && source.name.includes(this._sourceFilter))
           .map(source => source.name);
       })
       .then((sources) => {
@@ -117,7 +184,17 @@ export default class OBSSocket {
             }))
         }))
       })
-      .then(sources => this.sources = sources);
+      .then(sources => { this.sources = sources });
+  }
+
+  _fetchScenes(): Promise<unknown> {
+    return this._socket.send('GetSceneList')
+      .then((response) => {
+        return response.scenes
+          .filter(scene => scene.name.includes(this._sceneFilter))
+          .map(scene => scene.name);
+      })
+      .then(scenes => { this.scenes = scenes });
   }
 
   _getSourceSize(sourceName: string): Promise<{width: number, height: number}> {
@@ -172,7 +249,7 @@ export default class OBSSocket {
   _sourceRenamed({ previousName, newName, sourceType }: { previousName: string, newName: string, sourceType: string }): void {
     if (sourceType != 'input') { return }
     const sourceIndex = this.sources.findIndex(source => source.name == previousName);
-    const newNameMatchesFilter = newName.includes(this._filter);
+    const newNameMatchesFilter = newName.includes(this._sourceFilter);
 
     if (sourceIndex < 0) {
       if (newNameMatchesFilter) {
@@ -191,5 +268,11 @@ export default class OBSSocket {
         this._sources.splice(sourceIndex, 1);
       }
     }
+  }
+
+  _scenesChanged({ scenes }: { scenes: { name: string }[]}): void {
+    this.scenes = scenes
+      .filter(scene => scene.name.includes(this._sceneFilter))
+      .map(scene => scene.name);
   }
 }

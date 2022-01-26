@@ -9,8 +9,7 @@
 <script lang="ts">
 import { useStore } from '@/store/app'
 import { computed, defineComponent, ref, watch } from 'vue'
-import { LayoutNode } from '@/layout'
-import { Size } from '@/layout'
+import { LayoutNode, ContainerLayoutNode, Size } from '@/layout'
 import { usePreferredDark } from '@vueuse/core'
 
 export default defineComponent({
@@ -51,7 +50,7 @@ export default defineComponent({
       
       context.lineWidth = 1 / scale.value;
 
-      if (node.isContainer) {
+      if (node instanceof ContainerLayoutNode) {
         context.strokeStyle = 'rgb(150, 150, 150)'
         context.setLineDash([4 / scale.value, 2 / scale.value]);
       } else {
@@ -62,7 +61,9 @@ export default defineComponent({
       context.strokeRect(node.frame.x, node.frame.y, node.frame.width, node.frame.height);
       context.translate(node.frame.x, node.frame.y);
 
-      node.children.forEach(node => renderNode(node, context));
+      if (node instanceof ContainerLayoutNode) {
+        node.children.forEach(node => renderNode(node, context));
+      }
 
       context.restore();
     }

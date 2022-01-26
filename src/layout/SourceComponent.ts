@@ -4,6 +4,7 @@ import LayoutNode from './LayoutNode';
 import Frame from "./Frame";
 import Insets from "./Insets";
 import { Source } from "@/obs/source";
+import { SourceLayoutNode } from ".";
 
 export default class SourceComponent extends Component {
   source?: Source = undefined
@@ -15,7 +16,7 @@ export default class SourceComponent extends Component {
 
   exerciseLayout(size: Size): LayoutNode {
     if (!this.source) {
-      return new LayoutNode(this.id, new Frame(0, 0, 0, 0), false);
+      return new LayoutNode(this.id, new Frame(0, 0, 0, 0));
     }
 
     const sourceSize = new Size(this.source.width, this.source.height);
@@ -25,6 +26,6 @@ export default class SourceComponent extends Component {
     const heightScale = size.height / croppedSize.height
     const scaleRatio = Math.min(widthScale, heightScale);
 
-    return new LayoutNode(this.id, new Frame(0, 0, croppedSize.width * scaleRatio, croppedSize.height * scaleRatio), false)
+    return new SourceLayoutNode(this.id, new Frame(0, 0, croppedSize.width * scaleRatio, croppedSize.height * scaleRatio), this.source);
   }
 }
