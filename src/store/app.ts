@@ -12,6 +12,7 @@ import {
   SELECT_COMPONENT,
   ADD_CHILD,
   EMBED_IN_COMPONENT,
+  DELETE_COMPONENT,
   EXERCISE_LAYOUT,
   FLEX_SET_DIRECTION,
   FLEX_SET_DISTRIBUTION,
@@ -55,6 +56,15 @@ export const store = createStore<State>({
       const parent = state.rootComponent.childWithId(payload.parentId)
       if (!parent || !(parent instanceof ContainerComponent)) { return }
       parent.addChild(payload.component)
+    },
+    [DELETE_COMPONENT](state: State, payload: { id: string }) {
+      const component = state.rootComponent.childWithId(payload.id);
+      if (!component || !component.parent) { return }
+      component.removeFromParent();
+
+      if (state.selectedComponent == component) {
+        state.selectedComponent = null;
+      }
     },
     [EMBED_IN_COMPONENT](state: State, payload: { id: string, container: ContainerComponent }) {
       if (state.rootComponent.id == payload.id) {

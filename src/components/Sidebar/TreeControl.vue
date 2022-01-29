@@ -20,7 +20,7 @@
             <menu-item v-for="action in embedActions" :key="action.title" @click="action.action()">{{ action.title }}</menu-item>
           </Submenu>
           <menu-separator/>
-          <menu-item>Delete</menu-item>
+          <menu-item @click="deleteComponent()">Delete</menu-item>
         </context-menu>
       </template>
     </context-menu-providing>
@@ -40,7 +40,7 @@ import {
 } from '@headlessui/vue';
 import { ChevronRightIcon } from '@heroicons/vue/solid';
 import { useStore } from '@/store/app';
-import { ADD_CHILD, SELECT_COMPONENT, EMBED_IN_COMPONENT } from '@/store/mutation-types';
+import { ADD_CHILD, SELECT_COMPONENT, EMBED_IN_COMPONENT, DELETE_COMPONENT } from '@/store/mutation-types';
 
 interface ContainerAction {
   title: string
@@ -124,6 +124,10 @@ export default defineComponent({
       return actions
     })
 
+    const deleteComponent = () => {
+      store.commit(DELETE_COMPONENT, { id: component.value.id });
+    }
+
     return {
       selectComponent,
       isSelected,
@@ -131,7 +135,8 @@ export default defineComponent({
       containerActions,
       embedActions,
       addFlexComponent,
-      addSourceComponent
+      addSourceComponent,
+      deleteComponent
     }
   }
 })
