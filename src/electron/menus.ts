@@ -31,40 +31,49 @@ export function installContextMenuHandling(): void {
   });
 }
 
+export function showsApplicationMenu(): boolean {
+  return process.platform == 'darwin'
+}
+
 export function configureApplicationMenu(): void {
-  Menu.setApplicationMenu(
-    Menu.buildFromTemplate(
-      [
-        {
-          role: 'appMenu',
-          submenu: [
-            { role: 'about' },
-            { type: 'separator' },
-            {
-              label: 'Preferences...',
-              accelerator: 'CmdOrCtrl+,',
-              click: () => { emitter.emit('open-preferences') }
-            },
-            { type: 'separator' },
-            { role: 'services' },
-            { type: 'separator' },
-            { role: 'hide' },
-            { role: 'hideOthers' },
-            { role: 'unhide' },
-            { type: 'separator'},
-            { role: 'quit' }
-          ]
-        },
-        {
-          role: 'windowMenu',
-          submenu: [
-            { role: 'minimize' },
-            { role: 'zoom' },
-            { type: 'separator' },
-            { role: 'toggleDevTools' }
-          ]
-        }
-      ]
+  if (showsApplicationMenu()) {
+    Menu.setApplicationMenu(
+      Menu.buildFromTemplate(
+        [
+          {
+            role: 'appMenu',
+            submenu: [
+              { role: 'about' },
+              { type: 'separator' },
+              {
+                label: 'Preferences...',
+                accelerator: 'CmdOrCtrl+,',
+                click: () => { emitter.emit('open-preferences') }
+              },
+              { type: 'separator' },
+              { role: 'services' },
+              { type: 'separator' },
+              { role: 'hide' },
+              { role: 'hideOthers' },
+              { role: 'unhide' },
+              { type: 'separator'},
+              { role: 'quit' }
+            ]
+          },
+          {
+            role: 'windowMenu',
+            submenu: [
+              { role: 'minimize' },
+              { role: 'zoom' },
+              { type: 'separator' },
+              { role: 'toggleDevTools' }
+            ]
+          }
+        ]
+      )
     )
-  )
+  } else {
+    // Remove the menu on Windows, since we'll use the command bar for similar purposes.
+    Menu.setApplicationMenu(null)
+  }
 }

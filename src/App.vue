@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col h-screen text-system-text text-sm">
     <nav-bar v-if="isMacOS" class="flex-none"></nav-bar>
+    <command-bar v-if="isWindows" class="flex-none"></command-bar>
     <div class="flex-1 flex flex-row items-stretch">
       <sidebar class="flex-none border-r border-system-divider"></sidebar>
       <preview></preview>
@@ -15,7 +16,8 @@ import Preview from './components/Preview.vue';
 import Sidebar from './components/Sidebar.vue';
 import Controls from './components/Controls.vue';
 import NavBar from './components/NavBar.vue';
-import { useIsMacOS } from './integration/platform';
+import CommandBar from './components/CommandBar.vue';
+import { useIsMacOS, useIsWindows } from './integration/platform';
 
 export default defineComponent({
   name: 'App',
@@ -24,10 +26,12 @@ export default defineComponent({
     Sidebar,
     Controls,
     NavBar,
+    CommandBar,
   },
   setup() {
     return {
-      isMacOS: useIsMacOS()
+      isMacOS: useIsMacOS(),
+      isWindows: useIsWindows()
     }
   }
 });

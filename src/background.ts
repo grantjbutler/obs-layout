@@ -5,7 +5,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 import { basename } from 'path';
 
-import { installContextMenuHandling, configureApplicationMenu } from './electron/menus';
+import { installContextMenuHandling, configureApplicationMenu, showsApplicationMenu } from './electron/menus';
 import emitter from './electron/events';
 import { openPreferences } from './electron/preferences-window';
 import { injectSystemColors } from './electron/colors';
@@ -51,7 +51,8 @@ async function createWindow() {
     minWidth: 1050,
     show: false,
     vibrancy: 'sidebar',
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'hidden',
+    titleBarOverlay: process.platform === 'win32',
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -69,6 +70,15 @@ async function createWindow() {
   win.once('ready-to-show', () => {
     win.show();
   });
+
+  if (!showsApplicationMenu() && isDevelopment) {
+    win.webContents.on('before-input-event', (event, input) => {
+      if (input.control && input.shift && input.key.toLocaleLowerCase() == 'i') {
+        win.webContents.openDevTools({ mode: 'undocked' });
+        event.preventDefault();
+      }
+    })
+  }
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode

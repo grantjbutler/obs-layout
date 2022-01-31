@@ -3,6 +3,7 @@ import { ipcMain } from "electron";
 import OBSSocket from "@/electron/obs";
 import Preferences from "./preferences";
 import { Node } from './obs';
+import emitter from './events';
 
 export interface InstallationOptions {
   preferences: Preferences,
@@ -48,5 +49,9 @@ export function install(options: InstallationOptions): void {
 
   ipcMain.handle('sync-layout-to-scene', (_, nodes: Node[], sceneName: string) => {
     return options.obsSocket.syncLayout(nodes, sceneName);
+  })
+
+  ipcMain.on('open-settings', () => {
+    emitter.emit('open-preferences');
   })
 }

@@ -25,6 +25,10 @@ type ColorModeMapping = {
   dark: ColorMapping
 }
 
+function getAccentColor(): string {
+  return '#' + systemPreferences.getAccentColor();
+}
+
 function deriveColorMapping(): ColorModeMapping {
   if (process.platform == 'darwin') {
     return {
@@ -39,7 +43,7 @@ function deriveColorMapping(): ColorModeMapping {
         selectedContentBackground: systemPreferences.getColor('selected-content-background'),
         windowBackground: systemPreferences.getColor('window-background'),
       
-        accent: systemPreferences.getAccentColor(),
+        accent: getAccentColor(),
         separator: /*systemPreferences.getColor('separator')*/ '#ffffff1a',
         divider: '#000000'
       },
@@ -54,7 +58,7 @@ function deriveColorMapping(): ColorModeMapping {
         selectedContentBackground: systemPreferences.getColor('selected-content-background'),
         windowBackground: systemPreferences.getColor('window-background'),
       
-        accent: systemPreferences.getAccentColor(),
+        accent: getAccentColor(),
         separator: /*systemPreferences.getColor('separator')*/ '#d8d4d8',
         divider: '#d8d4d8'
       }
@@ -64,15 +68,15 @@ function deriveColorMapping(): ColorModeMapping {
       dark: {
         text: systemPreferences.getColor('window-text'),
         textSecondary: systemPreferences.getColor('window-text'),
-        controlText: systemPreferences.getColor('window-text'),
+        controlText: systemPreferences.getColor('button-text'),
         selectedControlText: systemPreferences.getColor('window-text'),
 
         controlBackground: '',
-        navBarBackground: '#3c363c',
-        selectedContentBackground: systemPreferences.getAccentColor(),
+        navBarBackground: '#f0f0f0',
+        selectedContentBackground: getAccentColor(),
         windowBackground: systemPreferences.getColor('window'),
       
-        accent: systemPreferences.getAccentColor(),
+        accent: getAccentColor(),
         separator: '',
         divider: '#000000'
       },
@@ -83,11 +87,11 @@ function deriveColorMapping(): ColorModeMapping {
         selectedControlText: systemPreferences.getColor('window-text'),
         
         controlBackground: '',
-        navBarBackground: '#efebef',
-        selectedContentBackground: systemPreferences.getAccentColor(),
+        navBarBackground: '#f0f0f0',
+        selectedContentBackground: getAccentColor(),
         windowBackground: systemPreferences.getColor('window'),
       
-        accent: systemPreferences.getAccentColor(),
+        accent: getAccentColor(),
         separator: '',
         divider: '#d8d4d8'
       }
