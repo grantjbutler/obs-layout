@@ -46,4 +46,17 @@ export default class Preferences {
   set sourceFilter(value: string) {
     this.store.set('sourceFilter', value);
   }
+
+  get sceneFilter(): string {
+    const sceneFilter = this.store.get('sceneFilter');
+    if (typeof sceneFilter !== 'string') {
+      return '';
+    }
+
+    return sceneFilter;
+  }
+
+  set sceneFilter(value: string) {
+    this.store.set('sceneFilter', value)
+  }
 }

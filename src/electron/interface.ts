@@ -43,6 +43,16 @@ export function install(options: InstallationOptions): void {
     options.obsSocket.sourceFilter = filter;
   })
 
+  ipcMain.handle('load-scene-filter', () => {
+    return options.preferences.sceneFilter;
+  });
+
+  ipcMain.on('set-scene-filter', (_, filter: string) => {
+    options.preferences.sceneFilter = filter;
+
+    options.obsSocket.sceneFilter = filter;
+  })
+
   ipcMain.handle('get-obs-scenes', () => {
     return options.obsSocket.scenes;
   });

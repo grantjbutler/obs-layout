@@ -23,6 +23,10 @@
       <label>Source Filter</label>
       <input type="text" v-model="sourceFilter">
     </div>
+    <div class="control-field">
+      <label>Scene Filter</label>
+      <input type="text" v-model="sceneFilter">
+    </div>
   </div>
 </template>
 
@@ -44,6 +48,7 @@ export default defineComponent({
       password: null
     });
     const sourceFilter = ref('');
+    const sceneFilter = ref('');
 
     const isConnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Disconnected || connectionState.value == OBSConnectionState.Error)
     const isAbortButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connecting);
@@ -71,10 +76,19 @@ export default defineComponent({
         .then(filter => {
           sourceFilter.value = filter;
         })
+      
+      ipcRenderer.invoke('load-scene-filter')
+        .then(filter => {
+          sceneFilter.value = filter;
+        });
     });
 
     watch(sourceFilter, debounce((newFilter: string) => {
       ipcRenderer.send('set-source-filter', newFilter);
+    }));
+
+    watch(sceneFilter, debounce((newFilter: string) => {
+      ipcRenderer.send('set-scene-filter', newFilter);
     }));
     
     return {
@@ -87,7 +101,8 @@ export default defineComponent({
       isAbortButtonVisible,
       isDisconnectButtonVisible,
 
-      sourceFilter
+      sourceFilter,
+      sceneFilter
     }
   }
 })
