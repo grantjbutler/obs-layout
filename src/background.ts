@@ -36,9 +36,12 @@ installInterface({
   obsSocket
 });
 
-if (preferences.obsConnection) {
-  obsSocket.connect(preferences.obsConnection);
-}
+(async function() {
+  const savedConnection = await preferences.getObsConnection();
+  if (savedConnection) {
+    obsSocket.connect(savedConnection);
+  }
+})();
 
 let mainWindow: BrowserWindow | null = null;
 

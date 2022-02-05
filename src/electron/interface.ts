@@ -11,12 +11,12 @@ export interface InstallationOptions {
 }
 
 export function install(options: InstallationOptions): void {
-  ipcMain.handle('load-obs-connection', () => {
-    return options.preferences.obsConnection
+  ipcMain.handle('load-obs-connection', async () => {
+    return await options.preferences.getObsConnection()
   });
 
-  ipcMain.on('connect-to-obs', (_, connection: OBSConnectionOptions) => {
-    options.preferences.obsConnection = connection
+  ipcMain.on('connect-to-obs', async (_, connection: OBSConnectionOptions) => {
+    await options.preferences.setObsConnection(connection)
 
     options.obsSocket.connect(connection);
   });

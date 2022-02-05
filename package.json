@@ -20,6 +20,7 @@
     "core-js": "^3.6.5",
     "data-uri-to-buffer": "^4.0.0",
     "image-size": "^1.0.1",
+    "keytar": "^7.8.0",
     "lodash": "^4.17.21",
     "obs-websocket-js": "^4.0.3",
     "on-change": "^3.0",

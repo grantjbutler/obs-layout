@@ -1,6 +1,7 @@
 import { Store, StoreOptions } from './store'
 import { safeStorage } from 'electron'
 import { OBSConnectionOptions, isOBSConnectionOptions } from '@/obs/connection';
+import keytar from 'keytar';
 
 export default class Preferences {
   store: Store
@@ -9,29 +10,32 @@ export default class Preferences {
     this.store = new Store(options);
   }
 
-  get obsConnection(): OBSConnectionOptions | null {
-    const connection = this.store.get('obs-connection');
-    if (isOBSConnectionOptions(connection)) {
-      if (connection.password) {
-        connection.password = safeStorage.decryptString(Buffer.from(connection.password, 'base64'))
-      }
+  async getObsConnection(): Promise<OBSConnectionOptions | null> {
+    const connection = this.store.get('obsConnection');
+    if (!isOBSConnectionOptions(connection)) { return null }
+
+    try {
+      connection.password = await keytar.getPassword('obs-websocket', 'obs') ?? undefined
+    } catch {
+      console.error('Could not fetch password from secure storage');
       
-      return connection;
+      connection.password = undefined
     }
 
     return null;
   }
 
-  set obsConnection(value: OBSConnectionOptions | null) {
+  async setObsConnection(value: OBSConnectionOptions | null): Promise<void> {
     if (value && value.password) {
-      value.password = safeStorage.encryptString(value.password).toString('base64')
+      await keytar.setPassword('obs-websocket', 'obs', value.password);
+      value.password = undefined
     }
 
-    this.store.set('obs-connection', value)
+    this.store.set('obsConnection', value);
   }
 
   get sourceFilter(): string {
-    const sourceFilter = this.store.get('source-filter')
+    const sourceFilter = this.store.get('sourceFilter')
     if (typeof sourceFilter !== 'string') {
       return '';
     }
@@ -40,6 +44,6 @@ export default class Preferences {
   }
 
   set sourceFilter(value: string) {
-    this.store.set('source-filter', value);
+    this.store.set('sourceFilter', value);
   }
 }
