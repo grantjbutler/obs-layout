@@ -2,6 +2,7 @@ import { Store, StoreOptions } from './store'
 import { safeStorage } from 'electron'
 import { OBSConnectionOptions, isOBSConnectionOptions } from '@/obs/connection';
 import keytar from 'keytar';
+import { clone } from 'lodash';
 
 export default class Preferences {
   store: Store
@@ -12,26 +13,27 @@ export default class Preferences {
 
   async getObsConnection(): Promise<OBSConnectionOptions | null> {
     const connection = this.store.get('obsConnection');
+
     if (!isOBSConnectionOptions(connection)) { return null }
 
     try {
       connection.password = await keytar.getPassword('obs-websocket', 'obs') ?? undefined
     } catch {
       console.error('Could not fetch password from secure storage');
-      
-      connection.password = undefined
     }
 
-    return null;
+    return connection;
   }
 
   async setObsConnection(value: OBSConnectionOptions | null): Promise<void> {
-    if (value && value.password) {
-      await keytar.setPassword('obs-websocket', 'obs', value.password);
-      value.password = undefined
+    let options = clone(value)
+
+    if (options && options.password) {
+      await keytar.setPassword('obs-websocket', 'obs', options.password);
+      options.password = undefined
     }
 
-    this.store.set('obsConnection', value);
+    this.store.set('obsConnection', options);
   }
 
   get sourceFilter(): string {
