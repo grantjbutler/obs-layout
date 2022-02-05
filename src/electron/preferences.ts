@@ -1,5 +1,4 @@
 import { Store, StoreOptions } from './store'
-import { safeStorage } from 'electron'
 import { OBSConnectionOptions, isOBSConnectionOptions } from '@/obs/connection';
 import keytar from 'keytar';
 import { clone } from 'lodash';
