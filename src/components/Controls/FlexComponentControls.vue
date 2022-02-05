@@ -1,25 +1,16 @@
 <template>
-  <div>
-    <p class="controls-heading">Flex Component</p>
-    <div class="control-field">
-      <label>Direction</label>
-      <select v-model="direction">
-        <option value="horizontal">Horizontal</option>
-        <option value="vertical">Vertical</option>
-      </select>
-    </div>
-    <div class="control-field">
-      <label>Distribution</label>
-      <select v-model="distribution">
+  <div class="m-5 space-y-4">
+    <h3 class="text-lg">Flex Component</h3>
+    <FormSelect label="Direction" v-model="direction">
+      <option value="horizontal">Horizontal</option>
+      <option value="vertical">Vertical</option>
+    </FormSelect>
+    <FormSelect label="Distribution" v-model="distribution">
         <option value="leading">Leading</option>
         <option value="center">Center</option>
         <option value="trailing">Trailing</option>
-      </select>
-    </div>
-    <div class="control-field">
-      <label>Spacing</label>
-      <input type="number" v-model="spacing">
-    </div>
+    </FormSelect>
+    <FormNumberInput label="Spacing" v-model="spacing" :shows-slider="isWindows"></FormNumberInput>
   </div>
 </template>
 
@@ -27,7 +18,10 @@
 import { FlexComponent } from '@/layout'
 import { useStore } from '@/store/app'
 import { FLEX_SET_DIRECTION, FLEX_SET_DISTRIBUTION, FLEX_SET_SPACING } from '@/store/mutation-types'
+import { useIsWindows } from '@/integration/platform';
 import { computed, defineComponent, PropType, toRefs } from 'vue'
+import FormSelect from '@/components/Form/FormSelect.vue';
+import FormNumberInput from '@/components/Form/FormNumberInput.vue';
 
 export default defineComponent({
   name: 'FlexComponentControls',
@@ -37,9 +31,14 @@ export default defineComponent({
       required: true
     }
   },
+  components: {
+    FormSelect,
+    FormNumberInput
+  },
   setup(props) {
     const store = useStore()
     const { component } = toRefs(props)
+    const isWindows = useIsWindows();
     
     return {
       direction: computed({
@@ -53,7 +52,8 @@ export default defineComponent({
       spacing: computed({
         get() { return component.value.spacing },
         set(spacing: number) { store.commit(FLEX_SET_SPACING, spacing) }
-      })
+      }),
+      isWindows
     }
   }
 })

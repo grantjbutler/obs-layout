@@ -1,27 +1,11 @@
 <template>
-  <div>
-    <p class="controls-heading">Inset Component</p>
-    <div class="control-field">
-      <label>Insets</label>
-      <div>
-        <div>
-          <label>Top</label>
-          <input type="number" v-model="top">
-        </div>
-        <div>
-          <label>Left</label>
-          <input type="number" v-model="left">
-        </div>
-        <div>
-          <label>Bottom</label>
-          <input type="number" v-model="bottom">
-        </div>
-        <div>
-          <label>Right</label>
-          <input type="number" v-model="right">
-        </div>
-      </div>
-    </div>
+  <div class="m-5 space-y-4">
+    <h3 class="text-lg">Inset Component</h3>
+    <label>Insets</label>
+    <FormNumberInput label="Top" v-model="top"></FormNumberInput>
+    <FormNumberInput label="Left" v-model="left"></FormNumberInput>
+    <FormNumberInput label="Bottom" v-model="bottom"></FormNumberInput>
+    <FormNumberInput label="Right" v-model="right"></FormNumberInput>
   </div>
 </template>
 
@@ -30,6 +14,7 @@ import InsetComponent from '@/layout/InsetComponent';
 import { useStore } from '@/store/app'
 import { INSET_SET_INSETS } from '@/store/mutation-types';
 import { computed, defineComponent, PropType, toRefs } from 'vue'
+import FormNumberInput from '@/components/Form/FormNumberInput.vue';
 
 export default defineComponent({
   name: 'InsetComponentControls',
@@ -38,6 +23,9 @@ export default defineComponent({
       type: Object as PropType<InsetComponent>,
       required: true
     }
+  },
+  components: {
+    FormNumberInput
   },
   setup(props) {
     const { component } = toRefs(props);

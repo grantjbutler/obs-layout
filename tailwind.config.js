@@ -1,7 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const plugin = require('tailwindcss/plugin')
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const colors = require('tailwindcss/colors')
 
 module.exports = {
@@ -42,6 +39,8 @@ module.exports = {
       borderOpacity: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
       borderRadius: ['responsive', 'macos', 'windows'],
       boxShadow: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
+      fontSize: ['responsive', 'macos', 'windows'],
+      justifyContent: ['responsive', 'macos', 'windows'],
       margin: ['responsive', 'macos', 'windows'],
       opacity: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
       padding: ['responsive', 'macos', 'windows'],
@@ -51,6 +50,7 @@ module.exports = {
     },
   },
   plugins: [
+    require('@tailwindcss/forms'),
     plugin(function({ addUtilities, addVariant, e }) {
       addVariant('macos', ({ modifySelectors, separator }) => {
         modifySelectors(({ className }) => {

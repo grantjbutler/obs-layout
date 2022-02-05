@@ -17,3 +17,9 @@
 .control\-field select {
   @apply macos:rounded;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

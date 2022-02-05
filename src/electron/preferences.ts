@@ -25,7 +25,7 @@ export default class Preferences {
   }
 
   async setObsConnection(value: OBSConnectionOptions | null): Promise<void> {
-    let options = clone(value)
+    const options = clone(value)
 
     if (options && options.password) {
       await keytar.setPassword('obs-websocket', 'obs', options.password);
