@@ -5,7 +5,7 @@ export interface OBSConnectionOptions {
 }
 
 export function isOBSConnectionOptions(obj: unknown): obj is OBSConnectionOptions {
-  if (typeof obj !== 'object') { return false; }
+  if (!obj || typeof obj !== 'object') { return false; }
 
   const hasRequiredFields = (obj as OBSConnectionOptions).host !== null
     && typeof (obj as OBSConnectionOptions).host === 'string'
