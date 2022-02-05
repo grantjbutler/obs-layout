@@ -23,7 +23,9 @@ protocol.registerSchemesAsPrivileged([
 const preferences = new Preferences({
   name: basename(process.argv0),
   defaults: {
-    connection: null
+    obsConnection: null,
+    sourceFilter: '',
+    sceneFilter: ''
   }
 });
 
