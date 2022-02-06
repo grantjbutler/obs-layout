@@ -1,6 +1,5 @@
 <template>
-  <div class="m-5 space-y-4">
-    <h3 class="text-lg">Flex Component</h3>
+  <Controls title="Flex Component">
     <FormSelect label="Direction" v-model="direction">
       <option value="horizontal">Horizontal</option>
       <option value="vertical">Vertical</option>
@@ -11,7 +10,7 @@
         <option value="trailing">Trailing</option>
     </FormSelect>
     <FormNumberInput label="Spacing" v-model="spacing" :shows-slider="isWindows"></FormNumberInput>
-  </div>
+  </Controls>
 </template>
 
 <script lang="ts">
@@ -22,6 +21,7 @@ import { useIsWindows } from '@/integration/platform';
 import { computed, defineComponent, PropType, toRefs } from 'vue'
 import FormSelect from '@/components/Form/FormSelect.vue';
 import FormNumberInput from '@/components/Form/FormNumberInput.vue';
+import Controls from './Controls.vue';
 
 export default defineComponent({
   name: 'FlexComponentControls',
@@ -33,7 +33,8 @@ export default defineComponent({
   },
   components: {
     FormSelect,
-    FormNumberInput
+    FormNumberInput,
+    Controls
   },
   setup(props) {
     const store = useStore()

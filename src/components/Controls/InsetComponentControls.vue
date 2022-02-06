@@ -1,12 +1,11 @@
 <template>
-  <div class="m-5 space-y-4">
-    <h3 class="text-lg">Inset Component</h3>
-    <label>Insets</label>
+  <Controls title="Inset Component">
+    <label class="macos:px-2 macos:pb-2 macos:-mt-2 macos:border-b macos:border-system-separator macos:text-system-text-secondary macos:font-semibold">Insets</label>
     <FormNumberInput label="Top" v-model="top"></FormNumberInput>
     <FormNumberInput label="Left" v-model="left"></FormNumberInput>
     <FormNumberInput label="Bottom" v-model="bottom"></FormNumberInput>
     <FormNumberInput label="Right" v-model="right"></FormNumberInput>
-  </div>
+  </Controls>
 </template>
 
 <script lang="ts">
@@ -15,6 +14,7 @@ import { useStore } from '@/store/app'
 import { INSET_SET_INSETS } from '@/store/mutation-types';
 import { computed, defineComponent, PropType, toRefs } from 'vue'
 import FormNumberInput from '@/components/Form/FormNumberInput.vue';
+import Controls from './Controls.vue';
 
 export default defineComponent({
   name: 'InsetComponentControls',
@@ -25,7 +25,8 @@ export default defineComponent({
     }
   },
   components: {
-    FormNumberInput
+    FormNumberInput,
+    Controls
   },
   setup(props) {
     const { component } = toRefs(props);

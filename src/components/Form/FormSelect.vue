@@ -1,17 +1,20 @@
 <template>
-  <div class="flex items-baseline windows:justify-between">
-    <label>{{ label }}</label>
-    <select :value="modelValue" @change="$emit('update:modelValue', $event.target.value)" class="windows:text-sm windows:border-gray-300">
+  <FormControl :label="label">
+    <select :value="modelValue" @change="$emit('update:modelValue', $event.target.value)" class="windows:text-sm windows:border-gray-300 macos:text-system-text-control macos:bg-system-background-control macos:flex-grow macos:rounded macos:text-sm macos:py-1 macos:px-2">
       <slot></slot>
     </select>
-  </div>
+  </FormControl>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import FormControl from './FormControl.vue'
 
 export default defineComponent({
   name: 'FormSelect',
+  components: {
+    FormControl
+  },
   props: {
     label: {
       type: String,
