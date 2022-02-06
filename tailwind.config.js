@@ -21,18 +21,19 @@ module.exports = {
             'nav-bar': 'var(--color-nav-bar-background)',
             control: 'var(--color-control-background)',
             'selected-content': 'var(--color-selected-content-background)',
+            'under-page': 'var(--color-under-page-background)',
             window: 'var(--color-window-background)'
           },
           accent: 'var(--color-accent)',
           separator: 'var(--color-separator)',
           divider: 'var(--color-divider)'
         },
-
       }
     },
   },
   variants: {
     extend: {
+      alignItems: ['responsive', 'macos', 'windows'],
       backgroundColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
       backgroundOpacity: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
       borderColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
@@ -40,10 +41,16 @@ module.exports = {
       borderRadius: ['responsive', 'macos', 'windows'],
       borderWidth: ['responsive', 'macos', 'windows'],
       boxShadow: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
+      display: ['responsive', 'macos', 'windows'],
       flexGrow: ['responsive', 'macos', 'windows'],
       flexShrink: ['responsive', 'macos', 'windows'],
       fontSize: ['responsive', 'macos', 'windows'],
       fontWeight: ['responsive', 'macos', 'windows'],
+      gap: ['responsive', 'macos', 'windows'],
+      gridColumn: ['responsive', 'macos', 'windows'],
+      gridColumnEnd: ['responsive', 'macos', 'windows'],
+      gridColumnStart: ['responsive', 'macos', 'windows'],
+      gridTemplateColumns: ['responsive', 'macos', 'windows'],
       justifyContent: ['responsive', 'macos', 'windows'],
       margin: ['responsive', 'macos', 'windows'],
       opacity: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],

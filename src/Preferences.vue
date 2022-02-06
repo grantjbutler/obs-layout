@@ -1,45 +1,39 @@
 <template>
-  <div class="h-screen text-sm bg-system-background-window text-system-text">
-    <p class="controls-heading">OBS Connection</p>
-    <div class="control-field">
-      <label>Host</label>
-      <input type="text" v-model="connection.host">
-    </div>
-    <div class="control-field">
-      <label>Port</label>
-      <input type="number" v-model="connection.port">
-    </div>
-    <div class="control-field">
-      <label>Password</label>
-      <input type="password" v-model="connection.password">
-    </div>
-    <div class="justify-end control-field">
-      <button v-if="isConnectButtonVisible" class="px-3 py-1 bg-green-500 rounded" @click="connect">Connect</button>
-      <button v-if="isAbortButtonVisible" class="px-3 py-1 bg-yellow-500 rounded">Abort</button>
-      <button v-if="isDisconnectButtonVisible" class="px-3 py-1 bg-red-500 rounded" @click="disconnect">Disconnect</button>
-    </div>
-    <p class="controls-heading">Sources</p>
-    <div class="control-field">
-      <label>Source Filter</label>
-      <input type="text" v-model="sourceFilter">
-    </div>
-    <div class="control-field">
-      <label>Scene Filter</label>
-      <input type="text" v-model="sceneFilter">
-    </div>
+  <div class="h-screen p-2 space-y-2 text-sm macos:bg-system-background-under-page macos:text-system-text">
+    <Controls label="OBS Connection">
+      <Control label="Host" type="text" v-model="connection.host"></Control>
+      <Control label="Port" type="text" v-model="connection.port"></Control>
+      <Control label="Password" type="password" v-model="connection.password"></Control>
+
+      <div class="flex justify-end macos:col-start-2 macos:col-end-9">
+        <button v-if="isConnectButtonVisible" class="px-3 py-1 bg-green-500 rounded" @click="connect">Connect</button>
+        <button v-if="isAbortButtonVisible" class="px-3 py-1 bg-yellow-500 rounded">Abort</button>
+        <button v-if="isDisconnectButtonVisible" class="px-3 py-1 bg-red-500 rounded" @click="disconnect">Disconnect</button>
+      </div>
+    </Controls>
+
+    <Controls label="Filters">
+      <Control label="Source Filter" type="text" v-model="sourceFilter"></Control>
+      <Control label="Scene Filter" type="text" v-model="sceneFilter"></Control>
+    </Controls>
   </div>
 </template>
 
 <script lang="ts">
-import '@/assets/shared.css';
 import { ipcRenderer } from 'electron';
 import { computed, defineComponent, onMounted, ref, watch } from 'vue'
 import debounce from 'lodash/debounce';
 import { isOBSConnectionOptions } from './obs/connection';
 import { useObsConnectionState } from './integration/obs';
 import { OBSConnectionState } from './obs/connection-state';
+import Controls from '@/components/Preferences/Controls.vue';
+import Control from '@/components/Preferences/Control.vue';
 
 export default defineComponent({
+  components: {
+    Controls,
+    Control
+  },
   setup() {
     const connectionState = useObsConnectionState();
     const connection = ref({
@@ -109,7 +103,5 @@ export default defineComponent({
 </script>
 
 <style>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('./assets/shared.css');
 </style>

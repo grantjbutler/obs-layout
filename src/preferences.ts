@@ -11,3 +11,6 @@ createApp(Preferences)
   .component('menu-separator', MenuSeparator)
   .component('Submenu', Submenu)
   .mount('#app')
+
+document.getElementsByTagName('html')[0]
+  .classList.add(process.platform);

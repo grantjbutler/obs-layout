@@ -7,12 +7,13 @@ let preferencesWindow: BrowserWindow | undefined
 
 async function createPreferencesWindow() {
   preferencesWindow = new BrowserWindow({
-    width: 330,
-    height: 175,
+    useContentSize: true,
+    width: 485,
+    height: 330,
     show: false,
     fullscreenable: false,
     maximizable: false,
-    // resizable: false,
+    resizable: false,
     title: 'Preferences',
     webPreferences: {
       

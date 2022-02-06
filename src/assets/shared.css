@@ -1,25 +1,9 @@
-.controls\-heading {
-  @apply border-b border-system-separator p-2 text-system-text-secondary font-semibold;
-}
-
-.control\-field {
-  @apply p-2 flex space-x-2;
-}
-
-.control\-field label {
-  @apply w-1/3 text-right;
-}
-
-.control\-field input, .control\-field select {
-  @apply text-system-text-control bg-system-background-control w-2/3;
-}
-
-.control\-field select {
-  @apply macos:rounded;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

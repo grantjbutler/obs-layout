@@ -9,7 +9,6 @@
 </template>
 
 <script lang="ts">
-import '@/assets/shared.css';
 import { Component } from '@/layout';
 import { useStore } from '@/store/app'
 import { computed, defineComponent } from 'vue'

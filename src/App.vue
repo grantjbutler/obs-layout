@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col h-screen text-system-text text-sm">
+  <div class="flex flex-col h-screen text-sm text-system-text">
     <nav-bar v-if="isMacOS" class="flex-none"></nav-bar>
     <command-bar v-if="isWindows" class="flex-none"></command-bar>
-    <div class="flex-1 flex flex-row items-stretch">
+    <div class="flex flex-row items-stretch flex-1">
       <sidebar class="flex-none border-r border-system-divider"></sidebar>
       <preview></preview>
       <controls class="flex-none border-l border-system-divider"></controls>
@@ -38,7 +38,5 @@ export default defineComponent({
 </script>
 
 <style>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('./assets/shared.css');
 </style>

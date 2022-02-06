@@ -13,6 +13,7 @@ type ColorMapping = {
   controlBackground: string
   navBarBackground: string
   selectedContentBackground: string
+  underPageBackground: string
   windowBackground: string
 
   accent: string
@@ -41,6 +42,7 @@ function deriveColorMapping(): ColorModeMapping {
         controlBackground: systemPreferences.getColor('control-background'),
         navBarBackground: '#3c363c',
         selectedContentBackground: systemPreferences.getColor('selected-content-background'),
+        underPageBackground: systemPreferences.getColor('under-page-background'),
         windowBackground: systemPreferences.getColor('window-background'),
       
         accent: getAccentColor(),
@@ -56,6 +58,7 @@ function deriveColorMapping(): ColorModeMapping {
         controlBackground: systemPreferences.getColor('control-background'),
         navBarBackground: '#efebef',
         selectedContentBackground: systemPreferences.getColor('selected-content-background'),
+        underPageBackground: systemPreferences.getColor('under-page-background'),
         windowBackground: systemPreferences.getColor('window-background'),
       
         accent: getAccentColor(),
@@ -74,6 +77,7 @@ function deriveColorMapping(): ColorModeMapping {
         controlBackground: '',
         navBarBackground: '#f0f0f0',
         selectedContentBackground: getAccentColor(),
+        underPageBackground: '',
         windowBackground: systemPreferences.getColor('window'),
       
         accent: getAccentColor(),
@@ -89,6 +93,7 @@ function deriveColorMapping(): ColorModeMapping {
         controlBackground: '',
         navBarBackground: '#f0f0f0',
         selectedContentBackground: getAccentColor(),
+        underPageBackground: '',
         windowBackground: systemPreferences.getColor('window'),
       
         accent: getAccentColor(),
