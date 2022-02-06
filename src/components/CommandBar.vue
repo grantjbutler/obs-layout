@@ -32,7 +32,6 @@ import { defineComponent } from 'vue'
 import { CloudUploadIcon, CogIcon } from '@heroicons/vue/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import ConnectionState from './ConnectionState.vue';
-import { ipcRenderer } from 'electron';
 import SyncPopover from './SyncPopover.vue';
 
 export default defineComponent({
@@ -46,14 +45,11 @@ export default defineComponent({
     PopoverButton,
     PopoverPanel
   },  
-  setup() {
-    const openSettings = () => {
-      ipcRenderer.send('open-settings');
-    }
-
+  setup(_, { emit }) {
     return {
-      openSettings
+      openSettings: () => emit('openSettings')
     }
   },
+  emits: ['openSettings']
 })
 </script>

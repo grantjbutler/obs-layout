@@ -42,6 +42,7 @@ module.exports = {
       borderWidth: ['responsive', 'macos', 'windows'],
       boxShadow: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
       display: ['responsive', 'macos', 'windows'],
+      flexDirection: ['responsive', 'macos', 'windows'],
       flexGrow: ['responsive', 'macos', 'windows'],
       flexShrink: ['responsive', 'macos', 'windows'],
       fontSize: ['responsive', 'macos', 'windows'],

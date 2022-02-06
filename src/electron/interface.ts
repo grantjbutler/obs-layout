@@ -60,8 +60,4 @@ export function install(options: InstallationOptions): void {
   ipcMain.handle('sync-layout-to-scene', (_, nodes: Node[], sceneName: string) => {
     return options.obsSocket.syncLayout(nodes, sceneName);
   })
-
-  ipcMain.on('open-settings', () => {
-    emitter.emit('open-preferences');
-  })
 }
