@@ -1,6 +1,6 @@
 <template>
-  <div class="text-sm macos:bg-system-background-under-page macos:text-system-text">
-    <div class="macos:space-y-2 windows:flex windows:flex-col windows:gap-8 windows:w-1/2">
+  <div class="text-sm macos:bg-system-background-under-page macos:text-system-text macos:p-2">
+    <div class="flex flex-col macos:gap-2 windows:gap-8 windows:w-1/2">
       <Controls label="OBS Connection">
         <Control label="Host" type="text" v-model="connection.host"></Control>
         <Control label="Port" type="text" v-model="connection.port"></Control>
