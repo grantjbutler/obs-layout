@@ -32,37 +32,12 @@ module.exports = {
     },
   },
   variants: {
-    extend: {
-      alignItems: ['responsive', 'macos', 'windows'],
-      backgroundColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      backgroundOpacity: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      borderColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      borderOpacity: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      borderRadius: ['responsive', 'macos', 'windows'],
-      borderWidth: ['responsive', 'macos', 'windows'],
-      boxShadow: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      display: ['responsive', 'macos', 'windows'],
-      flexDirection: ['responsive', 'macos', 'windows'],
-      flexGrow: ['responsive', 'macos', 'windows'],
-      flexShrink: ['responsive', 'macos', 'windows'],
-      fontSize: ['responsive', 'macos', 'windows'],
-      fontWeight: ['responsive', 'macos', 'windows'],
-      gap: ['responsive', 'macos', 'windows'],
-      gridColumn: ['responsive', 'macos', 'windows'],
-      gridColumnEnd: ['responsive', 'macos', 'windows'],
-      gridColumnStart: ['responsive', 'macos', 'windows'],
-      gridTemplateColumns: ['responsive', 'macos', 'windows'],
-      justifyContent: ['responsive', 'macos', 'windows'],
-      margin: ['responsive', 'macos', 'windows'],
-      opacity: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      padding: ['responsive', 'macos', 'windows'],
-      space: ['responsive', 'macos', 'windows'],
-      textAlign: ['responsive', 'macos', 'windows'],
-      textColor: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      textDecoration: ['responsive', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      textOpacity: ['responsive', 'dark', 'group-hover', 'focus-within', 'hover', 'focus', 'macos', 'windows', 'window-blur'],
-      width: ['responsive', 'macos', 'windows'],
-    },
+    extend: (() => {
+      return Object.keys(require('tailwindcss/defaultConfig').variants).reduce((variants, key) => {
+        variants[key] = ['macos', 'windows', 'window-blur'];
+        return variants
+      }, {});
+    })()
   },
   plugins: [
     require('@tailwindcss/forms'),
