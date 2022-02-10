@@ -1,4 +1,4 @@
-import Insets from './Insets'
+import type Insets from './Insets';
 
 export default class Size {
   width: number;

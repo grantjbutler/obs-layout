@@ -1,6 +1,6 @@
-import Component from './Component'
-import LayoutNode from './LayoutNode'
-import Size from './Size'
+import type Component from './Component';
+import type LayoutNode from './LayoutNode';
+import type Size from './Size';
 
 export default class LayoutExerciser {
   execute(component: Component, size: Size): LayoutNode {

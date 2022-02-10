@@ -1,5 +1,5 @@
-import Frame from './Frame'
-import LayoutNode from './LayoutNode'
+import type Frame from './Frame';
+import LayoutNode from './LayoutNode';
 
 export default class ContainerLayoutNode extends LayoutNode {
   children: LayoutNode[];

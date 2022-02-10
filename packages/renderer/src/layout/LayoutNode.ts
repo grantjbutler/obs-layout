@@ -1,4 +1,4 @@
-import Frame from './Frame'
+import type Frame from './Frame';
 
 export default class LayoutNode {
   id: string;

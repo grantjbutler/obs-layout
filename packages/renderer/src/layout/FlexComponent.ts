@@ -1,8 +1,8 @@
-import ContainerLayoutNode from './ContainerLayoutNode'
-import ContainerComponent from './ContainerComponent'
-import Frame from './Frame'
-import Size from './Size'
-import LayoutNode from './LayoutNode';
+import ContainerLayoutNode from './ContainerLayoutNode';
+import ContainerComponent from './ContainerComponent';
+import Frame from './Frame';
+import Size from './Size';
+import type LayoutNode from './LayoutNode';
 
 export default class FlexComponent extends ContainerComponent {
   direction: 'horizontal' | 'vertical' = 'horizontal';

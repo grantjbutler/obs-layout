@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import Size from './Size'
-import LayoutNode from './LayoutNode'
-import ContainerComponent from './ContainerComponent'
+import type Size from './Size';
+import type LayoutNode from './LayoutNode';
+import type ContainerComponent from './ContainerComponent';
 
 export default class Component {
   id: string = uuidv4();

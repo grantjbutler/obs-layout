@@ -1,4 +1,4 @@
-import Insets from './Insets'
+import type Insets from './Insets';
 
 interface FrameStyleObject {
   top: string

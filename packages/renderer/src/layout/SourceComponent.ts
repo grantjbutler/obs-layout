@@ -1,9 +1,9 @@
-import Component from './Component'
-import Size from './Size'
-import LayoutNode from './LayoutNode'
-import Frame from './Frame'
-import Insets from './Insets'
-import SourceLayoutNode from './SourceLayoutNode'
+import Component from './Component';
+import Size from './Size';
+import LayoutNode from './LayoutNode';
+import Frame from './Frame';
+import Insets from './Insets';
+import SourceLayoutNode from './SourceLayoutNode';
 import type { Source } from '../../../shared/src/obs';
 
 export default class SourceComponent extends Component {

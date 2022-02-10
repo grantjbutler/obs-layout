@@ -1,10 +1,10 @@
-import Component from './Component'
-import LayoutNode from './LayoutNode'
-import Size from './Size'
-import ContainerLayoutNode from './ContainerLayoutNode'
-import Frame from './Frame'
-import ContainerComponent from './ContainerComponent'
-import Insets from './Insets'
+import type Component from './Component';
+import type LayoutNode from './LayoutNode';
+import type Size from './Size';
+import ContainerLayoutNode from './ContainerLayoutNode';
+import Frame from './Frame';
+import ContainerComponent from './ContainerComponent';
+import Insets from './Insets';
 
 export default class InsetComponent extends ContainerComponent {
   insets = new Insets(0, 0, 0, 0);

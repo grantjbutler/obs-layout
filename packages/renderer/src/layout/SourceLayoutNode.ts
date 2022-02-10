@@ -1,5 +1,5 @@
 import type { Source } from '../../../shared/src/obs';
-import Frame from './Frame'
+import type Frame from './Frame';
 import LayoutNode from './LayoutNode';
 
 export default class SourceLayoutNode extends LayoutNode {
