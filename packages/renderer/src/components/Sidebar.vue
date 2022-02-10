@@ -7,20 +7,11 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { useStore } from '/@/store/app';
-import { computed, defineComponent } from 'vue';
+import { computed } from 'vue';
 import TreeControl from './Sidebar/TreeControl.vue';
-export default defineComponent({
-  name: 'Sidebar',
-  components: {
-    TreeControl,
-  },
-  setup() {
-    const store = useStore();
-    return {
-      component: computed(() => store.state.rootComponent),
-    };
-  },
-});
+
+const store = useStore();
+const component = computed(() => store.state.rootComponent);
 </script>

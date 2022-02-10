@@ -24,7 +24,7 @@ export default defineComponent({
       required: true,
     },
     modelValue: {
-      type: any,
+      type: String,
       required: true,
     },
   },

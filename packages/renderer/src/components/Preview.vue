@@ -14,81 +14,77 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { useStore } from '/@/store/app';
-import { computed, defineComponent, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { LayoutNode, Size } from '/@/layout';
 import { ContainerLayoutNode } from '/@/layout';
 import { usePreferredDark } from '@vueuse/core';
-export default defineComponent({
-  name: 'Preview',
-  setup() {
-    const store = useStore();
-    const scale = ref(1);
-    const canvas = ref<HTMLCanvasElement | null>(null);
-    const didChangeSize = (newSize: Size) => {
-      let el = canvas.value;
-      if (!el) { return; }
-      el.style.transformOrigin = '0 0';
-      let aspectRatio = 16 / 9;
-      let width = Math.min(newSize.width, newSize.height * aspectRatio);
-      let height = Math.min(newSize.height, newSize.width / aspectRatio);
-      if (newSize.width > newSize.height) {
-        scale.value = width / 1920;
-        el.style.transform = `scale(${scale.value}, ${scale.value})`;
-        el.style.left = ((newSize.width - width) / 2) + 'px';
-        el.style.top = ((newSize.height - (width / aspectRatio)) / 2) + 'px';
-      } else {
-        scale.value = height / 1080;
-        el.style.transform = `scale(${scale.value}, ${scale.value})`;
-        el.style.left = ((newSize.width - (height * aspectRatio)) / 2) + 'px';
-        el.style.top = ((newSize.height - height) / 2) + 'px';
-      }
-    };
-    const node = computed(() => store.state.rootNode);
-    const prefersDarkMode = usePreferredDark();
-    const renderNode = (node: LayoutNode, context: CanvasRenderingContext2D) => {
-      context.save();
 
-      context.lineWidth = 1 / scale.value;
-      if (node instanceof ContainerLayoutNode) {
-        context.strokeStyle = 'rgb(150, 150, 150)';
-        context.setLineDash([4 / scale.value, 2 / scale.value]);
-      } else {
-        context.strokeStyle = prefersDarkMode.value ? 'white' : 'black';
-        context.setLineDash([]);
-      }
-      context.strokeRect(node.frame.x, node.frame.y, node.frame.width, node.frame.height);
-      context.translate(node.frame.x, node.frame.y);
-      if (node instanceof ContainerLayoutNode) {
-        node.children.forEach(node => renderNode(node, context));
-      }
-      context.restore();
-    };
-    const render = () => {
-      const rootNode = node.value;
-      if (!rootNode) { return; }
-      const context = canvas.value?.getContext('2d');
-      if (!context) { return; }
-      context.clearRect(0, 0, 1920, 1080);
-      renderNode(rootNode, context);
-    };
-    watch(node, () => {
-      render();
-    });
-    watch(canvas, () => {
-      render();
-    });
-    watch(scale, () => {
-      render();
-    });
-    watch(prefersDarkMode, () => {
-      render();
-    });
-    return {
-      canvas,
-      didChangeSize,
-    };
-  },
+const store = useStore();
+const scale = ref(1);
+const canvas = ref<HTMLCanvasElement | null>(null);
+const node = computed(() => store.state.rootNode);
+const prefersDarkMode = usePreferredDark();
+
+const didChangeSize = (newSize: Size) => {
+  let el = canvas.value;
+  if (!el) { return; }
+  el.style.transformOrigin = '0 0';
+  let aspectRatio = 16 / 9;
+  let width = Math.min(newSize.width, newSize.height * aspectRatio);
+  let height = Math.min(newSize.height, newSize.width / aspectRatio);
+  if (newSize.width > newSize.height) {
+    scale.value = width / 1920;
+    el.style.transform = `scale(${scale.value}, ${scale.value})`;
+    el.style.left = ((newSize.width - width) / 2) + 'px';
+    el.style.top = ((newSize.height - (width / aspectRatio)) / 2) + 'px';
+  } else {
+    scale.value = height / 1080;
+    el.style.transform = `scale(${scale.value}, ${scale.value})`;
+    el.style.left = ((newSize.width - (height * aspectRatio)) / 2) + 'px';
+    el.style.top = ((newSize.height - height) / 2) + 'px';
+  }
+};
+
+const renderNode = (node: LayoutNode, context: CanvasRenderingContext2D) => {
+  context.save();
+
+  context.lineWidth = 1 / scale.value;
+  if (node instanceof ContainerLayoutNode) {
+    context.strokeStyle = 'rgb(150, 150, 150)';
+    context.setLineDash([4 / scale.value, 2 / scale.value]);
+  } else {
+    context.strokeStyle = prefersDarkMode.value ? 'white' : 'black';
+    context.setLineDash([]);
+  }
+  context.strokeRect(node.frame.x, node.frame.y, node.frame.width, node.frame.height);
+  context.translate(node.frame.x, node.frame.y);
+  if (node instanceof ContainerLayoutNode) {
+    node.children.forEach(node => renderNode(node, context));
+  }
+  context.restore();
+};
+
+const render = () => {
+  const rootNode = node.value;
+  if (!rootNode) { return; }
+  const context = canvas.value?.getContext('2d');
+  if (!context) { return; }
+  context.clearRect(0, 0, 1920, 1080);
+  renderNode(rootNode, context);
+};
+
+watch(node, () => {
+  render();
+});
+watch(canvas, () => {
+  render();
+});
+watch(scale, () => {
+  render();
+});
+watch(prefersDarkMode, () => {
+  render();
 });
 </script>

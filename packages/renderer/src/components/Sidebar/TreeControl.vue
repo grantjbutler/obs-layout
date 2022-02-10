@@ -13,7 +13,7 @@
         <DisclosureButton v-if="isContainerComponent">
           <ChevronRightIcon
             class="w-4 h-4"
-            :class="open ? &quot;transform rotate-90&quot; : &quot;&quot;"
+            :class="open ? 'transform rotate-90' : ''"
           />
         </DisclosureButton>
         <div
@@ -66,11 +66,11 @@
   </Disclosure>
 </template>
 
-<script lang="ts">
-import type { PropType} from 'vue';
-import { computed, defineComponent, toRefs } from 'vue';
-import type { Component} from '/@/layout';
-import { FlexComponent, SourceComponent, ContainerComponent, containerComponents as ContainerComponents, components as LayoutComponents } from '/@/layout';
+<script lang="ts" setup>
+import type { PropType } from 'vue';
+import { computed } from 'vue';
+import type { Component } from '/@/layout';
+import { ContainerComponent, containerComponents as ContainerComponents, components as LayoutComponents } from '/@/layout';
 import {
   Disclosure,
   DisclosureButton,
@@ -79,88 +79,67 @@ import {
 import { ChevronRightIcon } from '@heroicons/vue/solid';
 import { useStore } from '/@/store/app';
 import { ADD_CHILD, SELECT_COMPONENT, EMBED_IN_COMPONENT, DELETE_COMPONENT } from '/@/store/mutation-types';
+
 interface ContainerAction {
   title: string
   action: () => void
 }
-export default defineComponent({
-  name: 'TreeControl',
-  components: {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    ChevronRightIcon,
+
+const props = defineProps({
+  component: {
+    type: Object as PropType<Component>,
+    required: true,
   },
-  props: {
-    component: {
-      type: Object as PropType<Component>,
-      required: true,
-    },
-    indentationLevel: {
-      type: Number,
-      default: 0,
-    },
-  },
-  setup(props) {
-    const store = useStore();
-    const { component } = toRefs(props);
-    const selectComponent = () => {
-      store.commit(SELECT_COMPONENT, component.value);
-    };
-    const isSelected = computed(() => {
-      return store.state.selectedComponent?.id == component.value.id;
-    });
-    const isContainerComponent = computed(() => component.value instanceof ContainerComponent);
-    const addFlexComponent = () => {
-      store.commit(ADD_CHILD, { parentId: component.value.id, component: new FlexComponent()});
-    };
-    const addSourceComponent = () => {
-      store.commit(ADD_CHILD, { parentId: component.value.id, component: new SourceComponent()});
-    };
-    const containerActions = computed((): ContainerAction[] => {
-      if (!isContainerComponent.value) {
-        return [];
-      }
-      if (!(component.value instanceof ContainerComponent)) {
-        return [];
-      }
-      let actions: ContainerAction[] = [];
-      for (const property in LayoutComponents) {
-        if (!component.value.canAddChild(LayoutComponents[property])) {
-          continue;
-        }
-        actions.push({
-          title: LayoutComponents[property].displayName,
-          action: () => { store.commit(ADD_CHILD, { parentId: component.value.id, component: new LayoutComponents[property]()}); },
-        });
-      }
-      return actions;
-    });
-    const embedActions = computed((): ContainerAction[] => {
-      let actions: ContainerAction[] = [];
-      for (const property in ContainerComponents) {
-        actions.push({
-          title: LayoutComponents[property].displayName,
-          action: () => {
-            store.commit(EMBED_IN_COMPONENT, { id: component.value.id, container: new LayoutComponents[property]() });
-          },
-        });
-      }
-      return actions;
-    });
-    const deleteComponent = () => {
-      store.commit(DELETE_COMPONENT, { id: component.value.id });
-    };
-    return {
-      selectComponent,
-      isSelected,
-      isContainerComponent,
-      containerActions,
-      embedActions,
-      addFlexComponent,
-      addSourceComponent,
-      deleteComponent,
-    };
+  indentationLevel: {
+    type: Number,
+    default: 0,
   },
 });
+
+const store = useStore();
+const isSelected = computed(() => {
+  return store.state.selectedComponent?.id == props.component.id;
+});
+const isContainerComponent = computed(() => props.component instanceof ContainerComponent);
+
+const selectComponent = () => {
+  store.commit(SELECT_COMPONENT, props.component);
+};
+
+const containerActions = computed((): ContainerAction[] => {
+  if (!isContainerComponent.value) {
+    return [];
+  }
+  if (!(props.component instanceof ContainerComponent)) {
+    return [];
+  }
+  let actions: ContainerAction[] = [];
+  for (const property in LayoutComponents) {
+    if (!props.component.canAddChild(LayoutComponents[property])) {
+      continue;
+    }
+    actions.push({
+      title: LayoutComponents[property].displayName,
+      action: () => { store.commit(ADD_CHILD, { parentId: props.component.id, component: new LayoutComponents[property]()}); },
+    });
+  }
+  return actions;
+});
+
+const embedActions = computed((): ContainerAction[] => {
+  let actions: ContainerAction[] = [];
+  for (const property in ContainerComponents) {
+    actions.push({
+      title: LayoutComponents[property].displayName,
+      action: () => {
+        store.commit(EMBED_IN_COMPONENT, { id: props.component.id, container: new LayoutComponents[property]() });
+      },
+    });
+  }
+  return actions;
+});
+
+const deleteComponent = () => {
+  store.commit(DELETE_COMPONENT, { id: props.component.id });
+};
 </script>

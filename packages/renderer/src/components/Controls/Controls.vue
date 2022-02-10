@@ -10,10 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-});
+defineProps<{
+  title: string
+}>();
 </script>

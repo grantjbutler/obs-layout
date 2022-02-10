@@ -6,7 +6,7 @@
     >
       <option
         v-for="aSource in sources"
-        :key="aSource"
+        :key="aSource.name"
         :value="aSource"
         v-text="aSource.name"
       />
@@ -14,37 +14,24 @@
   </Controls>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import type SourceComponent from '/@/layout/SourceComponent';
 import { useStore } from '/@/store/app';
 import { SOURCE_SET_SOURCE } from '/@/store/mutation-types';
-import type { PropType} from 'vue';
-import { computed, defineComponent, toRefs } from 'vue';
+import { computed } from 'vue';
+import type { Source } from '../../../../shared/src/obs';
 import FormSelect from '/@/components/Form/FormSelect.vue';
 import Controls from './Controls.vue';
-export default defineComponent({
-  name: 'SourceComponentControls',
-  components: {
-    FormSelect,
-    Controls,
-  },
-  props: {
-    component: {
-      type: Object as PropType<SourceComponent>,
-      required: true,
-    },
-  },
-  setup(props) {
-    const store = useStore();
-    const { component } = toRefs(props);
-    const sources = computed(() => store.state.sources);
-    return {
-      source: computed({
-        get(): string { return component.value.source; },
-        set(value) { store.commit(SOURCE_SET_SOURCE, value); },
-      }),
-      sources,
-    };
-  },
+
+const props = defineProps<{
+  component: SourceComponent
+}>();
+
+const store = useStore();
+const sources = computed(() => store.state.sources);
+
+const source = computed({
+  get(): Source | undefined { return props.component.source; },
+  set(value?: Source) { store.commit(SOURCE_SET_SOURCE, value); },
 });
 </script>

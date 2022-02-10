@@ -20,63 +20,53 @@
   </Controls>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import type InsetComponent from '/@/layout/InsetComponent';
 import { useStore } from '/@/store/app';
 import { INSET_SET_INSETS } from '/@/store/mutation-types';
-import type { PropType} from 'vue';
-import { computed, defineComponent, toRefs } from 'vue';
+import { computed } from 'vue';
 import FormNumberInput from '/@/components/Form/FormNumberInput.vue';
 import Controls from './Controls.vue';
-export default defineComponent({
-  name: 'InsetComponentControls',
-  props: {
-    component: {
-      type: Object as PropType<InsetComponent>,
-      required: true,
-    },
+
+const props = defineProps<{
+  component: InsetComponent
+}>();
+
+const store = useStore();
+
+const top = computed({
+  get() { return props.component.insets.top; },
+  set(newValue: number) {
+    const insets = props.component.insets;
+    insets.top = newValue;
+    store.commit(INSET_SET_INSETS, insets);
   },
-  components: {
-    FormNumberInput,
-    Controls,
+});
+
+const left = computed({
+  get() { return props.component.insets.left; },
+  set(newValue: number) {
+    const insets = props.component.insets;
+    insets.left = newValue;
+    store.commit(INSET_SET_INSETS, insets);
   },
-  setup(props) {
-    const { component } = toRefs(props);
-    const store = useStore();
-    return {
-      top: computed({
-        get() { return component.value.insets.top; },
-        set(newValue: number) {
-          const insets = component.value.insets;
-          insets.top = newValue;
-          store.commit(INSET_SET_INSETS, insets);
-        },
-      }),
-      left: computed({
-        get() { return component.value.insets.left; },
-        set(newValue: number) {
-          const insets = component.value.insets;
-          insets.left = newValue;
-          store.commit(INSET_SET_INSETS, insets);
-        },
-      }),
-      bottom: computed({
-        get() { return component.value.insets.bottom; },
-        set(newValue: number) {
-          const insets = component.value.insets;
-          insets.bottom = newValue;
-          store.commit(INSET_SET_INSETS, insets);
-        },
-      }),
-      right: computed({
-        get() { return component.value.insets.right; },
-        set(newValue: number) {
-          const insets = component.value.insets;
-          insets.right = newValue;
-          store.commit(INSET_SET_INSETS, insets);
-        },
-      }),
-    };
+});
+
+const bottom = computed({
+  get() { return props.component.insets.bottom; },
+  set(newValue: number) {
+    const insets = props.component.insets;
+    insets.bottom = newValue;
+    store.commit(INSET_SET_INSETS, insets);
+  },
+});
+
+const right = computed({
+  get() { return props.component.insets.right; },
+  set(newValue: number) {
+    const insets = props.component.insets;
+    insets.right = newValue;
+    store.commit(INSET_SET_INSETS, insets);
   },
 });
 </script>

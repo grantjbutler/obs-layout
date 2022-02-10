@@ -20,21 +20,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
 import { CloudUploadIcon, ChevronDownIcon } from '@heroicons/vue/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import ConnectionState from './ConnectionState.vue';
 import SyncPopover from './SyncPopover.vue';
-export default defineComponent({
-  components: {
-    CloudUploadIcon,
-    ChevronDownIcon,
-    Popover,
-    PopoverButton,
-    PopoverPanel,
-    ConnectionState,
-    SyncPopover,
-  },
-});
 </script>

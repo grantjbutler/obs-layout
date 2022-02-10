@@ -64,76 +64,62 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+<script lang="ts" setup>
+import { computed, onMounted, ref, watch } from 'vue';
 import debounce from 'lodash/debounce';
-import { OBSConnectionState, OBSConnectionOptions, isOBSConnectionOptions } from '../../../../shared/src/obs';
+import type { OBSConnectionOptions} from '../../../../shared/src/obs';
+import { OBSConnectionState, isOBSConnectionOptions } from '../../../../shared/src/obs';
 import { useObsConnectionState } from '/@/integration/obs';
 import Controls from '/@/components/Preferences/Controls.vue';
 import Control from '/@/components/Preferences/Control.vue';
 import { useIsWindows } from '/@/integration/platform';
-export default defineComponent({
-  components: {
-    Controls,
-    Control,
-  },
-  setup() {
-    const connectionState = useObsConnectionState();
-    const connection = ref<OBSConnectionOptions>({
-      host: 'localhost',
-      port: 4444,
-      password: undefined,
-    });
-    const sourceFilter = ref('');
-    const sceneFilter = ref('');
-    const isConnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Disconnected || connectionState.value == OBSConnectionState.Error);
-    const isAbortButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connecting);
-    const isDisconnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connected);
-    const connect = () => {
-      if (isOBSConnectionOptions(connection.value)) {
-        window.obs.connect(connection.value);
-      }
-    };
-    const disconnect = () => {
-      window.obs.disconnect();
-    };
-    onMounted(() => {
-      window.preferences.loadConnectionOptions()
-        .then(newValue => {
-          if (newValue) {
-            connection.value = newValue;
-          }
-        });
 
-      window.preferences.loadSourceFilter()
-        .then(filter => {
-          sourceFilter.value = filter;
-        });
-
-      window.preferences.loadSceneFilter()
-        .then(filter => {
-          sceneFilter.value = filter;
-        });
-    });
-    watch(sourceFilter, debounce((newFilter: string) => {
-      window.preferences.setSourceFilter(newFilter);
-    }));
-    watch(sceneFilter, debounce((newFilter: string) => {
-      window.preferences.setSceneFilter(newFilter);
-    }));
-
-    const isWindows = useIsWindows();
-    return {
-      connection,
-      connect,
-      disconnect,
-      isConnectButtonVisible,
-      isAbortButtonVisible,
-      isDisconnectButtonVisible,
-      sourceFilter,
-      sceneFilter,
-      isWindows,
-    };
-  },
+const isWindows = useIsWindows();
+const connectionState = useObsConnectionState();
+const connection = ref<OBSConnectionOptions>({
+  host: 'localhost',
+  port: 4444,
+  password: undefined,
 });
+
+const sourceFilter = ref('');
+const sceneFilter = ref('');
+const isConnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Disconnected || connectionState.value == OBSConnectionState.Error);
+const isAbortButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connecting);
+const isDisconnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connected);
+
+const connect = () => {
+  if (isOBSConnectionOptions(connection.value)) {
+    window.obs.connect(connection.value);
+  }
+};
+const disconnect = () => {
+  window.obs.disconnect();
+};
+
+onMounted(() => {
+  window.preferences.loadConnectionOptions()
+    .then(newValue => {
+      if (newValue) {
+        connection.value = newValue;
+      }
+    });
+
+  window.preferences.loadSourceFilter()
+    .then(filter => {
+      sourceFilter.value = filter;
+    });
+
+  window.preferences.loadSceneFilter()
+    .then(filter => {
+      sceneFilter.value = filter;
+    });
+});
+
+watch(sourceFilter, debounce((newFilter: string) => {
+  window.preferences.setSourceFilter(newFilter);
+}));
+watch(sceneFilter, debounce((newFilter: string) => {
+  window.preferences.setSceneFilter(newFilter);
+}));
 </script>
