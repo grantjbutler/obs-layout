@@ -15,14 +15,15 @@
       <controls class="flex-none border-l border-system-divider" />
     </div>
     <preferences-modal
+      v-if="isWindows"
       :open="isSettingsOpen"
       @close="closeSettings"
     />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script lang="ts" setup>
+import { ref } from 'vue';
 import Preview from './components/Preview.vue';
 import Sidebar from './components/Sidebar.vue';
 import Controls from './components/Controls.vue';
@@ -30,25 +31,12 @@ import NavBar from './components/NavBar.vue';
 import CommandBar from './components/CommandBar.vue';
 import PreferencesModal from './components/Preferences/Modal.vue';
 import { useIsMacOS, useIsWindows } from './integration/platform';
-export default defineComponent({
-  name: 'App',
-  components: {
-    Preview,
-    Sidebar,
-    Controls,
-    NavBar,
-    CommandBar,
-    PreferencesModal,
-  },
-  setup() {
-    const isSettingsOpen = ref(false);
-    return {
-      isMacOS: useIsMacOS(),
-      isWindows: useIsWindows(),
-      isSettingsOpen,
-      openSettings: () => isSettingsOpen.value = true,
-      closeSettings: () => isSettingsOpen.value = false,
-    };
-  },
-});
+
+const isMacOS = useIsMacOS();
+const isWindows = useIsWindows();
+
+const isSettingsOpen = ref(false);
+
+const openSettings = () => isSettingsOpen.value = true;
+const closeSettings = () => isSettingsOpen.value = false;
 </script>

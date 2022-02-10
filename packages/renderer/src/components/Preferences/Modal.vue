@@ -3,7 +3,7 @@
     :open="open"
     class="fixed inset-x-0 bottom-0 z-10 flex flex-col bg-white"
     style="top: env(titlebar-area-height, 40px);"
-    @close="close"
+    @close="$emit('close')"
   >
     <DialogTitle class="flex mb-4 space-x-2 text-4xl font-light">
       <button
