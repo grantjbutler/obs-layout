@@ -1,9 +1,10 @@
 const plugin = require('tailwindcss/plugin');
 const colors = require('tailwindcss/colors');
+const { join } = require('path');
 
 module.exports = {
   content: [
-    'packages/**/*.vue',
+    join(__dirname, 'packages', '**', '*.vue'),
   ],
   theme: {
     extend: {
