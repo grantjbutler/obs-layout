@@ -2,6 +2,11 @@ import {app} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 
+import Preferences from '/@/preferences';
+import { install as installInterface } from '/@/interface';
+import OBSSocket from '/@/obs';
+import { configureApplicationMenu, installContextMenuHandling } from './menus';
+
 
 /**
  * Prevent multiple instances
@@ -33,12 +38,34 @@ app.on('window-all-closed', () => {
  */
 app.on('activate', restoreOrCreateWindow);
 
+const preferences = new Preferences({
+  defaults: {
+    obsConnection: null,
+    sourceFilter: '',
+    sceneFilter: '',
+  },
+});
+
+const obsSocket = new OBSSocket({
+  sourceFilter: preferences.sourceFilter,
+});
+
+installInterface({
+  preferences,
+  obsSocket,
+});
+
+if (preferences.obsConnection) {
+  obsSocket.connect(preferences.obsConnection);
+}
 
 /**
  * Create app window when background process will be ready
  */
 app.whenReady()
   .then(restoreOrCreateWindow)
+  .then(installContextMenuHandling)
+  .then(configureApplicationMenu)
   .catch((e) => console.error('Failed create window:', e));
 
 

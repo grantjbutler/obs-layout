@@ -32,6 +32,7 @@ const config = {
       external: [
         'electron',
         'electron-devtools-installer',
+        'obs-websocket-js',
         ...builtinModules.flatMap(p => [p, `node:${p}`]),
       ],
       output: {

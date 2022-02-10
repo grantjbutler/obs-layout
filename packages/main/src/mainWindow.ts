@@ -1,10 +1,27 @@
 import {BrowserWindow} from 'electron';
 import {join} from 'path';
 import {URL} from 'url';
+import { injectSystemColors } from './colors';
+
+/**
+ * URL for main window.
+ * Vite dev server for development.
+ * `file://../renderer/index.html` for production and test
+ */
+const pageUrl = import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
+ ? import.meta.env.VITE_DEV_SERVER_URL
+ : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
 
 async function createWindow() {
   const browserWindow = new BrowserWindow({
+    width: 1050,
+    height: 600,
+    minHeight: 600,
+    minWidth: 1050,
     show: false, // Use 'ready-to-show' event to show window
+    vibrancy: 'sidebar',
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'hidden',
+    titleBarOverlay: process.platform === 'win32',
     webPreferences: {
       nativeWindowOpen: true,
       webviewTag: false, // The webview tag is not recommended. Consider alternatives like iframe or Electron's BrowserView. https://www.electronjs.org/docs/latest/api/webview-tag#warning
@@ -26,15 +43,7 @@ async function createWindow() {
     }
   });
 
-  /**
-   * URL for main window.
-   * Vite dev server for development.
-   * `file://../renderer/index.html` for production and test
-   */
-  const pageUrl = import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== undefined
-    ? import.meta.env.VITE_DEV_SERVER_URL
-    : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
-
+  injectSystemColors(browserWindow);
 
   await browserWindow.loadURL(pageUrl);
 
@@ -45,7 +54,7 @@ async function createWindow() {
  * Restore existing BrowserWindow or Create new BrowserWindow
  */
 export async function restoreOrCreateWindow() {
-  let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
+  let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed() && w.webContents.getURL() === pageUrl);
 
   if (window === undefined) {
     window = await createWindow();
