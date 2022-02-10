@@ -90,7 +90,7 @@ const isDisconnectButtonVisible = computed(() => connectionState.value == OBSCon
 
 const connect = () => {
   if (isOBSConnectionOptions(connection.value)) {
-    window.obs.connect(connection.value);
+    window.obs.connect(JSON.parse(JSON.stringify(connection.value)));
   }
 };
 const disconnect = () => {

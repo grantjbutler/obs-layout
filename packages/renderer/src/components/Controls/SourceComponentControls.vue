@@ -7,7 +7,7 @@
       <option
         v-for="aSource in sources"
         :key="aSource.name"
-        :value="aSource"
+        :value="aSource.name"
         v-text="aSource.name"
       />
     </FormSelect>
@@ -19,7 +19,6 @@ import type SourceComponent from '/@/layout/SourceComponent';
 import { useStore } from '/@/store/app';
 import { SOURCE_SET_SOURCE } from '/@/store/mutation-types';
 import { computed } from 'vue';
-import type { Source } from '../../../../shared/src/obs';
 import FormSelect from '/@/components/Form/FormSelect.vue';
 import Controls from './Controls.vue';
 
@@ -31,7 +30,11 @@ const store = useStore();
 const sources = computed(() => store.state.sources);
 
 const source = computed({
-  get(): Source | undefined { return props.component.source; },
-  set(value?: Source) { store.commit(SOURCE_SET_SOURCE, value); },
+  get(): string { return props.component.source?.name ?? ''; },
+  set(value: string) {
+    const source = sources.value.find(source => source.name == value);
+    if (!source) { return; }
+    store.commit(SOURCE_SET_SOURCE, source);
+  },
 });
 </script>

@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 import type { OBSConnectionOptions, OBSConnectionState, Source } from '../../shared/src/obs';
 
 export function connect(options: OBSConnectionOptions) {
-  ipcRenderer.send('connect-to-obs', JSON.parse(JSON.stringify(options)));
+  ipcRenderer.send('connect-to-obs', options);
 }
 
 export function disconnect() {

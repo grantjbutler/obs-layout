@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-baseline windows:justify-between macos:px-2">
-    <label class="macos:w-1/3 macos:text-right macos:mr-2 macos:flex-shrink-0">{{ label }}</label>
+  <div class="flex items-baseline gap-2 windows:justify-between macos:px-2">
+    <label class="macos:w-1/3 macos:text-right macos:flex-shrink-0">{{ label }}</label>
     <slot />
   </div>
 </template>

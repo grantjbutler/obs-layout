@@ -174,7 +174,7 @@ export default class OBSSocket {
           .map(source => source.name);
       })
       .then((sources) => {
-        return Promise.all(sources.map(sourceName => {
+        return Promise.allSettled(sources.map(sourceName => {
           return this._getSourceSize(sourceName)
             .then(size => ({
               name: sourceName,
@@ -182,6 +182,10 @@ export default class OBSSocket {
               height: size.height,
             }));
         }));
+      })
+      .then(sources => {
+        return (sources.filter(source => source.status == 'fulfilled') as PromiseFulfilledResult<Source>[])
+          .map(source => source.value);
       })
       .then(sources => { this.sources = sources; });
   }
