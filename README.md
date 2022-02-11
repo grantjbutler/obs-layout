@@ -10,6 +10,4 @@ In the future, full builds of this app will be available as Releases. However, a
 
 ## Building
 
-obs-layout is an Electron app that uses [nklayman/vue-cli-plugin-electron-builder](https://github.com/nklayman/vue-cli-plugin-electron-builder) for building. This assumes you have the [Vue CLI](https://cli.vuejs.org) installed, as well as added the electron-build plugin by running `vue add electron-builder`.
-
-With the electron-builder plugin installed, you can run `yarn electron:serve` to compile and launch the app.
+obs-layout is an Electron app that uses a modified version of [vite-electron-builder](https://github.com/cawa-93/vite-electron-builder) for building. After installing dependencies with `npm`, run `npm run watch` to run the app and start a watcher to rebuild the app when source files change. If you want a one-off build and don't want to spin up a watcher, you can run `npm run build` for a development build or `npm run compile` for a production build.
