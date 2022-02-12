@@ -16,12 +16,12 @@
 
 <script lang="ts" setup>
 import { Component } from '/@/layout';
-import { useStore } from '/@/store/app';
+import { useLayoutStore } from '/@/store/layout';
 import { computed } from 'vue';
 import ControlComponents from './Controls/Registry';
 
-const store = useStore();
-const component = computed(() => store.state.selectedComponent);
+const store = useLayoutStore();
+const component = computed(() => store.selectedComponent);
 
 const controls = computed(() => {
   let controlComponent = Object.getPrototypeOf(component.value);
@@ -35,31 +35,4 @@ const controls = computed(() => {
   } while (controlComponent instanceof Component);
   return controlsComponents.reverse();
 });
-
-// export default defineComponent({
-//   name: 'Controls',
-//   components: {
-//     ...ControlComponents.components,
-//   },
-//   setup() {
-//     const store = useStore();
-//     const component = computed(() => store.state.selectedComponent);
-//     const controls = computed(() => {
-//       let controlComponent = Object.getPrototypeOf(component.value);
-//       let controlsComponents = [];
-//       do {
-//         let control: any = ControlComponents.registry.get(controlComponent.constructor);
-//         if (control) {
-//           controlsComponents.push(control);
-//         }
-//         controlComponent = Object.getPrototypeOf(controlComponent);
-//       } while (controlComponent instanceof Component);
-//       return controlsComponents.reverse();
-//     });
-//     return {
-//       controls,
-//       component,
-//     };
-//   },
-// });
 </script>

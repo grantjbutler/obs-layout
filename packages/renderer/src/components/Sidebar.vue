@@ -8,10 +8,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from '/@/store/app';
+import { useLayoutStore } from '/@/store/layout';
 import { computed } from 'vue';
 import TreeControl from './Sidebar/TreeControl.vue';
 
-const store = useStore();
-const component = computed(() => store.state.rootComponent);
+const store = useLayoutStore();
+const component = computed(() => store.rootComponent);
 </script>

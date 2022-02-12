@@ -1,14 +1,15 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import App from '/@/App.vue';
-import { store, key } from '/@/store/app';
 import observeResize from '/@/directives/observe-resize';
 import {
   ContextMenu, ContextMenuProviding, MenuItem, MenuSeparator, Submenu,
 } from '/@/components/ContextMenu';
 import './../assets/style.css';
+import { useObs } from './integration/obs';
 
 createApp(App)
-  .use(store, key)
+  .use(createPinia())
   .directive(
     'observe-resize', observeResize,
   )
@@ -18,6 +19,8 @@ createApp(App)
   .component('menu-separator', MenuSeparator)
   .component('Submenu', Submenu)
   .mount('#app');
+
+useObs();
 
 document.getElementsByTagName('html')[0]
   .classList.add(window.platform);
