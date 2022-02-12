@@ -22,8 +22,7 @@
 
 <script lang="ts" setup>
 import type InsetComponent from '/@/layout/InsetComponent';
-import { useStore } from '/@/store/app';
-import { INSET_SET_INSETS } from '/@/store/mutation-types';
+import { setInsets } from '/@/store/components/inset';
 import { computed } from 'vue';
 import FormNumberInput from '/@/components/Form/FormNumberInput.vue';
 import Controls from './Controls.vue';
@@ -32,14 +31,12 @@ const props = defineProps<{
   component: InsetComponent
 }>();
 
-const store = useStore();
-
 const top = computed({
   get() { return props.component.insets.top; },
   set(newValue: number) {
     const insets = props.component.insets;
     insets.top = newValue;
-    store.commit(INSET_SET_INSETS, insets);
+    setInsets(insets);
   },
 });
 
@@ -48,7 +45,7 @@ const left = computed({
   set(newValue: number) {
     const insets = props.component.insets;
     insets.left = newValue;
-    store.commit(INSET_SET_INSETS, insets);
+    setInsets(insets);
   },
 });
 
@@ -57,7 +54,7 @@ const bottom = computed({
   set(newValue: number) {
     const insets = props.component.insets;
     insets.bottom = newValue;
-    store.commit(INSET_SET_INSETS, insets);
+    setInsets(insets);
   },
 });
 
@@ -66,7 +63,7 @@ const right = computed({
   set(newValue: number) {
     const insets = props.component.insets;
     insets.right = newValue;
-    store.commit(INSET_SET_INSETS, insets);
+    setInsets(insets);
   },
 });
 </script>

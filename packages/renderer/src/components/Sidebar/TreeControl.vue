@@ -77,8 +77,7 @@ import {
   DisclosurePanel,
 } from '@headlessui/vue';
 import { ChevronRightIcon } from '@heroicons/vue/solid';
-import { useStore } from '/@/store/app';
-import { ADD_CHILD, SELECT_COMPONENT, EMBED_IN_COMPONENT, DELETE_COMPONENT } from '/@/store/mutation-types';
+import { useLayoutStore } from '/@/store/layout';
 
 interface ContainerAction {
   title: string
@@ -96,14 +95,14 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const store = useLayoutStore();
 const isSelected = computed(() => {
-  return store.state.selectedComponent?.id == props.component.id;
+  return store.selectedComponent?.id == props.component.id;
 });
 const isContainerComponent = computed(() => props.component instanceof ContainerComponent);
 
 const selectComponent = () => {
-  store.commit(SELECT_COMPONENT, props.component);
+  store.selectComponent(props.component);
 };
 
 const containerActions = computed((): ContainerAction[] => {
@@ -120,7 +119,7 @@ const containerActions = computed((): ContainerAction[] => {
     }
     actions.push({
       title: LayoutComponents[property].displayName,
-      action: () => { store.commit(ADD_CHILD, { parentId: props.component.id, component: new LayoutComponents[property]()}); },
+      action: () => { store.addChild(new LayoutComponents[property](), props.component.id); },
     });
   }
   return actions;
@@ -132,7 +131,7 @@ const embedActions = computed((): ContainerAction[] => {
     actions.push({
       title: LayoutComponents[property].displayName,
       action: () => {
-        store.commit(EMBED_IN_COMPONENT, { id: props.component.id, container: new LayoutComponents[property]() });
+        store.embedInComponent(props.component.id, new LayoutComponents[property]() as ContainerComponent);
       },
     });
   }
@@ -140,6 +139,6 @@ const embedActions = computed((): ContainerAction[] => {
 });
 
 const deleteComponent = () => {
-  store.commit(DELETE_COMPONENT, { id: props.component.id });
+  store.deleteComponent(props.component.id);
 };
 </script>

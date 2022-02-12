@@ -7,14 +7,14 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useStore } from '/@/store/app';
+import { useObsStore } from '/@/store/obs';
 import { OBSConnectionState } from '../../../shared/src/obs';
 
 const props = defineProps<{
   size: 'small' | 'medium'
 }>();
 
-const store = useStore();
+const store = useObsStore();
 
 const sizeClasses = computed(() => {
   switch (props.size) {
@@ -29,7 +29,7 @@ const sizeClasses = computed(() => {
 
 // eslint-disable-next-line vue/return-in-computed-property
 const backgroundColor = computed(() => {
-  switch (store.state.connectionState) {
+  switch (store.connectionState) {
     case OBSConnectionState.Connecting:
       return 'bg-yellow-500';
     case OBSConnectionState.Connected:
@@ -41,7 +41,7 @@ const backgroundColor = computed(() => {
 });
 // eslint-disable-next-line vue/return-in-computed-property
 const title = computed(() => {
-  switch (store.state.connectionState) {
+  switch (store.connectionState) {
     case OBSConnectionState.Disconnected:
       return 'Disconnected';
     case OBSConnectionState.Connecting:

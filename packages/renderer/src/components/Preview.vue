@@ -15,16 +15,16 @@
 </template>
 
 <script lang="ts" setup>
-import { useStore } from '/@/store/app';
+import { useLayoutStore } from '/@/store/layout';
 import { computed, ref, watch } from 'vue';
 import type { LayoutNode, Size } from '/@/layout';
 import { ContainerLayoutNode } from '/@/layout';
 import { usePreferredDark } from '@vueuse/core';
 
-const store = useStore();
+const store = useLayoutStore();
 const scale = ref(1);
 const canvas = ref<HTMLCanvasElement | null>(null);
-const node = computed(() => store.state.rootNode);
+const node = computed(() => store.rootNode);
 const prefersDarkMode = usePreferredDark();
 
 const didChangeSize = (newSize: Size) => {

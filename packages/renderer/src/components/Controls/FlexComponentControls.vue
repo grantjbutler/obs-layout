@@ -35,8 +35,7 @@
 
 <script lang="ts" setup>
 import type { FlexComponent } from '/@/layout';
-import { useStore } from '/@/store/app';
-import { FLEX_SET_DIRECTION, FLEX_SET_DISTRIBUTION, FLEX_SET_SPACING } from '/@/store/mutation-types';
+import { setDirection, setDistribution, setSpacing } from '/@/store/components/flex';
 import { useIsWindows } from '/@/integration/platform';
 import { computed } from 'vue';
 
@@ -48,19 +47,18 @@ const props = defineProps<{
   component: FlexComponent
 }>();
 
-const store = useStore();
 const isWindows = useIsWindows();
 
 const direction = computed({
   get(): 'horizontal' | 'vertical' { return props.component.direction; },
-  set(direction: 'horizontal' | 'vertical') { store.commit(FLEX_SET_DIRECTION, direction); },
+  set(direction: 'horizontal' | 'vertical') { setDirection(direction); },
 });
 const distribution = computed({
   get(): 'leading' | 'center' | 'trailing' { return props.component.distribution; },
-  set(distribution: 'leading' | 'center' | 'trailing') { store.commit(FLEX_SET_DISTRIBUTION, distribution); },
+  set(distribution: 'leading' | 'center' | 'trailing') { setDistribution(distribution); },
 });
 const spacing = computed({
   get() { return props.component.spacing; },
-  set(spacing: number) { store.commit(FLEX_SET_SPACING, spacing); },
+  set(spacing: number) { setSpacing(spacing); },
 });
 </script>

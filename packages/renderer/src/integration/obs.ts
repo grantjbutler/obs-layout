@@ -1,12 +1,9 @@
 import type { LayoutNode } from '/@/layout';
 import { ContainerLayoutNode, Frame, SourceLayoutNode } from '/@/layout';
-import type { Source } from '../../../shared/src/obs';
 import { OBSConnectionState } from '../../../shared/src/obs';
-import type { State } from '/@/store/app';
-import { SET_OBS_CONNECTION_STATE, SET_OBS_SOURCES, SET_OBS_SCENES } from '/@/store/mutation-types';
 import type { Ref} from 'vue';
 import { ref } from 'vue';
-import type { Store } from 'vuex';
+import { useObsStore } from '/@/store/obs';
 
 export function useObsConnectionState(): Ref<OBSConnectionState> {
   const state = ref(OBSConnectionState.Disconnected);
@@ -21,25 +18,21 @@ export function useObsConnectionState(): Ref<OBSConnectionState> {
   return state;
 }
 
-export function obsWebSocketPlugin() {
-  return (store: Store<State>): void => {
-    const setObsConnectionState = (state: OBSConnectionState) => store.commit(SET_OBS_CONNECTION_STATE, state);
-    const setSources = (sources: Source[]) => store.commit(SET_OBS_SOURCES, sources);
-    const setScenes = (scenes: string[]) => store.commit(SET_OBS_SCENES, scenes);
+export function useObs() {
+  const obsStore = useObsStore();
 
-    window.obs.getConnectionStatus()
-      .then(setObsConnectionState);
+  window.obs.getConnectionStatus()
+    .then(obsStore.setConnectionState);
 
-    window.obs.getSources()
-      .then(setSources);
+  window.obs.getSources()
+    .then(obsStore.setSources);
 
-    window.obs.getScenes()
-      .then(setScenes);
+  window.obs.getScenes()
+    .then(obsStore.setScenes);
 
-    window.obs.onConnectionStateChanged(setObsConnectionState);
-    window.obs.onSourcesChanged(setSources);
-    window.obs.onScenesChanged(setScenes);
-  };
+  window.obs.onConnectionStateChanged(obsStore.setConnectionState);
+  window.obs.onSourcesChanged(obsStore.setSources);
+  window.obs.onScenesChanged(obsStore.setScenes);
 }
 
 export function syncLayout(rootNode: LayoutNode, sceneName: string): void {

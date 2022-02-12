@@ -29,14 +29,16 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { useStore } from '/@/store/app';
+import { useObsStore } from '/@/store/obs';
+import { useLayoutStore } from '/@/store/layout';
 import { syncLayout } from '/@/integration/obs';
 
-const store = useStore();
+const obsStore = useObsStore();
+const layoutStore = useLayoutStore();
 const scene = ref('');
-const scenes = computed(() => store.state.scenes);
+const scenes = computed(() => obsStore.scenes);
 const sync = () => {
-  if (!store.state.rootNode) { return; }
-  syncLayout(store.state.rootNode, scene.value);
+  if (!layoutStore.rootNode) { return; }
+  syncLayout(layoutStore.rootNode, scene.value);
 };
 </script>
