@@ -8,6 +8,9 @@ if (process.env.VITE_APP_VERSION === undefined) {
  * @see https://www.electron.build/configuration/configuration
  */
 const config = {
+  afterSign: 'scripts/macos-notarize.js',
+  appId: 'com.grantjbutler.obs-layout',
+  productName: 'OBSLayout',
   directories: {
     output: 'dist',
     buildResources: 'buildResources',
@@ -18,6 +21,14 @@ const config = {
   extraMetadata: {
     version: process.env.VITE_APP_VERSION,
   },
+  mac: {
+    hardenedRuntime: true,
+    gatekeeperAssess: false,
+    entitlements: 'buildResources/entitlements.mac.plist',
+    entitlementsInherit: 'buildResources/entitlements.mac.plist',
+    category: 'public.app-category.video',
+    darkModeSupport: true
+  }
 };
 
 module.exports = config;
