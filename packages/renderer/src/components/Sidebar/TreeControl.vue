@@ -55,9 +55,9 @@
         </context-menu>
       </template>
     </context-menu-providing>
-    <DisclosurePanel v-if="isContainerComponent">
+    <DisclosurePanel v-if="childComponents.length > 0">
       <TreeControl
-        v-for="child in component.children"
+        v-for="child in childComponents"
         :key="child.id"
         :component="child"
         :indentation-level="indentationLevel + 1"
@@ -100,6 +100,13 @@ const isSelected = computed(() => {
   return store.selectedComponent?.id == props.component.id;
 });
 const isContainerComponent = computed(() => props.component instanceof ContainerComponent);
+const childComponents = computed(() => {
+  if (props.component instanceof ContainerComponent) {
+    return props.component.children;
+  } else {
+    return [];
+  }
+});
 
 const selectComponent = () => {
   store.selectComponent(props.component);

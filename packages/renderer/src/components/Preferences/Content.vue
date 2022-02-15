@@ -2,17 +2,16 @@
   <div class="text-sm macos:bg-system-background-under-page macos:text-system-text macos:p-2">
     <div class="flex flex-col macos:gap-2 windows:gap-8 windows:w-1/2">
       <Controls label="OBS Connection">
-        <Control
+        <TextControl
           v-model="connection.host"
           label="Host"
           type="text"
         />
-        <Control
+        <NumberControl
           v-model="connection.port"
           label="Port"
-          type="text"
         />
-        <Control
+        <TextControl
           v-model="connection.password"
           label="Password"
           type="password"
@@ -49,12 +48,12 @@
         >
           Filters allow you to limit which scenes and sources show up.
         </div>
-        <Control
+        <TextControl
           v-model="sourceFilter"
           label="Source Filter"
           type="text"
         />
-        <Control
+        <TextControl
           v-model="sceneFilter"
           label="Scene Filter"
           type="text"
@@ -71,7 +70,8 @@ import type { OBSConnectionOptions} from '../../../../shared/src/obs';
 import { OBSConnectionState, isOBSConnectionOptions } from '../../../../shared/src/obs';
 import { useObsConnectionState } from '/@/integration/obs';
 import Controls from '/@/components/Preferences/Controls.vue';
-import Control from '/@/components/Preferences/Control.vue';
+import TextControl from './TextControl.vue';
+import NumberControl from './NumberControl.vue';
 import { useIsWindows } from '/@/integration/platform';
 
 const isWindows = useIsWindows();
