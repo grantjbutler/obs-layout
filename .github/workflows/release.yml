@@ -6,7 +6,6 @@ on:
     paths-ignore:
       - '**.md'
       - '**.spec.js'
-      - '.idea'
       - '.gitignore'
       - '.github/**'
       - '!.github/workflows/release.yml'
