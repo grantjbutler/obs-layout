@@ -6,7 +6,7 @@ We're trying to figure out a good name. If you have an idea or suggestion, pleas
 
 ## Installation
 
-In the future, full builds of this app will be available as Releases. However, as this project is still early in its lifecycle, you must build the app from source yourself.
+The latest builds of the app can be found on the [Releases page](https://github.com/grantjbutler/obs-layout/releases). Builds are available for macOS and Windows. obs-layout app requires that v4 of the [websocket plugin](https://github.com/obsproject/obs-websocket) for OBS is installed, so make sure you have that set up before using this app.
 
 ## Building
 
