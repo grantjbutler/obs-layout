@@ -1,8 +1,7 @@
 import { defineComponent, h } from 'vue';
 
 export default defineComponent({
-  name: 'ContextMenuProviding',
-  setup(props, context) {
+  setup(_, context) {
     return () => {
       const defaultSlot = context.slots.default?.() ?? [];
       const menuSlot = context.slots.menu?.() ?? [];

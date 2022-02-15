@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import type { MenuItemDefinition } from '../../../../shared/src/menus';
 
 export default defineComponent({
-  name: 'MenuItem',
   emits: ['click'],
   setup(_, context) {
     const label = ref('');
