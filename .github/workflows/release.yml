@@ -110,6 +110,8 @@ jobs:
         uses: samuelmeuli/action-electron-builder@v1
         env:
           VITE_APP_VERSION: ${{ needs.draft.outputs.version }}
+          APPLEID: ${{ secrets.APPLEID }}
+          APPLEIDPASS: ${{ secrets.APPLEIDPASS }}
         with:
           build_script_name: build
           args: --config .electron-builder.config.js
