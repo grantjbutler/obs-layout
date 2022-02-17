@@ -33,34 +33,36 @@ function getAccentColor(): string {
 
 function deriveColorMapping(): ColorModeMapping {
   if (process.platform == 'darwin') {
+    // For macOS, `getColor` doesn't return the updated value when the system theme changes. It will instead return the value from when the browser window was first created.
+    // Thus, we hard code colors here for macOS to work around this bug. https://github.com/electron/electron/issues/18699
     return {
       dark: {
-        text: systemPreferences.getColor('text'),
+        text: /*systemPreferences.getColor('text')*/ '#FFFFFF',
         textSecondary: /*systemPreferences.getColor('secondary-label')*/ '#ffffff8c',
-        controlText: systemPreferences.getColor('control-text'),
-        selectedControlText: systemPreferences.getColor('selected-control-text'),
+        controlText: /*systemPreferences.getColor('control-text')*/ '#FFFFFF',
+        selectedControlText: /*systemPreferences.getColor('selected-control-text')*/ 'FFFFFF',
 
-        controlBackground: systemPreferences.getColor('control-background'),
+        controlBackground: /*systemPreferences.getColor('control-background')*/ '#1E1E1E',
         navBarBackground: '#3c363c',
-        selectedContentBackground: systemPreferences.getColor('selected-content-background'),
-        underPageBackground: systemPreferences.getColor('under-page-background'),
-        windowBackground: systemPreferences.getColor('window-background'),
+        selectedContentBackground: /*systemPreferences.getColor('selected-content-background')*/ '#0058D0', // This is the blue accent color. This will not reflect the user's selected accent color.
+        underPageBackground: /*systemPreferences.getColor('under-page-background')*/ '#282828',
+        windowBackground: /*systemPreferences.getColor('window-background')*/ '#323232',
 
         accent: getAccentColor(),
         separator: /*systemPreferences.getColor('separator')*/ '#ffffff1a',
         divider: '#000000',
       },
       light: {
-        text: systemPreferences.getColor('text'),
+        text: /*systemPreferences.getColor('text')*/ '#000000',
         textSecondary: /*systemPreferences.getColor('secondary-label')*/ '#0000008c',
-        controlText: systemPreferences.getColor('control-text'),
-        selectedControlText: systemPreferences.getColor('selected-control-text'),
+        controlText: /*systemPreferences.getColor('control-text')*/ '#000000',
+        selectedControlText: /*systemPreferences.getColor('selected-control-text')*/ '#000000',
 
-        controlBackground: systemPreferences.getColor('control-background'),
+        controlBackground: /*systemPreferences.getColor('control-background')*/ '#FFFFFF',
         navBarBackground: '#efebef',
-        selectedContentBackground: systemPreferences.getColor('selected-content-background'),
-        underPageBackground: systemPreferences.getColor('under-page-background'),
-        windowBackground: systemPreferences.getColor('window-background'),
+        selectedContentBackground: /*systemPreferences.getColor('selected-content-background')*/ '#0063E1', // This is the blue accent color. This will not reflect the user's selected accent color.
+        underPageBackground: /*systemPreferences.getColor('under-page-background')*/ '#969696',
+        windowBackground: /*systemPreferences.getColor('window-background')*/ '#ECECEC',
 
         accent: getAccentColor(),
         separator: /*systemPreferences.getColor('separator')*/ '#d8d4d8',
