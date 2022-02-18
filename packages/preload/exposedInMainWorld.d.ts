@@ -6,6 +6,7 @@ export declare global {
   interface Window {
     readonly versions: NodeJS.ProcessVersions;
     readonly platform: NodeJS.Platform;
+    readonly page: 'app' | 'preferences';
     readonly contextMenu: {
       show: (menu: MenuItemDefinition[]) => void;
       onClick: (id: string, handler: () => void) => void;

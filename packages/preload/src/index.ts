@@ -23,6 +23,17 @@ contextBridge.exposeInMainWorld('versions', process.versions);
 
 contextBridge.exposeInMainWorld('platform', process.platform);
 
+contextBridge.exposeInMainWorld('page', (() => {
+  const PAGE_ARG_REGEX = /--page=([a-z]+)/;
+  const pageArg = process.argv.find((value) => PAGE_ARG_REGEX.test(value));
+  if (pageArg) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return PAGE_ARG_REGEX.exec(pageArg)![1];
+  }
+
+  return 'app';
+})());
+
 /**
  * Expose context menu API
  * @example

@@ -7,8 +7,19 @@ import {
 } from '/@/components/ContextMenu';
 import './../assets/style.css';
 import { useObs } from './integration/obs';
+import Preferences from './Preferences.vue';
 
-createApp(App)
+let page = App;
+switch (window.page) {
+  case 'preferences':
+    page = Preferences;
+    break;
+  case 'app':
+  default:
+    break;
+}
+
+createApp(page)
   .use(createPinia())
   .directive(
     'observe-resize', observeResize,
