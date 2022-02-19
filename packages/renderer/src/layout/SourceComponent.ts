@@ -28,4 +28,11 @@ export default class SourceComponent extends Component {
 
     return new SourceLayoutNode(this.id, new Frame(0, 0, croppedSize.width * scaleRatio, croppedSize.height * scaleRatio), this.source);
   }
+
+  clone(): Component {
+    const clone = new SourceComponent();
+    clone.source = this.source;
+    clone.crop = this.crop.clone();
+    return clone;
+  }
 }

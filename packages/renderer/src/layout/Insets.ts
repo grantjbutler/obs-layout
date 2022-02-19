@@ -1,4 +1,4 @@
-export default class {
+export default class Insets {
   top: number;
   left: number;
   bottom: number;
@@ -9,5 +9,14 @@ export default class {
     this.left = left;
     this.bottom = bottom;
     this.right = right;
+  }
+
+  clone(): Insets {
+    return new Insets(
+      this.top,
+      this.left,
+      this.bottom,
+      this.right,
+    );
   }
 }

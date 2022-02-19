@@ -3,6 +3,7 @@ import ContainerComponent from './ContainerComponent';
 import Frame from './Frame';
 import Size from './Size';
 import type LayoutNode from './LayoutNode';
+import type Component from './Component';
 
 export default class FlexComponent extends ContainerComponent {
   direction: 'horizontal' | 'vertical' = 'horizontal';
@@ -104,5 +105,14 @@ export default class FlexComponent extends ContainerComponent {
     });
 
     return new ContainerLayoutNode(this.id, nodeFrame, childNodes);
+  }
+
+  clone(): Component {
+    const clone = new FlexComponent();
+    clone.direction = this.direction;
+    clone.spacing = this.spacing;
+    clone.distribution = this.distribution;
+    this.children.forEach(child => clone.addChild(child.clone()));
+    return clone;
   }
 }

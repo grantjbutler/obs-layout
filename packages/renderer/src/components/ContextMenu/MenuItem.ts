@@ -37,7 +37,7 @@ export default defineComponent({
         throw new Error();
       }
 
-      label.value = firstChild.children as string;
+      label.value = (firstChild.children as string).trim();
 
       return null;
     };

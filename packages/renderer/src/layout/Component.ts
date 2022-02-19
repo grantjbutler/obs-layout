@@ -28,4 +28,8 @@ export default class Component {
   exerciseLayout(size: Size): LayoutNode {
     throw new Error('Subclasses are expected to implement logic for exercising a layout.');
   }
+
+  clone(): Component {
+    throw new Error('Subclasses are expected to implement logic for cloning.');
+  }
 }

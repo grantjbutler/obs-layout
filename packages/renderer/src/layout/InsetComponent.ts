@@ -30,4 +30,11 @@ export default class InsetComponent extends ContainerComponent {
 
     return new ContainerLayoutNode(this.id, new Frame(0, 0, childNode.frame.width + this.insets.left + this.insets.right, childNode.frame.height + this.insets.top + this.insets.bottom), [childNode]);
   }
+
+  clone(): Component {
+    const clone = new InsetComponent();
+    clone.insets = this.insets.clone();
+    this.children.forEach(child => clone.addChild(child.clone()));
+    return clone;
+  }
 }

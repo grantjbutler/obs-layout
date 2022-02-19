@@ -23,6 +23,7 @@ export const containerComponents: { [index: string]: typeof ContainerComponent }
 };
 
 export interface Layout {
+  id: string
   name: string
   rootComponent: ContainerComponent
 }

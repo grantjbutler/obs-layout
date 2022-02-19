@@ -16,8 +16,8 @@
       >
         <option
           v-for="layout in layouts"
-          :key="layout.name"
-          :value="layout"
+          :key="layout.id"
+          :value="layout.id"
         >
           {{ layout.name }}
         </option>
@@ -44,7 +44,7 @@
       <div class="flex flex-col h-24 overflow-y-auto macos:border-b macos:border-system-separator macos:py-1">
         <Layout
           v-for="layout in layouts"
-          :key="layout.name"
+          :key="layout.id"
           :layout="layout"
         />
       </div>
@@ -75,7 +75,7 @@ import Layout from './Layout.vue';
 const layoutsStore = useLayoutsStore();
 const layouts = computed(() => layoutsStore.layouts);
 const selectedLayout = computed({
-  get: () => layoutsStore.selectedLayout,
+  get: () => layoutsStore.selectedLayout.id,
   set: (value) => layoutsStore.selectLayout(value),
 });
 
