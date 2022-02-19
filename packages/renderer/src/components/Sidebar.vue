@@ -76,7 +76,10 @@ const component = computed(() => store.rootComponent);
 
 const layoutsStore = useLayoutsStore();
 const layouts = computed(() => layoutsStore.layouts);
-const selectedLayout = computed(() => layoutsStore.selectedLayout);
+const selectedLayout = computed({
+  get: () => layoutsStore.selectedLayout,
+  set: (value) => layoutsStore.selectLayout(value),
+});
 
 const isNewLayoutModalOpen = ref(false);
 const setIsNewLayoutModalOpen = (isOpen: boolean) => isNewLayoutModalOpen.value = isOpen;
