@@ -1,6 +1,10 @@
 <template>
-  <Disclosure v-slot="{ open }">
-    <div class="flex justify-between gap-2 mb-2 macos:px-2 macos:pb-1 macos:border-b macos:border-system-separator macos:text-system-text-secondary">
+  <Disclosure
+    v-slot="{ open }"
+    as="div"
+    class="mb-2 "
+  >
+    <div class="flex justify-between gap-2 macos:px-2 macos:pb-1 macos:border-b macos:border-system-separator macos:text-system-text-secondary">
       <span
         v-if="open"
         class="macos:py-1 macos:pl-2"
@@ -37,7 +41,7 @@
     </div>
 
     <DisclosurePanel>
-      <div class="flex flex-col h-24 mb-2 overflow-y-auto macos:border-b macos:border-system-separator macos:pb-1">
+      <div class="flex flex-col h-24 overflow-y-auto macos:border-b macos:border-system-separator macos:py-1">
         <Layout
           v-for="layout in layouts"
           :key="layout.name"

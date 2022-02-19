@@ -27,6 +27,9 @@ export const useLayoutsStore = defineStore('layouts', {
       this.selectedLayout.rootComponent = component;
     },
     createLayout(name: string, rootComponent: ContainerComponent) {
+      // TODO: Show an alert that there's already a layout with a given name.
+      if (this.layouts.find(layout => layout.name === name)) { return; }
+
       const layout = {
         name,
         rootComponent,
@@ -34,6 +37,14 @@ export const useLayoutsStore = defineStore('layouts', {
 
       this.layouts.push(layout);
       this.selectedLayout = layout;
+    },
+    renameLayout(existing: string, newName: string) {
+      // TODO: Show an alert that there's already a layout with a given name.
+      if (this.layouts.find(layout => layout.name === newName)) { return; }
+
+      const index = this.layouts.findIndex(layout => layout.name === existing);
+      if (index < 0) { return; }
+      this.layouts[index].name = newName;
     },
   },
 });
