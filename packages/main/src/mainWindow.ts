@@ -12,6 +12,8 @@ const pageUrl = import.meta.env.DEV && import.meta.env.VITE_DEV_SERVER_URL !== u
  ? import.meta.env.VITE_DEV_SERVER_URL
  : new URL('../renderer/dist/index.html', 'file://' + __dirname).toString();
 
+let windowId: number | undefined;
+
 async function createWindow() {
   const browserWindow = new BrowserWindow({
     width: 1050,
@@ -28,6 +30,8 @@ async function createWindow() {
       preload: join(__dirname, '../../preload/dist/index.cjs'),
     },
   });
+
+  windowId = browserWindow.id;
 
   /**
    * If you install `show: true` then it can cause issues when trying to close the window.
@@ -54,9 +58,12 @@ async function createWindow() {
  * Restore existing BrowserWindow or Create new BrowserWindow
  */
 export async function restoreOrCreateWindow() {
-  let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed() && w.webContents.getURL() === pageUrl);
+  let window: BrowserWindow | null = null;
+  if (windowId) {
+    window = BrowserWindow.fromId(windowId);
+  }
 
-  if (window === undefined) {
+  if (!window) {
     window = await createWindow();
   }
 
