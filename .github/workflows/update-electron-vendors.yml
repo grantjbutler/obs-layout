@@ -38,7 +38,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           delete-branch: true
-          commit-message: Update electron vendors
+          commit-message: 'chore: update electron vendors'
           branch: autoupdates/electron-vendors
           title: Update electron vendors
           body: Updated versions of electron vendors in `.electron-vendors.cache.json` and `.browserslistrc` files
