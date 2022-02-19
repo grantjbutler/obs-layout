@@ -1,67 +1,72 @@
 <template>
-  <div class="flex justify-between gap-2 mb-2 macos:px-2 macos:pb-1 macos:border-b macos:border-system-separator macos:text-system-text-secondary">
-    <select
-      v-model="selectedLayout"
-      class="windows:text-sm windows:border-gray-300 macos:bg-transparent macos:rounded macos:border-0 macos:text-sm macos:py-1 macos:pl-2 macos:pr-8"
-    >
-      <option
-        v-for="layout in layouts"
-        :key="layout.name"
-        :value="layout"
+  <Disclosure v-slot="{ open }">
+    <div class="flex justify-between gap-2 mb-2 macos:px-2 macos:pb-1 macos:border-b macos:border-system-separator macos:text-system-text-secondary">
+      <span
+        v-if="open"
+        class="macos:py-1 macos:pl-2"
+      >Layouts</span>
+      <select
+        v-else
+        v-model="selectedLayout"
+        class="text-sm windows:border-gray-300 macos:bg-transparent macos:rounded macos:border-0 macos:py-1 macos:pl-2 macos:pr-8"
       >
-        {{ layout.name }}
-      </option>
-    </select>
-
-    <div class="flex gap-2 align-baseline">
-      <button
-        title="Add Layout"
-        @click="isNewLayoutModalOpen = true"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5"
-          viewBox="0 0 20 20"
-          fill="currentColor"
+        <option
+          v-for="layout in layouts"
+          :key="layout.name"
+          :value="layout"
         >
-          <path
-            fill-rule="evenodd"
-            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      </button>
+          {{ layout.name }}
+        </option>
+      </select>
 
-      <button title="More">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-6 h-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <div class="flex gap-2 align-baseline">
+        <button
+          title="Add Layout"
+          @click="isNewLayoutModalOpen = true"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+          <PlusCircleIcon class="w-5 h-5" />
+        </button>
+
+        <DisclosureButton :title="open ? `Hide layout list` : `Reveal layout list`">
+          <ChevronRightIcon
+            class="w-4 h-4"
+            :class="open ? 'transform rotate-90' : ''"
           />
-        </svg>
-      </button>
+        </DisclosureButton>
+      </div>
     </div>
-  </div>
 
-  <new-layout-modal
-    :open="isNewLayoutModalOpen"
-    @close="setIsNewLayoutModalOpen"
-  />
+    <DisclosurePanel>
+      <div class="flex flex-col h-24 mb-2 overflow-y-auto macos:border-b macos:border-system-separator macos:pb-1">
+        <Layout
+          v-for="layout in layouts"
+          :key="layout.name"
+          :layout="layout"
+        />
+      </div>
+    </DisclosurePanel>
+
+    <new-layout-modal
+      :open="isNewLayoutModalOpen"
+      @close="setIsNewLayoutModalOpen"
+    />
+  </Disclosure>
 </template>
 
 <script lang="ts" setup>
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/vue';
+import {
+  PlusCircleIcon,
+  ChevronRightIcon,
+} from '@heroicons/vue/solid';
 import { computed, ref } from 'vue';
 import { useLayoutsStore } from '/@/store/layouts';
 import NewLayoutModal from './NewLayoutModal.vue';
-
+import Layout from './Layout.vue';
 
 const layoutsStore = useLayoutsStore();
 const layouts = computed(() => layoutsStore.layouts);

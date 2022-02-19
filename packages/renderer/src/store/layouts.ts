@@ -1,11 +1,6 @@
 import { defineStore } from 'pinia';
-import type { ContainerComponent } from '/@/layout';
+import type { ContainerComponent, Layout } from '/@/layout';
 import { FlexComponent } from '/@/layout';
-
-interface Layout {
-  name: string
-  rootComponent: ContainerComponent
-}
 
 interface State {
   layouts: Layout[]

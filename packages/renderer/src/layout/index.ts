@@ -22,6 +22,11 @@ export const containerComponents: { [index: string]: typeof ContainerComponent }
   InsetComponent,
 };
 
+export interface Layout {
+  name: string
+  rootComponent: ContainerComponent
+}
+
 export {
   Component,
   ContainerComponent,
