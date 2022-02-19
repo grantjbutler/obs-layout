@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ContainerLayoutNode, FlexComponent, Frame, Size, SourceComponent, SourceLayoutNode } from '../src/layout';
+import { ContainerLayoutNode, FlexComponent, Frame, Size, SourceComponent, SourceLayoutNode } from '../../src/layout';
 
 describe('FlexComponent', () => {
   it('should layout vertically', () => {

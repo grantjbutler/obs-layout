@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Frame, Size, SourceComponent, SourceLayoutNode } from '../src/layout';
+import { Frame, Size, SourceComponent, SourceLayoutNode } from '../../src/layout';
 
 describe('SourceComponent', () => {
   it('should layout', () => {

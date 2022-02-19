@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Frame, InsetComponent, Size, SourceComponent, Insets, ContainerLayoutNode, SourceLayoutNode } from '../src/layout';
+import { Frame, InsetComponent, Size, SourceComponent, Insets, ContainerLayoutNode, SourceLayoutNode } from '../../src/layout';
 
 describe('InsetComponent', () => {
   it('should layout', () => {

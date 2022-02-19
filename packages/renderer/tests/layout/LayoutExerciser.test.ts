@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { FlexComponent, Frame, InsetComponent, LayoutExerciser, Size, SourceComponent, Insets, ContainerLayoutNode, SourceLayoutNode } from '../src/layout';
+import { FlexComponent, Frame, InsetComponent, LayoutExerciser, Size, SourceComponent, Insets, ContainerLayoutNode, SourceLayoutNode } from '../../src/layout';
 
 describe('LayoutExerciser', () => {
   it('should perform layout', () => {
