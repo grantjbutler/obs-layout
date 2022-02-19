@@ -5,8 +5,8 @@ import type ContainerComponent from './ContainerComponent';
 
 export default class Component {
   id: string = uuidv4();
-  _parent: WeakRef<ContainerComponent> | undefined = undefined;
-  customName: string | undefined;
+  _parent?: WeakRef<ContainerComponent>;
+  customName?: string;
 
   get name(): string {
     return this.customName ?? Object.getPrototypeOf(this).constructor.displayName;
