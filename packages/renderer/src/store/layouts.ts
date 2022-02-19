@@ -31,5 +31,14 @@ export const useLayoutsStore = defineStore('layouts', {
     setRootComponent(component: ContainerComponent) {
       this.selectedLayout.rootComponent = component;
     },
+    createLayout(name: string, rootComponent: ContainerComponent) {
+      const layout = {
+        name,
+        rootComponent,
+      };
+
+      this.layouts.push(layout);
+      this.selectedLayout = layout;
+    },
   },
 });
