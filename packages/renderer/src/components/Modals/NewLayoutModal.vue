@@ -16,18 +16,22 @@
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <DialogOverlay class="fixed inset-0 bg-black opacity-30" />
+          <DialogOverlay class="fixed inset-0 macos:bg-black windows:bg-white macos:opacity-30 windows:opacity-50" />
         </TransitionChild>
 
         <TransitionChild
           enter="transition duration-200 ease-linear"
-          enter-from="opacity-0 -translate-y-8"
-          enter-to="opacity-100 translate-y-0"
+          enter-from="opacity-0 macos:-translate-y-8"
+          enter-to="opacity-100 macos:translate-y-0"
           leave="transition duration-200 ease-linear"
-          leave-from="opacity-100 translate-y-0"
-          leave-to="opacity-0 -translate-y-8"
+          leave-from="opacity-100 macos:translate-y-0"
+          leave-to="opacity-0 macos:-translate-y-8"
         >
-          <div class="relative flex flex-col max-w-sm gap-3 p-4 mx-auto text-sm rounded-lg shadow-lg macos:bg-system-background-under-page macos:text-system-text macos:border macos:border-system-separator">
+          <div class="relative flex flex-col gap-3 p-4 mx-auto text-sm border rounded-lg macos:shadow-lg macos:max-w-sm windows:w-80 bg-system-background-under-page macos:text-system-text macos:border-system-separator windows:border-system-divider">
+            <h3 class="hidden text-xl windows:block">
+              Add a Layout
+            </h3>
+
             <div class="flex flex-col gap-2">
               <label>Layout Name</label>
               <input
@@ -53,15 +57,15 @@
               </select>
             </div>
 
-            <div class="flex justify-end w-full gap-2">
+            <div class="flex w-full gap-2 windows:flex-row-reverse macos:justify-end">
               <button
-                class="px-2 py-1 bg-gray-500 rounded"
+                class="px-2 py-1 rounded macos:bg-gray-500 windows:bg-gray-300 windows:w-1/2"
                 @click.prevent="cancel"
               >
                 Cancel
               </button>
               <button
-                class="px-2 py-1 rounded bg-system-background-selected-content disabled:opacity-30"
+                class="px-2 py-1 rounded bg-system-background-selected-content disabled:opacity-30 windows:w-1/2 windows:text-white"
                 :disabled="!isCreateButtonEnabled"
                 @click.prevent="create"
               >

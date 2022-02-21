@@ -75,12 +75,12 @@ function deriveColorMapping(): ColorModeMapping {
         text: systemPreferences.getColor('window-text'),
         textSecondary: systemPreferences.getColor('window-text'),
         controlText: systemPreferences.getColor('button-text'),
-        selectedControlText: systemPreferences.getColor('window-text'),
+        selectedControlText: systemPreferences.getColor('highlight-text'),
 
         controlBackground: '',
         navBarBackground: '#f0f0f0',
         selectedContentBackground: getAccentColor(),
-        underPageBackground: '',
+        underPageBackground: '#f0f0f0',
         windowBackground: systemPreferences.getColor('window'),
 
         accent: getAccentColor(),
@@ -90,13 +90,13 @@ function deriveColorMapping(): ColorModeMapping {
       light: {
         text: systemPreferences.getColor('window-text'),
         textSecondary: systemPreferences.getColor('window-text'),
-        controlText: systemPreferences.getColor('window-text'),
-        selectedControlText: systemPreferences.getColor('window-text'),
+        controlText: systemPreferences.getColor('button-text'),
+        selectedControlText: systemPreferences.getColor('highlight-text'),
 
         controlBackground: '',
         navBarBackground: '#f0f0f0',
         selectedContentBackground: getAccentColor(),
-        underPageBackground: '',
+        underPageBackground: '#f0f0f0',
         windowBackground: systemPreferences.getColor('window'),
 
         accent: getAccentColor(),

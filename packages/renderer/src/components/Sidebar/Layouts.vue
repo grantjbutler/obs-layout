@@ -69,7 +69,7 @@ import {
 } from '@heroicons/vue/solid';
 import { computed, ref } from 'vue';
 import { useLayoutsStore } from '/@/store/layouts';
-import NewLayoutModal from './NewLayoutModal.vue';
+import NewLayoutModal from '/@/components/Modals/NewLayoutModal.vue';
 import Layout from './Layout.vue';
 
 const layoutsStore = useLayoutsStore();
