@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
+import { useLayoutStore } from './layout';
 import type { ContainerComponent, Layout } from '/@/layout';
 import { FlexComponent } from '/@/layout';
 
@@ -26,6 +27,9 @@ export const useLayoutsStore = defineStore('layouts', {
       const layout = this.layouts.find(layout => layout.id === id);
       if (!layout) { return; }
       this.selectedLayout = layout;
+
+      const layoutStore = useLayoutStore();
+      layoutStore.exerciseLayout();
     },
     setRootComponent(component: ContainerComponent) {
       this.selectedLayout.rootComponent = component;
@@ -38,7 +42,8 @@ export const useLayoutsStore = defineStore('layouts', {
       };
 
       this.layouts.push(layout);
-      this.selectedLayout = layout;
+
+      this.selectLayout(layout.id);
     },
     renameLayout(id: string, newName: string) {
       const index = this.layouts.findIndex(layout => layout.id === id);
