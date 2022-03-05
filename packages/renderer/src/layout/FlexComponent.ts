@@ -9,9 +9,18 @@ export default class FlexComponent extends ContainerComponent {
   direction: 'horizontal' | 'vertical' = 'horizontal';
   spacing = 0;
   distribution: 'leading' | 'center' | 'trailing' = 'center';
+  weights: Map<string, number> = new Map();
 
   static get displayName(): string {
     return 'Flex Component';
+  }
+
+  didAddChild(child: Component): void {
+    this.weights.set(child.id, 1);
+  }
+
+  didRemoveChild(child: Component): void {
+    this.weights.delete(child.id);
   }
 
   exerciseLayout(size: Size): LayoutNode {
@@ -24,16 +33,25 @@ export default class FlexComponent extends ContainerComponent {
       return new ContainerLayoutNode(this.id, new Frame(0, 0, size.width, size.height));
     }
 
-    let childSize: Size;
+    const totalWeight = Array.from(this.weights.values()).reduce((total, weight) => total + weight, 0);
+    let availableDimension: number;
     if (this.direction == 'vertical') {
-      const availableHeight = size.height - totalSpacing;
-      childSize = new Size(size.width, availableHeight / this.children.length);
+      availableDimension = size.height - totalSpacing;
     } else {
-      const availableWidth = size.width - totalSpacing;
-      childSize = new Size(availableWidth / this.children.length, size.height);
+      availableDimension = size.width - totalSpacing;
     }
 
     const childNodes = this.children.map((child) => {
+      const childWeight = this.weights.get(child.id) || 1;
+      const proportion = childWeight / totalWeight;
+
+      let childSize: Size;
+      if (this.direction == 'vertical') {
+        childSize = new Size(size.width, availableDimension * proportion);
+      } else {
+        childSize = new Size(availableDimension * proportion, size.height);
+      }
+
       return child.exerciseLayout(childSize);
     });
 

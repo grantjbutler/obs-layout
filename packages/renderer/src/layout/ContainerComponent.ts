@@ -10,6 +10,8 @@ export default abstract class ContainerComponent extends Component {
   addChild(child: Component): void {
     this._children.push(child);
     child._parent = new WeakRef(this);
+
+    this.didAddChild(child);
   }
 
   _removeChild(child: Component): void {
@@ -20,12 +22,20 @@ export default abstract class ContainerComponent extends Component {
 
     this._children.splice(childIndex, 1);
     child._parent = undefined;
+
+    this.didRemoveChild(child);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canAddChild<T extends typeof Component>(child: T): boolean {
     return true;
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+  didAddChild(child: Component): void {}
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+  didRemoveChild(child: Component): void {}
 
   childWithId(id: string): null | Component {
     if (this.id == id) {

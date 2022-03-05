@@ -30,18 +30,40 @@
       label="Spacing"
       :shows-slider="isWindows"
     />
+    <FormControl label="Weights">
+      <table class="macos:text-system-text-control macos:bg-system-background-control macos:w-full">
+        <tbody class="block h-24 overflow-scroll border border-gray-500">
+          <template v-if="component.children.length > 0">
+            <WeightRow
+              v-for="(child, index) in component.children"
+              :key="child.id"
+              :model-value="component.weights.get(child.id) || 1"
+              :class="{'bg-transparent': index % 2 == 0, 'bg-gray-800': index % 2 == 1}"
+              :name="child.name"
+              @update:model-value="weight => setWeight(child.id, weight)"
+            />
+          </template>
+          <tr v-else>
+            <!-- We use a non-breaking space here so that we have some text for first baseline alignment to work. -->
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
+    </FormControl>
   </Controls>
 </template>
 
 <script lang="ts" setup>
 import type { FlexComponent } from '/@/layout';
-import { setDirection, setDistribution, setSpacing } from '/@/store/components/flex';
+import { setDirection, setDistribution, setSpacing, setWeight } from '/@/store/components/flex';
 import { useIsWindows } from '/@/integration/platform';
 import { computed } from 'vue';
 
 import FormSelect from '/@/components/Form/FormSelect.vue';
 import FormNumberInput from '/@/components/Form/FormNumberInput.vue';
+import FormControl from '/@/components/Form/FormControl.vue';
 import Controls from './Controls.vue';
+import WeightRow from './WeightRow.vue';
 
 const props = defineProps<{
   component: FlexComponent

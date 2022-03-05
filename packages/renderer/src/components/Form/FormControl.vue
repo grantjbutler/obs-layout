@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-baseline gap-2 windows:justify-between macos:px-2">
+  <div class="flex gap-2 items-first-baseline windows:justify-between macos:px-2">
     <label class="macos:w-1/3 macos:text-right macos:flex-shrink-0">{{ label }}</label>
     <slot />
   </div>

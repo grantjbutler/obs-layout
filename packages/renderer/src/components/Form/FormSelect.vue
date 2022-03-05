@@ -2,7 +2,7 @@
   <FormControl :label="label">
     <select
       :value="modelValue"
-      class="windows:text-sm windows:border-gray-300 macos:text-system-text-control macos:bg-system-background-control macos:w-full macos:rounded macos:text-sm macos:py-1 macos:px-2"
+      class="text-sm windows:border-gray-300 macos:text-system-text-control macos:bg-system-background-control macos:w-full macos:rounded macos:py-1 macos:px-2"
       @change="modelValueUpdated"
     >
       <slot />

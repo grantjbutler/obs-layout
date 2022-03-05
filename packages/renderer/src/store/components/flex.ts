@@ -30,3 +30,14 @@ export const setSpacing = (spacing: number) => {
 
   store.exerciseLayout();
 };
+
+export const setWeight = (id: string, weight: number) => {
+  const store = useLayoutStore();
+  if (!store.selectedComponent || !(store.selectedComponent instanceof FlexComponent)) {
+    return;
+  }
+
+  store.selectedComponent.weights.set(id, weight);
+
+  store.exerciseLayout();
+};

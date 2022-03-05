@@ -60,6 +60,11 @@ module.exports = {
           WebkitAppRegion: 'no-drag',
         },
       });
+
+      addUtilities({
+        '.items-first-baseline': { 'align-items': 'first baseline' },
+        '.items-last-baseline': { 'align-items': 'last baseline' },
+      });
     }),
   ],
 };
