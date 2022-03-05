@@ -4,7 +4,10 @@
     <div class="flex items-center justify-between w-full px-3 border-b bg-system-background-nav-bar border-system-divider">
       <Popover class="relative">
         <div class="flex items-center">
-          <PopoverButton class="flex items-center space-x-1">
+          <PopoverButton
+            class="flex items-center space-x-1 disabled:opacity-25"
+            :disabled="obsStore.connectionState != OBSConnectionState.Connected"
+          >
             <CloudUploadIcon class="w-6 h-6" />
 
             <ChevronDownIcon class="w-3 h-3" />
@@ -25,4 +28,8 @@ import { CloudUploadIcon, ChevronDownIcon } from '@heroicons/vue/outline';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import ConnectionState from './ConnectionState.vue';
 import SyncPopover from './SyncPopover.vue';
+import { useObsStore } from '/@/store/obs';
+import { OBSConnectionState } from '../../../shared/src/obs';
+
+const obsStore = useObsStore();
 </script>

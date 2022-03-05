@@ -32,7 +32,10 @@
       </div>
       <div class="flex items-center">
         <Popover class="relative">
-          <PopoverButton class="flex items-center p-3 space-x-1 hover:bg-gray-300">
+          <PopoverButton
+            class="flex items-center p-3 space-x-1 hover:bg-gray-300 disabled:opacity-25"
+            :disabled="obsStore.connectionState != OBSConnectionState.Connected"
+          >
             <CloudUploadIcon class="w-6 h-6 text-gray-600" />
 
             <span>Sync</span>
@@ -69,10 +72,14 @@ import ConnectionState from './ConnectionState.vue';
 import SyncPopover from './SyncPopover.vue';
 import { useLayoutsStore } from '/@/store/layouts';
 import NewLayoutModal from './Modals/NewLayoutModal.vue';
+import { useObsStore } from '/@/store/obs';
+import { OBSConnectionState } from '../../../shared/src/obs';
 
 defineEmits<{
   (e: 'openSettings'): void
 }>();
+
+const obsStore = useObsStore();
 
 const layoutsStore = useLayoutsStore();
 const layouts = computed(() => layoutsStore.layouts);
