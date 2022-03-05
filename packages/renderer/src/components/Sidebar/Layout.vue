@@ -80,6 +80,6 @@ watch(isSelected, (value) => {
 
 const name = computed({
   get: () => props.layout.name,
-  set: (value) => layoutsStore.renameLayout(props.layout.name, value),
+  set: (value) => layoutsStore.renameLayout(props.layout.id, value),
 });
 </script>
