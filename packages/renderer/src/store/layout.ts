@@ -40,6 +40,14 @@ export const useLayoutStore = defineStore('layout', {
 
       this.exerciseLayout();
     },
+    insertChildAtBeginning(component: Component, parentId: string) {
+      if (!this.rootComponent) { return; }
+      const parent = this.rootComponent.childWithId(parentId);
+      if (!parent || !(parent instanceof ContainerComponent)) { return; }
+      parent.insertChildAtIndex(component, 0);
+
+      this.exerciseLayout();
+    },
     deleteComponent(id: string) {
       if (!this.rootComponent) { return; }
       const component = this.rootComponent.childWithId(id);
@@ -70,6 +78,18 @@ export const useLayoutStore = defineStore('layout', {
         parent.addChild(container);
         container.addChild(child);
       }
+
+      this.exerciseLayout();
+    },
+    moveBefore(component: Component, sibling: Component) {
+      if (!sibling.parent) { return; }
+      sibling.parent.insertChildBefore(component, sibling);
+
+      this.exerciseLayout();
+    },
+    moveAfter(component: Component, sibling: Component) {
+      if (!sibling.parent) { return; }
+      sibling.parent.insertChildAfter(component, sibling);
 
       this.exerciseLayout();
     },

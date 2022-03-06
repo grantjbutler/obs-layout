@@ -8,7 +8,48 @@ export default abstract class ContainerComponent extends Component {
   }
 
   addChild(child: Component): void {
+    child.removeFromParent();
+
     this._children.push(child);
+    child._parent = new WeakRef(this);
+
+    this.didAddChild(child);
+  }
+
+  insertChildAtIndex(child: Component, index: number): void {
+    child.removeFromParent();
+
+    this._children.splice(index, 0, child);
+    child._parent = new WeakRef(this);
+
+    this.didAddChild(child);
+  }
+
+  insertChildAfter(child: Component, sibling: Component): void {
+    if (!child.parent || !sibling.parent) { return; }
+    if (sibling.parent.id != this.id) { return; }
+
+    const siblingIndex = this.children.indexOf(sibling);
+    if (siblingIndex === -1) { return; }
+
+    child.removeFromParent();
+
+    this._children.splice(siblingIndex + 1, 0, child);
+    child._parent = new WeakRef(this);
+
+    this.didAddChild(child);
+  }
+
+  insertChildBefore(child: Component, sibling: Component): void {
+    if (!child.parent || !sibling.parent) { return; }
+    if (sibling.parent.id != this.id) { return; }
+
+    const siblingIndex = this.children.indexOf(sibling);
+    if (siblingIndex === -1) { return; }
+
+    child.removeFromParent();
+
+    this._children.splice(siblingIndex, 0, child);
     child._parent = new WeakRef(this);
 
     this.didAddChild(child);
