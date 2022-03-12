@@ -30,9 +30,13 @@ export function useObs() {
   window.obs.getScenes()
     .then(obsStore.setScenes);
 
+  window.obs.getCanvasSize()
+    .then(obsStore.setCanvasSize);
+
   window.obs.onConnectionStateChanged(obsStore.setConnectionState);
   window.obs.onSourcesChanged(obsStore.setSources);
   window.obs.onScenesChanged(obsStore.setScenes);
+  window.obs.onCanvasSizeChanged(obsStore.setCanvasSize);
 }
 
 export function syncLayout(rootNode: LayoutNode, sceneName: string): void {

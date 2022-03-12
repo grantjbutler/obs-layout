@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useLayoutsStore } from './layouts';
+import { useObsStore } from './obs';
 import type { LayoutNode, Component } from '/@/layout';
 import { LayoutExerciser, Size, ContainerComponent } from '/@/layout';
 
@@ -30,7 +31,8 @@ export const useLayoutStore = defineStore('layout', {
     },
     exerciseLayout() {
       if (!this.rootComponent) { return; }
-      this.rootNode = new LayoutExerciser().execute(this.rootComponent, new Size(1920, 1080));
+      const obsStore = useObsStore();
+      this.rootNode = new LayoutExerciser().execute(this.rootComponent, new Size(obsStore.canvasSize.width, obsStore.canvasSize.height));
     },
     addChild(component: Component, parentId: string) {
       if (!this.rootComponent) { return; }

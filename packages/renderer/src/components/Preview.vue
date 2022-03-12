@@ -7,8 +7,8 @@
       <canvas
         ref="canvas"
         class="absolute bg-white dark:bg-black"
-        width="1920"
-        height="1080"
+        :width="canvasSize.width"
+        :height="canvasSize.height"
       />
     </div>
   </div>
@@ -17,33 +17,45 @@
 <script lang="ts" setup>
 import { useLayoutStore } from '/@/store/layout';
 import { computed, ref, watch } from 'vue';
-import type { LayoutNode, Size } from '/@/layout';
-import { ContainerLayoutNode } from '/@/layout';
+import type { LayoutNode } from '/@/layout';
+import { ContainerLayoutNode , Size } from '/@/layout';
 import { usePreferredDark } from '@vueuse/core';
+import { useObsStore } from '../store/obs';
 
 const store = useLayoutStore();
+const obsStore = useObsStore();
 const scale = ref(1);
 const canvas = ref<HTMLCanvasElement | null>(null);
 const node = computed(() => store.rootNode);
 const prefersDarkMode = usePreferredDark();
 
+const canvasSize = computed(() => obsStore.canvasSize);
+const previewSize = ref<Size>(new Size(1920, 1080));
+
 const didChangeSize = (newSize: Size) => {
+  previewSize.value = newSize;
+  resizeCanvas();
+};
+
+watch(canvasSize, () => resizeCanvas());
+
+const resizeCanvas = () => {
   let el = canvas.value;
   if (!el) { return; }
   el.style.transformOrigin = '0 0';
-  let aspectRatio = 16 / 9;
-  let width = Math.min(newSize.width, newSize.height * aspectRatio);
-  let height = Math.min(newSize.height, newSize.width / aspectRatio);
-  if (newSize.width > newSize.height) {
-    scale.value = width / 1920;
+  let aspectRatio = canvasSize.value.width / canvasSize.value.height;
+  let width = Math.min(previewSize.value.width, previewSize.value.height * aspectRatio);
+  let height = Math.min(previewSize.value.height, previewSize.value.width / aspectRatio);
+  if (previewSize.value.width > previewSize.value.height) {
+    scale.value = width / canvasSize.value.width;
     el.style.transform = `scale(${scale.value}, ${scale.value})`;
-    el.style.left = ((newSize.width - width) / 2) + 'px';
-    el.style.top = ((newSize.height - (width / aspectRatio)) / 2) + 'px';
+    el.style.left = ((previewSize.value.width - width) / 2) + 'px';
+    el.style.top = ((previewSize.value.height - (width / aspectRatio)) / 2) + 'px';
   } else {
-    scale.value = height / 1080;
+    scale.value = height / canvasSize.value.height;
     el.style.transform = `scale(${scale.value}, ${scale.value})`;
-    el.style.left = ((newSize.width - (height * aspectRatio)) / 2) + 'px';
-    el.style.top = ((newSize.height - height) / 2) + 'px';
+    el.style.left = ((previewSize.value.width - (height * aspectRatio)) / 2) + 'px';
+    el.style.top = ((previewSize.value.height - height) / 2) + 'px';
   }
 };
 
@@ -71,20 +83,9 @@ const render = () => {
   if (!rootNode) { return; }
   const context = canvas.value?.getContext('2d');
   if (!context) { return; }
-  context.clearRect(0, 0, 1920, 1080);
+  context.clearRect(0, 0, canvasSize.value.width, canvasSize.value.height);
   renderNode(rootNode, context);
 };
 
-watch(node, () => {
-  render();
-});
-watch(canvas, () => {
-  render();
-});
-watch(scale, () => {
-  render();
-});
-watch(prefersDarkMode, () => {
-  render();
-});
+watch([node, canvas, scale, prefersDarkMode, canvasSize], () => render());
 </script>

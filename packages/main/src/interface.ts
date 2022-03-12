@@ -59,4 +59,8 @@ export function install(options: InstallationOptions): void {
   ipcMain.handle('sync-layout-to-scene', (_, nodes: Node[], sceneName: string) => {
     return options.obsSocket.syncLayout(nodes, sceneName);
   });
+
+  ipcMain.handle('get-obs-canvas-size', () => {
+    return options.obsSocket.canvasSize;
+  });
 }

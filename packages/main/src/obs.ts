@@ -6,6 +6,7 @@ import dataUriToBuffer from 'data-uri-to-buffer';
 import broadcast from './broadcast';
 import type { OBSConnectionOptions, Source } from '../../shared/src/obs';
 import { OBSConnectionState } from '../../shared/src/obs';
+import type { Size } from '../../shared/src/layout';
 
 interface OBSSocketOptions {
   sourceFilter: string
@@ -42,6 +43,8 @@ export default class OBSSocket {
   _sources: Source[] = [];
   _scenes: string[] = [];
 
+  _canvasSize: Size = { width: 1920, height: 1080 };
+
   constructor(options: OBSSocketOptions) {
     this._sourceFilter = options.sourceFilter;
 
@@ -51,6 +54,8 @@ export default class OBSSocket {
     this._socket.on('SourceRenamed', (data) => this._sourceRenamed(data));
 
     this._socket.on('ScenesChanged', (data) => this._scenesChanged(data));
+
+    this._socket.on('ProfileChanged', () => this._profileChanged());
   }
 
   connect(options: OBSConnectionOptions): Promise<unknown> {
@@ -159,8 +164,19 @@ export default class OBSSocket {
     this._fetchScenes();
   }
 
+  get canvasSize(): Size {
+    return this._canvasSize;
+  }
+
+  set canvasSize(size: Size) {
+    this._canvasSize = size;
+
+    broadcast('obs-canvas-size', size);
+  }
+
   _fullUpdate(): Promise<unknown> {
     return Promise.all([
+      this._fetchCanvasSize(),
       this._fetchSources(),
       this._fetchScenes(),
     ]);
@@ -232,6 +248,11 @@ export default class OBSSocket {
       .then(screenshot => screenshot.img);
   }
 
+  _fetchCanvasSize(): Promise<void> {
+    return this._socket.send('GetVideoInfo')
+      .then(info => { this.canvasSize = { width: info.baseWidth, height: info.baseHeight }; });
+  }
+
   _sourceCreated({ sourceName, sourceType }: { sourceName: string, sourceType: string }): void {
     if (sourceType != 'input') { return; }
     this._getSourceSize(sourceName)
@@ -277,5 +298,9 @@ export default class OBSSocket {
     this.scenes = scenes
       .filter(scene => scene.name.includes(this._sceneFilter))
       .map(scene => scene.name);
+  }
+
+  _profileChanged() {
+    this._fetchCanvasSize();
   }
 }

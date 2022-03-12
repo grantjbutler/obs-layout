@@ -1,5 +1,6 @@
 import type { OBSConnectionOptions, OBSConnectionState, Source } from '../shared/src/obs';
 import type { MenuItemDefinition } from '../shared/src/menu';
+import type { Size } from '../shared/src/layout';
 import type { Node } from './src/obs';
 
 export declare global {
@@ -17,11 +18,13 @@ export declare global {
       getConnectionStatus(): Promise<OBSConnectionState>;
       getSources(): Promise<Source[]>;
       getScenes(): Promise<string[]>;
+      getCanvasSize(): Promise<Size>;
       sync(nodes: Node[], sceneName: string)
 
       onConnectionStateChanged: (handler: (value: OBSConnectionState) => void) => void;
       onSourcesChanged: (handler: (value: Source[]) => void) => void;
       onScenesChanged: (handler: (value: string[]) => void) => void;
+      onCanvasSizeChanged: (handler: (value: Size) => void) => void;
     };
     readonly preferences: {
       loadConnectionOptions: () => Promise<OBSConnectionOptions | null>;
