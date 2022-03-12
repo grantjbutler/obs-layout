@@ -40,6 +40,13 @@ export const useLayoutStore = defineStore('layout', {
 
       this.exerciseLayout();
     },
+    renameComponent(component: Component, name?: string) {
+      if (name?.trim() == '') {
+        component.customName = undefined;
+      } else {
+        component.customName = name;
+      }
+    },
     insertChildAtBeginning(component: Component, parentId: string) {
       if (!this.rootComponent) { return; }
       const parent = this.rootComponent.childWithId(parentId);

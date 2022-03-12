@@ -5,10 +5,13 @@
   >
     <context-menu-providing>
       <div
-        class="relative flex macos:mx-2 macos:rounded"
+        v-click-away="exitEditing"
+        class="relative flex macos:mx-2 macos:rounded macos:py-1"
         :class="{'bg-system-background-selected-content': isSelected, 'text-white': isSelected}"
-        :style="`padding-left: calc(0.75rem * ${indentationLevel})`"
+        :style="`padding-left: calc(0.25rem + 0.75rem * ${indentationLevel})`"
         @click.prevent="selectComponent"
+        @click.self="exitEditing"
+        @dblclick.prevent="enterEditing"
         @dragenter="dragEntered"
         @dragleave="dragLeft"
         @dragover="dragOver"
@@ -31,7 +34,16 @@
           class="w-4 h-4"
         />
 
+        <input
+          v-if="isEditing"
+          v-model.lazy="name"
+          v-focus
+          type="text"
+          class="p-0 text-sm border-0 bg-system-background-under-page"
+          @keydown.esc="exitEditing"
+        >
         <span
+          v-else
           draggable="true"
           @dragstart="startDragging"
           v-text="component.name"
@@ -82,7 +94,7 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue';
-import { computed, ref, inject } from 'vue';
+import { computed, ref, inject, watch } from 'vue';
 import type { Component } from '/@/layout';
 import { ContainerComponent, containerComponents as ContainerComponents, components as LayoutComponents } from '/@/layout';
 import {
@@ -163,6 +175,30 @@ const embedActions = computed((): ContainerAction[] => {
 const deleteComponent = () => {
   store.deleteComponent(props.component.id);
 };
+
+// --
+
+const isEditing = ref(false);
+
+const enterEditing = () => {
+  if (!isSelected.value) { return; }
+  isEditing.value = true;
+};
+
+const exitEditing = () => {
+  isEditing.value = false;
+};
+
+watch(isSelected, (value) => {
+  if (!value) {
+    exitEditing();
+  }
+});
+
+const name = computed({
+  get: () => props.component.name,
+  set: (value) => store.renameComponent(props.component, value),
+});
 
 // --
 
