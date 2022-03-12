@@ -25,6 +25,8 @@ export declare global {
       onSourcesChanged: (handler: (value: Source[]) => void) => void;
       onScenesChanged: (handler: (value: string[]) => void) => void;
       onCanvasSizeChanged: (handler: (value: Size) => void) => void;
+
+      refresh()
     };
     readonly preferences: {
       loadConnectionOptions: () => Promise<OBSConnectionOptions | null>;

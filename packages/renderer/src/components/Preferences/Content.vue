@@ -32,6 +32,13 @@
             Abort
           </button>
           <button
+            v-if="isSyncButtonVisible"
+            class="px-3 py-1 bg-green-500 rounded"
+            @click="sync"
+          >
+            Sync
+          </button>
+          <button
             v-if="isDisconnectButtonVisible"
             class="px-3 py-1 bg-red-500 rounded"
             @click="disconnect"
@@ -87,6 +94,7 @@ const sceneFilter = ref('');
 const isConnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Disconnected || connectionState.value == OBSConnectionState.Error);
 const isAbortButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connecting);
 const isDisconnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connected);
+const isSyncButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connected);
 
 const connect = () => {
   if (isOBSConnectionOptions(connection.value)) {
@@ -95,6 +103,9 @@ const connect = () => {
 };
 const disconnect = () => {
   window.obs.disconnect();
+};
+const sync = () => {
+  window.obs.refresh();
 };
 
 onMounted(() => {

@@ -63,4 +63,8 @@ export function install(options: InstallationOptions): void {
   ipcMain.handle('get-obs-canvas-size', () => {
     return options.obsSocket.canvasSize;
   });
+
+  ipcMain.on('refresh-obs-settings', () => {
+    options.obsSocket.refreshSettings();
+  });
 }

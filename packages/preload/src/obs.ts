@@ -42,6 +42,10 @@ export function getCanvasSize(): Promise<Size> {
   return ipcRenderer.invoke('get-obs-canvas-size');
 }
 
+export function refresh() {
+  ipcRenderer.send('refresh-obs-settings');
+}
+
 export interface Node {
   sourceName: string;
   frame: {

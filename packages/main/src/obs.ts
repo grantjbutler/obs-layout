@@ -174,6 +174,10 @@ export default class OBSSocket {
     broadcast('obs-canvas-size', size);
   }
 
+  refreshSettings() {
+    this._fullUpdate();
+  }
+
   _fullUpdate(): Promise<unknown> {
     return Promise.all([
       this._fetchCanvasSize(),
