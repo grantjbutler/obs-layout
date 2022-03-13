@@ -238,20 +238,46 @@ export default class OBSSocket {
   }
 
   _screenshotSource(sourceName: string, quality: ImageQuality = ImageQuality.Best): Promise<string> {
-    const options: ScreenshotOptions = { sourceName };
+    return this._screenshotSources([sourceName], quality)
+      .then(results => results[sourceName]);
+  }
 
-    switch (quality) {
-      case ImageQuality.Worst:
-        options.embedPictureFormat = 'jpeg';
-        options.compressionQuality = 1;
-        break;
-      case ImageQuality.Best:
-        options.embedPictureFormat = 'png';
-        break;
-    }
+  _screenshotSources(sourceNames: string[], quality: ImageQuality = ImageQuality.Best): Promise<{ [index: string]: string }> {
+    const requests = sourceNames.map(sourceName => {
+      const options: ScreenshotOptions = { sourceName };
 
-    return this._socket.send('TakeSourceScreenshot', options)
-      .then(screenshot => screenshot.img);
+      switch (quality) {
+        case ImageQuality.Worst:
+          options.embedPictureFormat = 'jpeg';
+          options.compressionQuality = 1;
+          break;
+        case ImageQuality.Best:
+          options.embedPictureFormat = 'png';
+          break;
+      }
+
+      return {
+        ...options,
+        'request-type': 'TakeSourceScreenshot',
+        'message-id': `${sourceName}-screenshot`,
+      };
+    });
+
+    return this._socket.send('ExecuteBatch', { requests, abortOnFail: false })
+      .then(({ results }) => {
+        return results.reduce((images, result) => {
+          let sourceName: string;
+          if (result['message-id'] && result['message-id'].endsWith('-screenshot')) {
+            sourceName = result['message-id'].substring(0, result['message-id'].length - '-screenshot'.length);
+          } else {
+            return images;
+          }
+
+          images[sourceName] = result.img;
+
+          return images;
+        }, {} as { [index: string]: string });
+      });
   }
 
   _fetchCanvasSize(): Promise<void> {
