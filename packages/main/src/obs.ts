@@ -193,20 +193,7 @@ export default class OBSSocket {
           .filter(source => source.type == 'input' && source.name.includes(this._sourceFilter))
           .map(source => source.name);
       })
-      .then((sources) => {
-        return Promise.allSettled(sources.map(sourceName => {
-          return this._getSourceSize(sourceName)
-            .then(size => ({
-              name: sourceName,
-              width: size.width,
-              height: size.height,
-            }));
-        }));
-      })
-      .then(sources => {
-        return (sources.filter(source => source.status == 'fulfilled') as PromiseFulfilledResult<Source>[])
-          .map(source => source.value);
-      })
+      .then((sources) => this._getSizesOfSources(sources))
       .then(sources => { this.sources = sources; });
   }
 
@@ -218,6 +205,21 @@ export default class OBSSocket {
           .map(scene => scene.name);
       })
       .then(scenes => { this.scenes = scenes; });
+  }
+
+  _getSizesOfSources(sourceNames: string[]): Promise<{name: string, width: number, height: number}[]> {
+    return Promise.allSettled(sourceNames.map(sourceName => {
+      return this._getSourceSize(sourceName)
+        .then(size => ({
+          name: sourceName,
+          width: size.width,
+          height: size.height,
+        }));
+    }))
+    .then(sources => {
+      return (sources.filter(source => source.status == 'fulfilled') as PromiseFulfilledResult<Source>[])
+        .map(source => source.value);
+    });
   }
 
   _getSourceSize(sourceName: string): Promise<{width: number, height: number}> {
