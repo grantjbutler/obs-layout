@@ -9,6 +9,7 @@ import type { Source } from '../../../shared/src/obs';
 export default class SourceComponent extends Component {
   source?: Source = undefined;
   crop: Insets = new Insets(0, 0, 0, 0);
+  screenshot?: HTMLImageElement = undefined;
 
   static get displayName(): string {
     return 'Source Component';
@@ -26,13 +27,14 @@ export default class SourceComponent extends Component {
     const heightScale = size.height / croppedSize.height;
     const scaleRatio = Math.min(widthScale, heightScale);
 
-    return new SourceLayoutNode(this.id, new Frame(0, 0, croppedSize.width * scaleRatio, croppedSize.height * scaleRatio), this.source);
+    return new SourceLayoutNode(this.id, new Frame(0, 0, croppedSize.width * scaleRatio, croppedSize.height * scaleRatio), this.source, this.screenshot);
   }
 
   clone(): Component {
     const clone = new SourceComponent();
     clone.source = this.source;
     clone.crop = this.crop.clone();
+    clone.screenshot = this.screenshot;
     return clone;
   }
 }

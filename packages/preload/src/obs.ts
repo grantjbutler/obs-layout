@@ -46,6 +46,16 @@ export function refresh() {
   ipcRenderer.send('refresh-obs-settings');
 }
 
+export function screenshotSource(sourceName: string): Promise<HTMLImageElement> {
+  return ipcRenderer.invoke('screenshot-obs-source', sourceName)
+    .then(imageURI => {
+      const image = new Image();
+      image.src = imageURI;
+      return image.decode()
+        .then(() => image);
+    });
+}
+
 export interface Node {
   sourceName: string;
   frame: {

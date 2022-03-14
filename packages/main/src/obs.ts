@@ -178,6 +178,10 @@ export default class OBSSocket {
     this._fullUpdate();
   }
 
+  screenshotSource(sourceName: string): Promise<string> {
+    return this._screenshotSource(sourceName, ImageQuality.Best);
+  }
+
   _fullUpdate(): Promise<unknown> {
     return Promise.all([
       this._fetchCanvasSize(),

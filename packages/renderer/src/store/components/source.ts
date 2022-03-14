@@ -7,7 +7,23 @@ export const setSource = (source?: Source) => {
   if (!store.selectedComponent || !(store.selectedComponent instanceof SourceComponent)) {
     return;
   }
+  const sourceComponent = store.selectedComponent;
   store.selectedComponent.source = source;
 
   store.exerciseLayout();
+
+  if (source) {
+    window.obs.screenshotSource(source.name)
+      .then(image => {
+        const currentSource = sourceComponent.source;
+        if (!currentSource) {
+          return;
+        }
+        else if (currentSource.name == source.name) {
+          sourceComponent.screenshot = image;
+          store.exerciseLayout();
+        }
+      });
+  }
 };
+

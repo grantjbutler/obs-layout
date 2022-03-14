@@ -1,9 +1,9 @@
 import type { OBSConnectionOptions, OBSConnectionState, Source } from '../shared/src/obs';
-import type { MenuItemDefinition } from '../shared/src/menu';
+import type { MenuItemDefinition } from '../shared/src/menus';
 import type { Size } from '../shared/src/layout';
 import type { Node } from './src/obs';
 
-export declare global {
+declare global {
   interface Window {
     readonly versions: NodeJS.ProcessVersions;
     readonly platform: NodeJS.Platform;
@@ -20,6 +20,7 @@ export declare global {
       getScenes(): Promise<string[]>;
       getCanvasSize(): Promise<Size>;
       sync(nodes: Node[], sceneName: string)
+      screenshotSource(sourceName: string): Promise<HTMLImageElement>;
 
       onConnectionStateChanged: (handler: (value: OBSConnectionState) => void) => void;
       onSourcesChanged: (handler: (value: Source[]) => void) => void;

@@ -64,14 +64,37 @@ describe('LayoutExerciser', () => {
     expect(topRightSourceNode.frame).to.eql(new Frame(935, 0, 826.6666666666667, 465));
     expect(topRightSourceNode).to.be.an.instanceOf(SourceLayoutNode);
   });
+
+  it('should center children if there\'s enough space', () => {
+    const rootComponent = new FlexComponent();
+    rootComponent.direction = 'horizontal';
+    rootComponent.spacing = 50;
+    rootComponent.addChild(newSource(1920, 1080));
+    rootComponent.addChild(newSource(1521, 244));
+
+    const exerciser = new LayoutExerciser();
+    const node = exerciser.execute(rootComponent, new Size(1280, 720));
+
+    expect(node.frame).to.eql(new Frame(0, 187.03125, 1280, 345.9375));
+    expect(node).to.be.an.instanceOf(ContainerLayoutNode);
+    expect((node as ContainerLayoutNode).children).to.have.lengthOf(2);
+
+    const leftSourceNode = (node as ContainerLayoutNode).children[0];
+    expect(leftSourceNode.frame).to.eql(new Frame(0, 0, 615, 345.9375));
+    expect(leftSourceNode).to.be.an.instanceOf(SourceLayoutNode);
+
+    const rightSouceNode = (node as ContainerLayoutNode).children[1];
+    expect(rightSouceNode.frame).to.eql(new Frame(665, 123.6393614398422, 615, 98.65877712031559));
+    expect(rightSouceNode).to.be.an.instanceOf(SourceLayoutNode);
+  });
 });
 
-function newSource(): SourceComponent {
+function newSource(width = 1920, height = 1080): SourceComponent {
   const component = new SourceComponent();
   component.source = {
     name: 'source',
-    width: 1920,
-    height: 1080,
+    width,
+    height,
   };
   return component;
 }

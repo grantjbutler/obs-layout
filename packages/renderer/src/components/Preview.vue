@@ -18,7 +18,7 @@
 import { useLayoutStore } from '/@/store/layout';
 import { computed, ref, watch } from 'vue';
 import type { LayoutNode } from '/@/layout';
-import { ContainerLayoutNode , Size } from '/@/layout';
+import { ContainerLayoutNode, Size, SourceLayoutNode } from '/@/layout';
 import { usePreferredDark } from '@vueuse/core';
 import { useObsStore } from '../store/obs';
 
@@ -61,6 +61,13 @@ const resizeCanvas = () => {
 
 const renderNode = (node: LayoutNode, context: CanvasRenderingContext2D) => {
   context.save();
+
+  if (node instanceof SourceLayoutNode) {
+    const screenshot = node.screenshot;
+    if (screenshot) {
+      context.drawImage(screenshot, node.frame.x, node.frame.y, node.frame.width, node.frame.height);
+    }
+  }
 
   context.lineWidth = 1 / scale.value;
   if (node instanceof ContainerLayoutNode) {

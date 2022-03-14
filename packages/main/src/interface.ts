@@ -67,4 +67,8 @@ export function install(options: InstallationOptions): void {
   ipcMain.on('refresh-obs-settings', () => {
     options.obsSocket.refreshSettings();
   });
+
+  ipcMain.handle('screenshot-obs-source', (_, sourceName: string) => {
+    return options.obsSocket.screenshotSource(sourceName);
+  });
 }
