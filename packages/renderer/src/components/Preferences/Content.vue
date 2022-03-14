@@ -17,7 +17,7 @@
           type="password"
         />
 
-        <div class="flex justify-end macos:col-start-2 macos:col-end-9 windows:w-2/3">
+        <div class="flex justify-end gap-2 macos:col-start-2 macos:col-end-9 windows:w-2/3">
           <button
             v-if="isConnectButtonVisible"
             class="px-3 py-1 bg-green-500 rounded"
