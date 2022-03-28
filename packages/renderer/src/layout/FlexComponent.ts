@@ -33,96 +33,27 @@ export default class FlexComponent extends ContainerComponent {
       return new ContainerLayoutNode(this.id, new Frame(0, 0, size.width, size.height));
     }
 
+    const strategy = Strategies[this.direction];
+
     const totalWeight = Array.from(this.weights.values()).reduce((total, weight) => total + weight, 0);
-    let availableDimension: number;
-    if (this.direction == 'vertical') {
-      availableDimension = size.height - totalSpacing;
-    } else {
-      availableDimension = size.width - totalSpacing;
-    }
+    const availableDimension = strategy.availableDimension(size, totalSpacing);
 
     const childNodes = this.children.map((child) => {
       const childWeight = this.weights.get(child.id) || 1;
       const proportion = childWeight / totalWeight;
 
-      let childSize: Size;
-      if (this.direction == 'vertical') {
-        childSize = new Size(size.width, availableDimension * proportion);
-      } else {
-        childSize = new Size(availableDimension * proportion, size.height);
-      }
-
-      return child.exerciseLayout(childSize);
+      return child.exerciseLayout(strategy.childSize(size, availableDimension, proportion));
     });
 
-    let nodeFrame: Frame;
-    if (this.direction == 'vertical') {
-      const maxWidth = childNodes.reduce((width, node) => {
-        if (node.frame.width > width) {
-          return node.frame.width;
-        }
+    strategy.positionNodes(childNodes, size, this.spacing);
 
-        return width;
-      }, 0);
-      nodeFrame = new Frame(0, 0, maxWidth, size.height);
-
-      const totalHeight = childNodes.reduce((height, node) => {
-        return height + node.frame.height;
-      }, totalSpacing);
-
-      childNodes.reduce((yOffset, node) => {
-        node.frame.y = yOffset;
-        return yOffset + node.frame.height + this.spacing;
-      }, (size.height - totalHeight) / 2.0);
-    } else {
-      const maxHeight = childNodes.reduce((height, node) => {
-        if (node.frame.height > height) {
-          return node.frame.height;
-        }
-
-        return height;
-      }, 0);
-      nodeFrame = new Frame(0, 0, size.width, maxHeight);
-
-      const totalWidth = childNodes.reduce((width, node) => {
-        return width + node.frame.width;
-      }, totalSpacing);
-
-      childNodes.reduce((xOffset, node) => {
-        node.frame.x = xOffset;
-        return xOffset + node.frame.width + this.spacing;
-      }, (size.width - totalWidth) / 2.0);
-    }
+    const containerFrame = strategy.containerFrame(childNodes, size);
 
     childNodes.forEach(node => {
-      if (this.direction == 'vertical') {
-        switch (this.distribution) {
-          case 'leading':
-            node.frame.x = 0;
-            break;
-          case 'center':
-            node.frame.x = (nodeFrame.width - node.frame.width) / 2.0;
-            break;
-          case 'trailing':
-            node.frame.x = (nodeFrame.width - node.frame.width);
-            break;
-        }
-      } else {
-        switch (this.distribution) {
-          case 'leading':
-            node.frame.y = 0;
-            break;
-          case 'center':
-            node.frame.y = (nodeFrame.height - node.frame.height) / 2.0;
-            break;
-          case 'trailing':
-            node.frame.y = (nodeFrame.height - node.frame.height);
-            break;
-        }
-      }
+      strategy.distribute(this.distribution, node, containerFrame);
     });
 
-    return new ContainerLayoutNode(this.id, nodeFrame, childNodes);
+    return new ContainerLayoutNode(this.id, containerFrame, childNodes);
   }
 
   clone(): Component {
@@ -134,3 +65,90 @@ export default class FlexComponent extends ContainerComponent {
     return clone;
   }
 }
+
+interface Strategy {
+  availableDimension: (size: Size, spacing: number) => number;
+  childSize: (containerSize: Size, availableDimension: number, proportion: number) => Size;
+  containerFrame: (nodes: LayoutNode[], containerSize: Size) => Frame;
+  distribute: (distribution: 'leading' | 'center' | 'trailing', node: LayoutNode, containerFrame: Frame) => void;
+  positionNodes: (nodes: LayoutNode[], containerSize: Size, spacing: number) => void;
+}
+
+const Strategies = {
+  vertical: {
+    availableDimension(size: Size, spacing: number): number {
+      return size.height - spacing;
+    },
+    childSize(containerSize: Size, availableDimension: number, proportion: number): Size {
+      return new Size(containerSize.width, availableDimension * proportion);
+    },
+    containerFrame(nodes: LayoutNode[], containerSize: Size) {
+      const maxWidth = nodes.reduce((width, node) => {
+        return Math.max(node.frame.width, width);
+      }, 0);
+      return new Frame(0, 0, maxWidth, containerSize.height);
+    },
+    distribute(distribution: 'leading' | 'center' | 'trailing', node: LayoutNode, containerFrame: Frame) {
+      switch (distribution) {
+        case 'leading':
+          node.frame.x = 0;
+          break;
+        case 'center':
+          node.frame.x = (containerFrame.width - node.frame.width) / 2.0;
+          break;
+        case 'trailing':
+          node.frame.x = (containerFrame.width - node.frame.width);
+          break;
+      }
+    },
+    positionNodes(nodes: LayoutNode[], containerSize: Size, spacing: number) {
+      const totalSpacing = spacing * (nodes.length - 1);
+      const totalHeight = nodes.reduce((height, node) => {
+        return height + node.frame.height;
+      }, totalSpacing);
+
+      nodes.reduce((yOffset, node) => {
+        node.frame.y = yOffset;
+        return yOffset + node.frame.height + spacing;
+      }, (containerSize.height - totalHeight) / 2.0);
+    },
+  } as Strategy,
+  horizontal: {
+    availableDimension(size: Size, spacing: number): number {
+      return size.width - spacing;
+    },
+    childSize(containerSize: Size, availableDimension: number, proportion: number): Size {
+      return new Size(availableDimension * proportion, containerSize.height);
+    },
+    containerFrame(nodes: LayoutNode[], containerSize: Size) {
+      const maxHeight = nodes.reduce((height, node) => {
+        return Math.max(node.frame.height, height);
+      }, 0);
+      return new Frame(0, 0, containerSize.width, maxHeight);
+    },
+    distribute(distribution: 'leading' | 'center' | 'trailing', node: LayoutNode, containerFrame: Frame) {
+      switch (distribution) {
+        case 'leading':
+          node.frame.y = 0;
+          break;
+        case 'center':
+          node.frame.y = (containerFrame.height - node.frame.height) / 2.0;
+          break;
+        case 'trailing':
+          node.frame.y = (containerFrame.height - node.frame.height);
+          break;
+      }
+    },
+    positionNodes(nodes: LayoutNode[], containerSize: Size, spacing: number) {
+      const totalSpacing = spacing * (nodes.length - 1);
+      const totalWidth = nodes.reduce((width, node) => {
+        return width + node.frame.width;
+      }, totalSpacing);
+
+      nodes.reduce((xOffset, node) => {
+        node.frame.x = xOffset;
+        return xOffset + node.frame.width + spacing;
+      }, (containerSize.width - totalWidth) / 2.0);
+    },
+  } as Strategy,
+};
