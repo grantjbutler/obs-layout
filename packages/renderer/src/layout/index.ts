@@ -1,5 +1,6 @@
 import Component from './Component';
 import FlexComponent from './FlexComponent';
+import GridComponent from './GridComponent';
 import InsetComponent from './InsetComponent';
 import SourceComponent from './SourceComponent';
 import LayoutExerciser from './LayoutExerciser';
@@ -13,12 +14,14 @@ import Insets from './Insets';
 
 export const components: { [index: string]: typeof Component } = {
   FlexComponent,
+  GridComponent,
   InsetComponent,
   SourceComponent,
 };
 
 export const containerComponents: { [index: string]: typeof ContainerComponent } = {
   FlexComponent,
+  GridComponent,
   InsetComponent,
 };
 
@@ -32,6 +35,7 @@ export {
   Component,
   ContainerComponent,
   FlexComponent,
+  GridComponent,
   InsetComponent,
   SourceComponent,
   LayoutExerciser,
