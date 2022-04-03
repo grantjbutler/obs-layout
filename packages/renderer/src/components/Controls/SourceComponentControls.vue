@@ -11,12 +11,26 @@
         v-text="aSource.name"
       />
     </FormSelect>
+    <FormSelect
+      v-model="scalingMode"
+      label="Scaling Mode"
+    >
+      <option value="aspect-fit">
+        Aspect Fit
+      </option>
+      <option value="aspect-fill">
+        Aspect Fill
+      </option>
+      <option value="none">
+        Don't Scale
+      </option>
+    </FormSelect>
   </Controls>
 </template>
 
 <script lang="ts" setup>
 import type SourceComponent from '/@/layout/SourceComponent';
-import { setSource } from '/@/store/components/source';
+import { setScalingMode, setSource } from '/@/store/components/source';
 import { useObsStore } from '/@/store/obs';
 import { computed } from 'vue';
 import FormSelect from '/@/components/Form/FormSelect.vue';
@@ -36,5 +50,10 @@ const source = computed({
     if (!source) { return; }
     setSource(source);
   },
+});
+
+const scalingMode = computed({
+  get(): 'aspect-fit' | 'aspect-fill' | 'none' { return props.component.scalingMode; },
+  set(scalingMode: 'aspect-fit' | 'aspect-fill' | 'none') { setScalingMode(scalingMode); },
 });
 </script>

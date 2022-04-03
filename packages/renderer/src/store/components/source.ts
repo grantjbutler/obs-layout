@@ -27,3 +27,14 @@ export const setSource = (source?: Source) => {
   }
 };
 
+export const setScalingMode = (scalingMode: 'aspect-fit' | 'aspect-fill' | 'none') => {
+  const store = useLayoutStore();
+  if (!store.selectedComponent || !(store.selectedComponent instanceof SourceComponent)) {
+    return;
+  }
+
+  store.selectedComponent.scalingMode = scalingMode;
+
+  store.exerciseLayout();
+};
+
