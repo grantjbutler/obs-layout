@@ -3,6 +3,7 @@ import FlexComponent from './FlexComponent';
 import GridComponent from './GridComponent';
 import InsetComponent from './InsetComponent';
 import SourceComponent from './SourceComponent';
+import StackComponent from './StackComponent';
 import LayoutExerciser from './LayoutExerciser';
 import Frame from './Frame';
 import Size from './Size';
@@ -16,6 +17,7 @@ export const components: { [index: string]: typeof Component } = {
   FlexComponent,
   GridComponent,
   InsetComponent,
+  StackComponent,
   SourceComponent,
 };
 
@@ -23,6 +25,7 @@ export const containerComponents: { [index: string]: typeof ContainerComponent }
   FlexComponent,
   GridComponent,
   InsetComponent,
+  StackComponent,
 };
 
 export interface Layout {
@@ -38,6 +41,7 @@ export {
   GridComponent,
   InsetComponent,
   SourceComponent,
+  StackComponent,
   LayoutExerciser,
   Frame,
   Size,
