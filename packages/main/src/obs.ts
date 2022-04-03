@@ -7,6 +7,8 @@ import broadcast from './broadcast';
 import type { OBSConnectionOptions, Source } from '../../shared/src/obs';
 import { OBSConnectionState } from '../../shared/src/obs';
 import type { Size } from '../../shared/src/layout';
+import { zip } from 'lodash';
+import assert from 'assert';
 
 interface OBSSocketOptions {
   sourceFilter: string
@@ -82,36 +84,118 @@ export default class OBSSocket {
     this._socket.disconnect();
   }
 
-  syncLayout(nodes: Node[], sceneName: string): Promise<void[]> {
+  syncLayout(nodes: Node[], sceneName: string): Promise<void> {
     return this._socket.send('GetSceneItemList', { sceneName })
       .then(response => {
-        return Promise.all(
-          // This could probably use some optimization. I could be smart about only deleting the things that don't exist between the old layout and the new layout, rather
-          // than deleting every single item and then adding them back in.
-          response.sceneItems.map(item => {
-            return this._socket.send('DeleteSceneItem', { scene: sceneName, item: { name: item.sourceName, id: item.itemId }});
-          }),
-        );
+        const includedSources = nodes.map(node => node.sourceName);
+        const itemsToDelete = response.sceneItems.filter(item => !includedSources.includes(item.sourceName));
+
+        return this._deleteSources(sceneName, itemsToDelete)
+          .then(() => {
+            const existingSources = filterMap(response.sceneItems, item => {
+              const node = nodes.find(node => node.sourceName === item.sourceName);
+              if (!node) { return undefined; }
+              return {...item, node};
+            });
+            return existingSources;
+          });
       })
-      .then(() => {
-        return Promise.all(
-          nodes.map(node => {
-            return this._socket.send('AddSceneItem', { sceneName, sourceName: node.sourceName })
-              .then(response => {
-                this._socket.send(
-                  'SetSceneItemProperties',
-                  {
-                    'scene-name': sceneName,
-                    item: { id: response.itemId },
-                    position: { x: node.frame.x, y: node.frame.y },
-                    scale: { x: node.frame.width, y: node.frame.height },
-                    crop: {},
-                    bounds: {},
-                  });
-              });
-          }),
-        );
+      .then(existingSources => {
+        const existingSourceNames = existingSources.map(item => item.sourceName);
+        const itemsToAdd = nodes.filter(node => !existingSourceNames.includes(node.sourceName));
+
+        return this._addSources(sceneName, itemsToAdd.map(node => node.sourceName))
+          .then(itemIds => {
+            assert(itemIds.length == itemsToAdd.length, 'Expected to have the same number of successful items added as the number of items that we requested to add.');
+
+            return zip(itemIds, itemsToAdd)
+              .map(arg => ({
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                itemId: arg[0]!,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                node: arg[1]!,
+              }));
+          })
+          .then(addedSources => {
+            return addedSources.concat(existingSources);
+          });
+      })
+      .then(allSources => this._positionSources(sceneName, allSources));
+  }
+
+  _deleteSources(sceneName: string, items: { sourceName: string, itemId: number }[]): Promise<void> {
+    return this._socket.send('ExecuteBatch', {
+      requests: items.map(item => ({
+          'request-type': 'DeleteSceneItem',
+          scene: sceneName,
+          item: {
+            id: item.itemId,
+            name: item.sourceName,
+          },
+          'message-id': `delete-${item.sourceName}`,
+      })),
+    })
+    .then(value => {
+      const undeleted: string[] = [];
+      value.results.forEach(result => {
+        if (result.error && result['message-id'].startsWith('delete-')) {
+          undeleted.push(removePrefix(result['message-id'], 'delete-'));
+        }
       });
+      if (undeleted.length) {
+        throw `Unable to delete the following sources: ${undeleted.join(', ')}`;
+      }
+    });
+  }
+
+  _addSources(sceneName: string, sources: string[]): Promise<number[]> {
+    return this._socket.send('ExecuteBatch', {
+      requests: sources.map(source => ({
+        'request-type': 'AddSceneItem',
+        sceneName,
+        sourceName: source,
+        'message-id': `create-${source}`,
+      })),
+    })
+    .then(value => {
+      const uncreated: string[] = [];
+      value.results.forEach(result => {
+        if (result.error && result['message-id'].startsWith('create-')) {
+          uncreated.push(removePrefix(result['message-id'], 'create-'));
+        }
+      });
+      if (uncreated.length) {
+        throw `Unable to create the following sources: ${uncreated.join(', ')}`;
+      } else {
+        return value.results.map(result => result.itemId as number);
+      }
+    });
+  }
+
+  _positionSources(sceneName: string, items: { itemId: number, node: Node }[]): Promise<void> {
+    return this._socket.send('ExecuteBatch', {
+      requests: items.map(({ itemId, node }) => ({
+        'request-type': 'SetSceneItemProperties',
+        'scene-name': sceneName,
+        item: { id: itemId },
+        position: { x: node.frame.x, y: node.frame.y },
+        scale: { x: node.frame.width, y: node.frame.height },
+        crop: {},
+        bounds: {},
+        'message-id': `position-${node.sourceName}`,
+      })),
+    })
+    .then(value => {
+      const unpositioned: string[] = [];
+      value.results.forEach(result => {
+        if (result.error && result['message-id'].startsWith('position-')) {
+          unpositioned.push(removePrefix(result['message-id'], 'position-'));
+        }
+      });
+      if (unpositioned.length) {
+        throw `Unable to position the following sources: ${unpositioned.join(', ')}`;
+      }
+    });
   }
 
   get state(): OBSConnectionState {
@@ -339,4 +423,19 @@ export default class OBSSocket {
   _profileChanged() {
     this._fetchCanvasSize();
   }
+}
+
+function filterMap<T, N>(items: T[], callback: (item: T) => N | undefined): N[] {
+  const newItems: N[] = [];
+  for (const item of items) {
+    const newItem = callback(item);
+    if (!newItem) { continue; }
+    newItems.push(newItem);
+  }
+  return newItems;
+}
+
+function removePrefix(string: string, prefix: string): string {
+  if (!string.startsWith(prefix)) { return string; }
+  return string.substring(prefix.length);
 }
