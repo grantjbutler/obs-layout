@@ -40,8 +40,7 @@ export function useObs() {
 }
 
 export function syncLayout(rootNode: LayoutNode, sceneName: string): void {
-  const origin = { x: rootNode.frame.x, y: rootNode.frame.y };
-  const nodes = walkLayout(rootNode, origin);
+  const nodes = walkLayout(rootNode, { x: 0, y: 0 });
   window.obs.sync(nodes, sceneName);
 }
 
