@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { ContainerLayoutNode, GridComponent, Frame, Size, SourceComponent, SourceLayoutNode } from '../../src/layout';
 
-describe('FlexComponent', () => {
+describe('GridComponent', () => {
   it('should lay out', () => {
     const component = new GridComponent();
     component.rowSpacing = 10;
