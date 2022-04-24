@@ -3,8 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import type { MenuItemDefinition } from '../../../../shared/src/menus';
 
 export default defineComponent({
+  props: {
+    enabled: {
+      type: Boolean,
+      default: true,
+    },
+  },
   emits: ['click'],
-  setup(_, context) {
+  setup(props, context) {
     const label = ref('');
     const id = ref(uuidv4());
 
@@ -12,6 +18,7 @@ export default defineComponent({
       return {
         id: id.value,
         label: label.value,
+        enabled: props.enabled,
       };
     };
 

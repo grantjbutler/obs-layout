@@ -7,6 +7,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    enabled: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props, context) {
     const { buildItem, buildMenu } = useMenuBuilding();
@@ -14,6 +18,7 @@ export default defineComponent({
       return {
         'label': props.label,
         'submenu': buildItem(),
+        'enabled': props.enabled,
       };
     };
 

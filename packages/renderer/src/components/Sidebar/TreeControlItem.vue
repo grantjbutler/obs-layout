@@ -75,7 +75,10 @@
             </menu-item>
           </Submenu>
           <menu-separator />
-          <menu-item @click="deleteComponent()">
+          <menu-item
+            :enabled="canBeDeleted"
+            @click="deleteComponent()"
+          >
             Delete
           </menu-item>
         </context-menu>
@@ -95,7 +98,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue';
 import { computed, ref, inject, watch } from 'vue';
-import type { Component } from '/@/layout';
+import type { Component} from '/@/layout';
 import { ContainerComponent, containerComponents as ContainerComponents, components as LayoutComponents } from '/@/layout';
 import {
   Disclosure,
@@ -170,6 +173,10 @@ const embedActions = computed((): ContainerAction[] => {
     });
   }
   return actions;
+});
+
+const canBeDeleted = computed((): boolean => {
+  return props.component.id != store.rootComponent.id;
 });
 
 const deleteComponent = () => {
