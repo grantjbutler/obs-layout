@@ -92,7 +92,7 @@ const connection = ref<OBSConnectionOptions>({
 const sourceFilter = ref('');
 const sceneFilter = ref('');
 const isConnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Disconnected || connectionState.value == OBSConnectionState.Error);
-const isAbortButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connecting);
+const isAbortButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connecting || connectionState.value == OBSConnectionState.Reconnecting);
 const isDisconnectButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connected);
 const isSyncButtonVisible = computed(() => connectionState.value == OBSConnectionState.Connected);
 

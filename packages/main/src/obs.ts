@@ -11,7 +11,7 @@ import { zip } from 'lodash';
 import assert from 'assert';
 
 interface OBSSocketOptions {
-  sourceFilter: string
+  sourceFilter: string;
 }
 
 enum ImageQuality {
@@ -47,6 +47,9 @@ export default class OBSSocket {
 
   _canvasSize: Size = { width: 1920, height: 1080 };
 
+  _lastConnectionOptions: OBSConnectionOptions | null = null;
+  _reconnectInterval: NodeJS.Timer | null = null;
+
   constructor(options: OBSSocketOptions) {
     this._sourceFilter = options.sourceFilter;
 
@@ -58,9 +61,30 @@ export default class OBSSocket {
     this._socket.on('ScenesChanged', (data) => this._scenesChanged(data));
 
     this._socket.on('ProfileChanged', () => this._profileChanged());
+
+    this._socket.on('error', () => this._reconnect());
+    this._socket.on('ConnectionClosed', () => this._connectionClosed());
   }
 
   connect(options: OBSConnectionOptions): Promise<unknown> {
+    return this._connect(options)
+      .catch(() => {
+        this.state = OBSConnectionState.Error;
+      });
+  }
+
+  disconnect(): void {
+    if (this._reconnectInterval) {
+      clearTimeout(this._reconnectInterval);
+      this._reconnectInterval = null;
+    }
+
+    this.state = OBSConnectionState.Disconnected;
+
+    this._socket.disconnect();
+  }
+
+  _connect(options: OBSConnectionOptions): Promise<unknown> {
     this.state = OBSConnectionState.Connecting;
 
     return this._socket.connect({
@@ -68,20 +92,31 @@ export default class OBSSocket {
       password: options.password,
     })
     .then(() => {
+      this._lastConnectionOptions = options;
       this.state = OBSConnectionState.Connected;
-    })
-    .catch(() => {
-      this.state = OBSConnectionState.Error;
+
+      if (this._reconnectInterval) {
+        clearTimeout(this._reconnectInterval);
+        this._reconnectInterval = null;
+      }
     })
     .then(() => {
       return this._fullUpdate();
     });
   }
 
-  disconnect(): void {
-    this.state = OBSConnectionState.Disconnected;
+  _reconnect(): void {
+    if (this._reconnectInterval) { return; }
 
-    this._socket.disconnect();
+    const connectionOptions = this._lastConnectionOptions;
+    if (!connectionOptions) { return; }
+
+    this.state = OBSConnectionState.Reconnecting;
+
+    this._reconnectInterval = setInterval(() => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      this._connect(connectionOptions).catch(() => {});
+    }, 5000);
   }
 
   syncLayout(nodes: Node[], sceneName: string): Promise<void> {
@@ -422,6 +457,12 @@ export default class OBSSocket {
 
   _profileChanged() {
     this._fetchCanvasSize();
+  }
+
+  _connectionClosed() {
+    if (this.state != OBSConnectionState.Disconnected) {
+      this._reconnect();
+    }
   }
 }
 

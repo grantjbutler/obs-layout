@@ -31,6 +31,7 @@ const sizeClasses = computed(() => {
 const backgroundColor = computed(() => {
   switch (store.connectionState) {
     case OBSConnectionState.Connecting:
+    case OBSConnectionState.Reconnecting:
       return 'bg-yellow-500';
     case OBSConnectionState.Connected:
       return 'bg-green-500';
@@ -50,6 +51,8 @@ const title = computed(() => {
       return 'Connected';
     case OBSConnectionState.Error:
       return 'Error';
+    case OBSConnectionState.Reconnecting:
+      return 'Reconnecting to OBS...';
   }
 });
 </script>
