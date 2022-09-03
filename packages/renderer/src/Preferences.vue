@@ -1,7 +1,7 @@
 <template>
-  <Content />
+  <WindowContent />
 </template>
 
 <script lang="ts" setup>
-import Content from '/@/components/Preferences/Content.vue';
+import WindowContent from './components/Preferences/WindowContent.vue';
 </script>

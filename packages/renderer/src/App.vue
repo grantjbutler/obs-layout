@@ -10,9 +10,9 @@
       @open-settings="openSettings"
     />
     <div class="flex flex-row items-stretch flex-1">
-      <sidebar class="flex-none border-r border-system-divider" />
-      <preview />
-      <controls class="flex-none border-l border-system-divider" />
+      <layout-sidebar class="flex-none border-r border-system-divider" />
+      <canvas-preview />
+      <component-controls class="flex-none border-l border-system-divider" />
     </div>
     <preferences-modal
       v-if="isWindows"
@@ -24,12 +24,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import Preview from './components/Preview.vue';
-import Sidebar from './components/Sidebar.vue';
-import Controls from './components/Controls.vue';
+import CanvasPreview from './components/CanvasPreview.vue';
+import LayoutSidebar from './components/LayoutSidebar.vue';
+import ComponentControls from './components/ComponentControls.vue';
 import NavBar from './components/NavBar.vue';
 import CommandBar from './components/CommandBar.vue';
-import PreferencesModal from './components/Preferences/Modal.vue';
+import PreferencesModal from './components/Preferences/PreferencesModal.vue';
 import { useIsMacOS, useIsWindows } from './integration/platform';
 
 const isMacOS = useIsMacOS();

@@ -42,7 +42,7 @@
 
     <DisclosurePanel>
       <div class="flex flex-col h-24 overflow-y-auto macos:border-b macos:border-system-separator macos:py-1">
-        <Layout
+        <LayoutItem
           v-for="layout in layouts"
           :key="layout.id"
           :layout="layout"
@@ -70,7 +70,7 @@ import {
 import { computed, ref } from 'vue';
 import { useLayoutsStore } from '/@/store/layouts';
 import NewLayoutModal from '/@/components/Modals/NewLayoutModal.vue';
-import Layout from './Layout.vue';
+import LayoutItem from './LayoutItem.vue';
 
 const layoutsStore = useLayoutsStore();
 const layouts = computed(() => layoutsStore.layouts);

@@ -1,7 +1,7 @@
 <template>
   <div class="text-sm macos:bg-system-background-under-page macos:text-system-text macos:p-2">
     <div class="flex flex-col macos:gap-2 windows:gap-8 windows:w-1/2">
-      <Controls label="OBS Connection">
+      <ControlGroup label="OBS Connection">
         <TextControl
           v-model="connection.host"
           label="Host"
@@ -46,9 +46,9 @@
             Disconnect
           </button>
         </div>
-      </Controls>
+      </ControlGroup>
 
-      <Controls label="Filters">
+      <ControlGroup label="Filters">
         <div
           v-if="isWindows"
           class="mb-2"
@@ -65,7 +65,7 @@
           label="Scene Filter"
           type="text"
         />
-      </Controls>
+      </ControlGroup>
     </div>
   </div>
 </template>
@@ -76,7 +76,7 @@ import debounce from 'lodash/debounce';
 import type { OBSConnectionOptions} from '../../../../shared/src/obs';
 import { OBSConnectionState, isOBSConnectionOptions } from '../../../../shared/src/obs';
 import { useObsConnectionState } from '/@/integration/obs';
-import Controls from '/@/components/Preferences/Controls.vue';
+import ControlGroup from './ControlGroup.vue';
 import TextControl from './TextControl.vue';
 import NumberControl from './NumberControl.vue';
 import { useIsWindows } from '/@/integration/platform';
