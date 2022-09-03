@@ -39,7 +39,7 @@ import {
   Dialog,
   DialogTitle,
 } from '@headlessui/vue';
-import Content from './Content.vue';
+import Content from './WindowContent.vue';
 
 defineProps<{
   open: boolean
