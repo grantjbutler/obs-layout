@@ -1,5 +1,5 @@
 <template>
-  <Controls title="Grid Component">
+  <ControlsGroup title="Grid Component">
     <FormNumberInput
       v-model="columnCount"
       label="Column Count"
@@ -32,7 +32,7 @@
         Justify Between
       </option>
     </FormSelect>
-  </Controls>
+  </ControlsGroup>
 </template>
 
 <script lang="ts" setup>
@@ -42,7 +42,7 @@ import { computed } from 'vue';
 
 import FormSelect from '/@/components/Form/FormSelect.vue';
 import FormNumberInput from '/@/components/Form/FormNumberInput.vue';
-import Controls from './Controls.vue';
+import ControlsGroup from './ControlsGroup.vue';
 import { setColumnCount, setColumnSpacing, setDistribution, setRowSpacing } from '/@/store/components/grid';
 
 const props = defineProps<{

@@ -1,5 +1,5 @@
 <template>
-  <Controls title="Stack Component">
+  <ControlsGroup title="Stack Component">
     <FormSelect
       v-model="horizontalAlignment"
       label="Horizontal Alignment"
@@ -28,7 +28,7 @@
         Trailing
       </option>
     </FormSelect>
-  </Controls>
+  </ControlsGroup>
 </template>
 
 <script lang="ts" setup>
@@ -36,7 +36,7 @@ import type { StackComponent } from '/@/layout';
 import { computed } from 'vue';
 
 import FormSelect from '/@/components/Form/FormSelect.vue';
-import Controls from './Controls.vue';
+import ControlsGroup from './ControlsGroup.vue';
 import { setHorizontalAlignment, setVerticalAlignment } from '/@/store/components/stack';
 
 const props = defineProps<{

@@ -1,5 +1,5 @@
 <template>
-  <Controls title="Source Component">
+  <ControlsGroup title="Source Component">
     <FormSelect
       v-model="source"
       label="Source"
@@ -25,7 +25,7 @@
         Don't Scale
       </option>
     </FormSelect>
-  </Controls>
+  </ControlsGroup>
 </template>
 
 <script lang="ts" setup>
@@ -34,7 +34,7 @@ import { setScalingMode, setSource } from '/@/store/components/source';
 import { useObsStore } from '/@/store/obs';
 import { computed } from 'vue';
 import FormSelect from '/@/components/Form/FormSelect.vue';
-import Controls from './Controls.vue';
+import ControlsGroup from './ControlsGroup.vue';
 
 const props = defineProps<{
   component: SourceComponent

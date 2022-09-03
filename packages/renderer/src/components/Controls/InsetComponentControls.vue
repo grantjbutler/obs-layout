@@ -1,5 +1,5 @@
 <template>
-  <Controls title="Inset Component">
+  <ControlsGroup title="Inset Component">
     <label class="macos:px-2 macos:pb-2 macos:-mt-2 macos:border-b macos:border-system-separator macos:text-system-text-secondary macos:font-semibold">Insets</label>
     <FormNumberInput
       v-model="top"
@@ -17,7 +17,7 @@
       v-model="right"
       label="Right"
     />
-  </Controls>
+  </ControlsGroup>
 </template>
 
 <script lang="ts" setup>
@@ -25,7 +25,7 @@ import type InsetComponent from '/@/layout/InsetComponent';
 import { setInsets } from '/@/store/components/inset';
 import { computed } from 'vue';
 import FormNumberInput from '/@/components/Form/FormNumberInput.vue';
-import Controls from './Controls.vue';
+import ControlsGroup from './ControlsGroup.vue';
 
 const props = defineProps<{
   component: InsetComponent

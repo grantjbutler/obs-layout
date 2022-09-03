@@ -1,5 +1,5 @@
 <template>
-  <Controls title="Flex Component">
+  <ControlsGroup title="Flex Component">
     <FormSelect
       v-model="direction"
       label="Direction"
@@ -50,7 +50,7 @@
         </tbody>
       </table>
     </FormControl>
-  </Controls>
+  </ControlsGroup>
 </template>
 
 <script lang="ts" setup>
@@ -62,7 +62,7 @@ import { computed } from 'vue';
 import FormSelect from '/@/components/Form/FormSelect.vue';
 import FormNumberInput from '/@/components/Form/FormNumberInput.vue';
 import FormControl from '/@/components/Form/FormControl.vue';
-import Controls from './Controls.vue';
+import ControlsGroup from './ControlsGroup.vue';
 import WeightRow from './WeightRow.vue';
 
 const props = defineProps<{
